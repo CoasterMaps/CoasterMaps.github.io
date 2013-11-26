@@ -1,0 +1,158 @@
+body {
+    font-family: 'UbuntuRegular';
+}
+
+
+.right_home_column {
+        float: right;
+        width: 500px;
+        padding: 10px;
+        text-align: justify;
+
+}
+
+
+#tabs {
+                    background-color: #e3e4d7!important;
+                    color: #ffffff!important;
+                    
+            li {
+                border-right: 1px solid #CACACA;
+            }
+        }
+
+
+ #tabs {
+ 
+ img{
+ margin: 5px 15px 5px 15px; 
+ }
+        li {
+            display: inline-block;
+               
+        }
+        
+       
+    }
+
+    .nav_links {
+            li:hover, li.active {
+                border-bottom: 2px solid #FF2400;
+            }
+
+
+        }
+
+
+
+
+.map_holderGoogle, .map_holderBing, .map_holderOS {
+   width: 730px;
+   margin: 10px 5px 20px 40px;
+   background-color: white;
+
+   &:hover {
+    background-color: darken(white, 20%);
+    }
+
+     #googleMap {
+      width: 728px;
+      height: 450px;
+      margin: 0px;
+      }
+
+     #bingMap {
+      position:relative;
+      width: 728px;
+      height: 450px;
+      margin: 0px;
+     }
+
+     #osMap {
+      position:relative;
+      width: 728px;
+      height: 450px;
+      margin: 0px;
+     }
+ }
+
+
+
+#header {
+
+    div {
+        position: relative;
+        width: 100%;
+        margin: 0px;
+
+        img {
+            margin: 0px;
+            width: 100%;
+        }
+
+        ul {
+            position: absolute;
+            bottom: 10px;
+            right: 25px;
+
+            font-family: 'UbuntuBold';
+            
+            li {
+                display:inline;
+                margin: 0 10px;
+                
+                a {
+                    text-decoration: none;
+                    background-color: #91bd09!important;
+                          display: inline-block;
+                    padding: 10px 20px 8px 20px;
+                    color: #ffffff!important;
+                    font-weight: 600;
+                    text-transform: uppercase;
+                    position: relative;
+                    cursor: pointer;
+                    border-radius: 2px;
+                }
+            }
+        }
+    }
+}
+
+#main {
+
+    width: $width;
+    margin: auto;
+    padding: 20px 0;
+
+    h1 {
+        font-family: 'UbuntuBold';
+        font-size: 2em;
+    }
+
+    #contents {
+        width: $contents_width;
+        margin: auto;
+        text-align: justify;
+
+        h2.tabheading {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+        }
+
+        p {
+            margin: 20px 0;
+        }
+
+        a {
+            text-decoration: none;
+
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+    }
+
+}
+
+
+

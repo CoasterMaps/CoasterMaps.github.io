@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+        <title>COMP2013 Group Blog. COASTER 3D PROJECT. | That's techSoc to you
+        </title>
+        
+        <link href="/css/all.css" rel="stylesheet" type="text/css" />
+
+        <script type="text/javascript"
+        src="https://maps.googleapis.com/maps/api/js?v=3key={AIzaSyBiVydJrssXEs9BpQoO7MX7RSsU13CuJ20}&sensor=false">
+        </script>
+
+        <script type="text/javascript"
+        src="http://ecn.dev.virtualearth.net/mapcontrol/mapcontrol.ashx?v=7.0">
+        </script>
+
+        <script 
+        src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=drawing">
+        </script>
+
+        <script type="text/javascript" src="http://openspace.ordnancesurvey.co.uk/osmapapi/openspace.js?key=BA08531D8339984EE0405F0AC86026A9"></script>  
+
+        <script type="text/javascript" src="/js/all.js"></script>
+
+    </head>
+
+
+       <div id="contents">
+        <body onload="initializeGoogle();">
+	<div class="map_holderGoogle" >
+		<div id="googleMap"></div>
+		<ul id="tabs" class="nav_links">
+			<a href="/google/"><li><img height="35px" src="/images/googlemaps.png"/></li></a>
+			<a href="/bing/"><li><img height="35px" src="/images/bing.png"/></li></a>
+		</ul>
+	</div>
+
+	<div>
+                <input onclick = "lineListenerOnGMap();" type=button value = "Add shape"/>
+                <input onclick = "tagListenerOnGMap();" type = button value = "Add Annotation"/>
+    </div>
+
+</body>
+       </div>
+
+</html>
+
+
+
+

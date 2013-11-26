@@ -1,0 +1,12 @@
+body.home {
+    &.welcome {
+        #contents {
+            text-align: justify;
+            
+            p {
+                margin-bottom: 20px;
+                line-height: 1.2em;
+            }
+        }
+    }
+}

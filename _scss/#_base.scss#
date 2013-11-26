@@ -1,0 +1,342 @@
+body {
+    font-family: 'UbuntuRegular';
+
+}
+
+#theme {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 0.8em;
+}
+
+.right_home_column {
+        float: right;
+        width: 600px;
+        padding: 10px;
+        text-align: justify; 
+
+}
+
+
+
+#googleMap { 
+width: 809px; height: 500px; margin: 20px;
+}
+
+#bingMap { 
+position:relative;
+width: 566px; 
+height: 350px; 
+margin: 20px;
+}
+
+
+
+.map_holderGoogle {
+width: 600px;
+margin: 10px 5px 20px 40px;
+background-color: white;
+&:hover {
+    background-color: darken(white, 20%);
+}
+img {
+margin: 20px;
+}
+
+#googleMap { 
+width: 566px; 
+height: 350px; 
+margin: 20px;
+}
+
+}
+
+
+.map_holderBing {
+width: 600px;
+margin: 0px 20px 20px 0px;
+background-color: white;
+&:hover {
+    background-color: darken(white, 20%);
+}
+
+img {
+margin: 20px 0px 0px 20px;
+}
+
+#bingMap { 
+position:relative;
+width: 566px; 
+height: 350px; 
+margin: 20px;
+}
+
+}
+
+
+
+#header {
+
+    div {
+        position: relative;
+        width: 100%;
+        margin: 5px;
+
+        img {
+            margin: 5px;
+            width: 100%;
+        }
+
+        ul {
+            position: absolute;
+            bottom: 10px;
+            right: 25px;
+
+            font-family: 'UbuntuBold';
+            
+            li {
+                display:inline;
+                margin: 0 10px;
+                
+                a {
+                    text-decoration: none;
+                    background-color: #91bd09!important;
+                    
+	display: inline-block;
+	padding: 10px 20px 8px 20px;
+	margin-bottom: 1.5em;
+	color: #ffffff!important;
+	font-weight: 600;
+	text-transform: uppercase;
+	position: relative;
+	cursor: pointer;
+	border-radius: 2px;
+                }
+            }
+        }
+    }
+}
+
+#main {
+    width: $width;
+    margin: auto;
+    padding: 20px 0;
+
+    h1 {
+        font-family: 'UbuntuBold';
+        font-size: 2em;
+    }
+
+    div.contact {
+        float: right;
+        margin-top: -30px;
+
+        a {
+            display: inline-block;
+            height: 25px;
+            line-height: 25px;
+            width: 25px;
+            margin: 0 5px;
+            text-decoration: none;
+            text-align: center;
+
+            &.facebook {
+                background-color: $color_facebook;
+                color: white;
+                &:hover {
+                    background-color: lighten($color_facebook, 20%);
+                }
+            }
+
+            &.twitter {
+                background-color: $color_twitter;
+                color: white;
+                &:hover {
+                    background-color: lighten($color_twitter, 20%);
+                }
+            }
+
+            &.email {
+                background-color: $color_email;
+                color: white;
+                &:hover {
+                    background-color: lighten($color_email, 20%);
+                }
+            }
+        }
+    }
+
+    ul#tabs {
+        width: ($width - 100)px;
+        margin: 20px 0;
+        height: 40px;
+
+        li {
+            display: inline-block;
+            height: 40px;
+            width: 150px;
+            text-align: center;
+            margin-right: -4px;
+
+            a {
+                display: block;
+                height: 27px;
+                text-decoration: none;
+                color: inherit;
+                padding-top: 12px;
+            }
+        }
+    }
+
+    #contents {
+        width: $contents_width;
+        margin: auto;
+        text-align: justify;
+
+        h2.tabheading {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+        }
+
+        p {
+            margin: 20px 0;
+        }
+
+        a {
+            text-decoration: none;
+
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+
+
+
+     .right_news_column {
+        display: block;
+        float: right;
+        width: 300px;
+        padding: 10px;
+        text-align: justify; 
+
+        h1 {
+      font-family: 'UbuntuBold';
+      margin: 10px 0px; }
+        h2 {
+      font-family: 'UbuntuBold';
+      margin: 10px 0px; }
+        h3 {
+      font-family: 'UbuntuBold';
+      margin: 10px 0px; }
+        h4 {
+      font-family: 'UbuntuBold';
+      margin: 10px 0px; 
+      letter-spacing:0.5px}
+
+        p {
+      margin: 10px 0;
+      line-height: 1.5em;
+      font-size: 0.8em; }
+
+       }
+
+
+.plugin_message, .plugin_page_navigation  { 
+  
+  margin: 10px; 
+  padding: 15px;
+  text-align: left; 
+     
+      h2 {
+  font-family: 'UbuntuBold';
+    font-size: 1.5em; }
+      h3 {
+  font-family: 'UbuntuBold';
+    font-size: 1em; }
+
+      h1, h2, h3, h4 {
+   margin: 5px 0px;
+  }
+
+     }
+
+ .plugin_message {
+  position: relative;
+  width: auto;
+  }
+
+ .plugin_page_navigation  { 
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 300px;
+  }
+
+     
+.plugin_message_details {
+  position: right;
+  width: auto;
+  margin: 1px 1px; 
+  padding: 2px;
+  text-align: right;
+}
+
+.news_broadcast {
+
+  position: relative;
+  display: block;
+  width: 550px;
+  margin: 30px 0px; 
+  padding: 10px 0px;
+  text-align: left;
+  border-style:none;
+  border-bottom-style:dotted;
+  border-width:5px;
+
+  iframe, h1, h2 {
+   margin: 0px 0px 35px 0px;
+  }
+  h3 {
+   margin: 0px 0px 35px 5px;
+  }
+  h4 {
+   margin: 5px 0px;
+  }
+
+      h1 { 
+    font-family: 'UbuntuBold';
+    font-size: 2em; }
+      h2 {
+  font-family: 'UbuntuBold';
+    font-size: 1.5em; }
+      h3,h4 {
+  font-family: 'UbuntuBold';
+    font-size: 1em; }
+     
+
+}
+
+ .inLine {
+    margin: 5px 10px;
+    float: left;
+    text-align: center; 
+
+    h2 {
+      font-size: 2em;
+       }
+ }
+
+.img-rounded {
+  -webkit-border-radius: 6px;
+     -moz-border-radius: 6px;
+          border-radius: 6px;
+}
+
+.people {
+    width: 300px;
+    height: 300px;
+}
+
+    }
+}

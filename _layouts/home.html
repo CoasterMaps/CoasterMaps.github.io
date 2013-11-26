@@ -1,0 +1,25 @@
+---
+layout: default
+page: home
+name: Home
+tabs:
+    - name: welcome
+      text: Welcome
+      href: /
+---
+
+  <div id="header">
+            <div>
+                <a href="/"><img src="/images/logo.jpg" alt="Logo" title="Logo" /></a>
+
+                <ul class="nav_links">
+                    <li><a href="/google/" class="{% if page.page == 'home'%}active{% endif %}">Create custom map</a></li>
+                    <li><a href="/aboutus/" class="{% if page.page == 'aboutus'%}active{% endif %}">About Us</a></li>
+                    <li><a href="/globalmap/" class="{% if page.page == 'gaming'%}active{% endif %}">Global Map</a></li>
+                </ul>
+            </div>
+
+       </div>
+
+       
+{{ content }}
