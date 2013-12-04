@@ -42,6 +42,7 @@
     strokeOpacity: 1.0,
     strokeWeight: 3
   };
+  
   var polyOptions2 = {
           strokeColor: '#000000',
     strokeOpacity: 1.0,
@@ -70,7 +71,6 @@
     initializeButtons();
 
     initializeVariables();
-
 
     // If Google Map exist
     if(typeof localStorage.gmapZoom !== 'undefined') getBMap(savedGMapLat, savedGMapLong, savedGMapZoom);
