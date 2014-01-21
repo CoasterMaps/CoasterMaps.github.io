@@ -23,23 +23,40 @@
 
         <script type="text/javascript" src="/js/all.js"></script>
 
+        <script src="http://d3lp1msu2r81bx.cloudfront.net/kjs/js/lib/kinetic-v5.0.0.min.js"></script>
+
+        <style type="text/css">
+
+        #map-canvas {
+        height: 100%;
+        position: absolute;
+        top: 0;
+       
+        left: 0;
+        right: 0;
+        z-index: 0;
+      }
+
+      #container {
+        margin-left: 60px;
+        
+        height: 100%;
+        width: 85%;
+        z-index: 100;
+        position: relative;
+      }
+      
+    </style>
+
     </head>
 
 
        <div id="contents">
-        <body onload="initializeGoogle();">
-	<div class="map_holderGoogle" >
-		<div id="googleMap"></div>
-		<ul id="tabs" class="nav_links">
-			<a href="/google/"><li><img height="35px" src="/images/googlemaps.png"/></li></a>
-			<a href="/bing/"><li><img height="35px" src="/images/bing.png"/></li></a>
-		</ul>
-	</div>
-
-	<div>
-                <input onclick = "lineListenerOnGMap();" type=button value = "Add shape"/>
-                <input onclick = "tagListenerOnGMap();" type = button value = "Add Annotation"/>
-    </div>
+        <body onload="SetEasel();">
+	
+    <div id="container"></div>
+   
+    <div id="map-canvas"/> 
 
 </body>
        </div>
