@@ -1,5 +1,4 @@
 
-
 function BingMap()
 {
     
@@ -26,7 +25,7 @@ function BingMap()
       this.mapZoom = savedZoom;
 
       var mapOptions = {
-      credentials: 'AveOyi7oVuY5IQ3tIs_9ow7f0MePq1XgB3hXC84OAJ9dCxZ3H9dcDq4VdkAJyIie',
+      credentials: 'AvO9xIw_2cNwan6bWuRDDjX1wTVLoXOXcVLTglL-ZrvRWN9KTqYynA6fsBcpvqOw',
       center: new Microsoft.Maps.Location(savedLat,savedLong),
       mapTypeId: Microsoft.Maps.MapTypeId.birdseye,
       zoom: savedZoom,
