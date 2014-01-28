@@ -9651,6 +9651,38 @@ var globVar = 0;
       //savedPoint = projection;
 
 
+var geoLocationSaved;
+
+function zoomIn() {
+  globalMap.setZoom(globalMap.getZoom()+1);
+}
+function zoomOut() {
+  globalMap.setZoom(globalMap.getZoom()-1);
+}
+    function fromLatLngToPoint(latLng, map) {
+    
+      var topRight = map.getProjection().fromLatLngToPoint(map.getBounds().getNorthEast());
+      var bottomLeft = map.getProjection().fromLatLngToPoint(map.getBounds().getSouthWest());
+      var scale = Math.pow(2, map.getZoom());
+      var worldPoint = map.getProjection().fromLatLngToPoint(latLng);
+
+      return new google.maps.Point((worldPoint.x - bottomLeft.x) * scale, (worldPoint.y - topRight.y) * scale);
+    }
+
+    function fromPointToLatLng(point, map) {
+
+      var topRight = map.getProjection().fromLatLngToPoint(map.getBounds().getNorthEast());
+      var bottomLeft = map.getProjection().fromLatLngToPoint(map.getBounds().getSouthWest());
+      var scale = Math.pow(2, map.getZoom());
+      
+      var worldPoint = map.getProjection().fromPointToLatLng(
+        new google.maps.Point(Math.floor(point.x/scale+bottomLeft.x), Math.floor(point.y/scale+topRight.y)));
+
+
+      return worldPoint;
+    }
+
+
 function Events(inputMap, inputOverlay)
 {
   this.googleMap = inputMap;
@@ -9663,119 +9695,112 @@ function Events(inputMap, inputOverlay)
      
 		//this.initialPositionX = 0;
     //this.initialPositionY = 0;
+
+
+
+
+google.maps.event.addListenerOnce(globalMap, 'idle', function(){
+  
+
+  var currentHexPoint = new google.maps.Point(blueHex.getAbsolutePosition().x, blueHex.getAbsolutePosition().y);
+
+
+  var hexGeo = fromPointToLatLng(currentHexPoint, globalMap);
+  geoLocationSaved = hexGeo;
+
+  initialZoom = globalMap.getZoom();
+  //window.alert("lat=" + hexGeo.lat() + "long=" + hexGeo.lng());
+
+});
+
+
+
+
+
     google.maps.event.addListener(globalMap, 'click', function(event) {
-      //window.alert("hi0");
-      //var projection = globalMap.getProjection();
-      //savedPoint = projection.fromLatLngToPoint(this.point);
-       
-       // var initLatLong1 = globalMap.getCenter();            
-      //  var pixelpointCenter = globalMap.getProjection().fromLatLngToPoint(initLatLong1);
+      
 
       var mouseLocation = event.latLng;
 
-       var numTiles = 1 << globalMap.getZoom();
-       var worldCoordinate = globalMap.getProjection().fromLatLngToPoint(glovalMap.getCenter());
+      var northEastCoord = globalMap.getBounds().getNorthEast();
+      var southWestCoord = globalMap.getBounds().getSouthWest();
 
-       var pixelCoordinate = new google.maps.Point(
-        worldCoordinate.x * numTiles,
-        worldCoordinate.y * numTiles);
-  
-       var tileCoordinate = new google.maps.Point(
-        Math.floor(pixelCoordinate.x / 256),
-        Math.floor(pixelCoordinate.y / 256));
+      var northEastPoint = globalMap.getProjection().fromLatLngToPoint(northEastCoord);
+      var southWestPoint = globalMap.getProjection().fromLatLngToPoint(southWestCoord);
+
+      var actualpixelMouse = fromLatLngToPoint(mouseLocation, globalMap);
  
- 
-       //window.alert("worldCoordinate: x="+worldCoordinate.x+" y="+worldCoordinate.y);
-       //window.alert("pixelCoordinate: x="+pixelCoordinate.x+" y="+pixelCoordinate.y);
-       window.alert("tileCoordinate: x="+tileCoordinate.x+" y="+tileCoordinate.y);
+      window.alert("worldCoordinate: x="+Math.floor(actualpixelMouse.x)+" y="+Math.floor(actualpixelMouse.y));
 
+       //blueHex.setAbsolutePosition(Math.floor(actualpixelMouse.x));
 
-          //var LatiLongi = globalMap.getProjection().fromPointToLatLng(point);
-     
+      blueHex.x(Math.floor(actualpixelMouse.x));
+      blueHex.y(Math.floor(actualpixelMouse.y));
+       
+
+      staticLayer.add(blueHex);
+      stage.add(staticLayer);
+
     });
+
+
+
 
 
 
     google.maps.event.addListener(globalMap, 'zoom_changed', function(event){
+     
 
-//point = 
+      var actualpixelMouse = fromLatLngToPoint(geoLocationSaved, globalMap);
+ 
 
-      
+      blueHex.x(Math.floor(actualpixelMouse.x));
+      blueHex.y(Math.floor(actualpixelMouse.y));
 
-      // zoom level change
-    
-    //     blueHex.setRadius(blueHex.getRadius()*zoom/lastZoom);
-      
-       //window.alert("equals="+oldpixelX * pow(2,zoom) / pow(2,lastZoom));
+
+      blueHex.setRadius(blueHex.getRadius()*(Math.pow(2,globalMap.getZoom()) / Math.pow(2,initialZoom) ));
+      //else blueHex.setRadius(blueHex.getRadius()*globalMap.getZoom());
+      //if (initialZoom>globalMap.getZoom())
+
+
+      initialZoom = globalMap.getZoom();
 
        
 
-      blueHex.setX(globalMap.getProjection().fromLatLngToPoint(worldpixelX));
+      staticLayer.add(blueHex);
+      stage.add(staticLayer);
+          
 
-      blueHex.setY(globalMap.getProjection().fromLatLngToPoint(worldpixelY));
+      //blueHex.setX(globalMap.getProjection().fromLatLngToPoint(worldpixelX));
+
+      //blueHex.setY(globalMap.getProjection().fromLatLngToPoint(worldpixelY));
 
 
-       //savedPoint = globalMap.getProjection().fromLatLngToPoint(globalMap.getCenter());
 
-       //lastZoom = zoom;
-
-       //staticLayer.add(blueHex);
-       //stage.add(staticLayer);*/
-       //window.alert("layer scale = "+);
-
-       if (globVar===0) {
-          savedPoint = globalMap.getCenter();
-          globVar=1;
-       }
+     //  if (globVar===0) {
+     //     savedPoint = globalMap.getCenter();
+     //     globVar=1;
+     //  }
       
-      worldpixelX = blueHex.getAbsolutePosition().x;
+      //worldpixelX = blueHex.getAbsolutePosition().x;
      
 
+      //window.alert("hi");
 
-      //var mousepixelpoint =  globalMap.getCenter();
-
-      //var LatiLongi = globalMap.getProjection().fromPointToLatLng(mousepixelpoint);
-
-     //window.alert("diff lat=" + (savedPoint.lat()-mousepixelpoint.lat()) + " lng=" + (savedPoint.lng()-mousepixelpoint.lng()) );
-
-   //   savedPoint = mousepixelpoint;
-
-       window.alert("hi");
-
-      var container = document.getElementById('container');
-      window.alert("left=" + $(container).offset().left + " top=" + $(container).offset().top + " right=" + $(container).offset().right);
-
-       var map = document.getElementById('map-canvas');
-      window.alert("left=" + $(map).offset().left + " top=" + $(map).offset().top + " right=" + $(map).offset().right);
-
+      //var container = document.getElementById('container');
+      //window.alert("left=" + $(container).offset().left + " top=" + $(container).offset().top + " right=" + $(container).offset().right);
 
        //var map = document.getElementById('map-canvas');
-     // window.alert(map.style.top.toString());
+      //window.alert("left=" + $(map).offset().left + " top=" + $(map).offset().top + " right=" + $(map).offset().right);
 
 
+      // window.alert("lat=" +geoLocationSaved.lat() + "long=" + geoLocationSaved.lng());
 
-       //blueHex.setX(worldpixelX*Math.pow(2,zoom));
-       //blueHex.setY(worldpixelY*Math.pow(2,zoom));
-      // staticLayer.add(blueHex);
-       //stage.add(staticLayer);
-
-/*try with layers
-
-       var zoomAmount =  Math.pow(2,zoom)/Math.pow(2,lastZoom);
-
-          // window.alert("layer scale = "+staticLayer.getScale().x);
-          staticLayer.scaleX(staticLayer.scaleX()*zoomAmount);
-          staticLayer.scaleY(staticLayer.scaleY()*zoomAmount);
-      
-
-       lastZoom=zoom;
-       //staticLayer.draw();
-       stage.add(staticLayer);
-      //  window.alert("layer scale = "+staticLayer.getScale().x);
-
-      */
 
     });
+
+
+
         
      
     this.overlay.getStage().getContent().addEventListener('mousedown', function(event){
@@ -9895,14 +9920,15 @@ var worldpixelY;
 var pixelpoint;
 
 
+
 function Overlay()
 {
- 
+
 	 this.setStage = function() {
 
 	   this.stage = new Kinetic.Stage({
 	   		container: 'container',
-	   		width: $(window).width()-210,
+	   		width: $(window).width()-200,
 	   		height: $(window).height(),
 	   		draggable: true
 	   	});
@@ -9929,41 +9955,15 @@ function Overlay()
 
       stage = this.stage;
       staticLayer=this.staticLayer;
+
+
+
+
+   
+
+
       
-     // pixelpointX = (60+staticLayer.getAbsolutePosition().x+stage.getAbsolutePosition().x + blueHex.getAbsolutePosition().x) / Math.pow(2, globalMap.getZoom());// / Math.pow(2,zoom);
-     // var pixelpointY = (staticLayer.getAbsolutePosition().y + stage.getAbsolutePosition().y + blueHex.getAbsolutePosition().y) / Math.pow(2, globalMap.getZoom());// / Math.pow(2,zoom);
-
-      //pixelpoint = new google.maps.Point(pixelpointX, pixelpointY);
-
-
-
-/*      var numTiles = 1 << globalMap.getZoom();
-      window.alert("hi");
-
-      var worldCoordinate = globalMap.getProjection().fromLatLngToPoint(globalMap.getCenter());
-
-       window.alert("hi");
-
-      var pixelCoordinate = new google.maps.Point(
-        worldCoordinate.x * numTiles,
-        worldCoordinate.y * numTiles);
-  
-      var tileCoordinate = new google.maps.Point(
-        Math.floor(pixelCoordinate.x / 256),
-        Math.floor(pixelCoordinate.y / 256)); 
-
-
-var pointOnMap = new google.maps.Point(tileCoordinate.x + blueHex.getAbsolutePosition().x / Math.pow(2, globalMap.getZoom()), 
-  tileCoordinate.y + blueHex.getAbsolutePosition().y / Math.pow(2, globalMap.getZoom())); 
-
-
-      pointLatLng = globalMap.getProjection().fromPointToLatLng(pointOnMap); the last*/
-
-      //worldpixelY = globalMap.getProjection().fromPointToLatLng();
-
-    //  window.alert("lat="+pointLatLng.lat() + " lng="+pointLatLng.lng());
-
-     // saveLatLong = globalMap.getProjection().fromPointToLatLng(worldpixelX);
+     
 
       this.yellowHex = new Kinetic.RegularPolygon({
         x: this.stage.width()/2,
