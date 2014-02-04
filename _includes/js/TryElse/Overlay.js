@@ -7,7 +7,8 @@ var worldpixelY;
 
 var pixelpoint;
 
-
+// note
+var tooltip;
 
 function Overlay()
 {
@@ -30,16 +31,7 @@ function Overlay()
        * at the default which is at the center
        * of the hexagon
        */
-      blueHex = new Kinetic.RegularPolygon({
-        x: 100,
-        y: this.stage.height()/2,
-        sides: 6,
-        radius: 70,
-        fill: '#00D2FF',
-        stroke: 'black',
-        strokeWidth: 4,
-        draggable: true
-      });
+     
 
       stage = this.stage;
       staticLayer=this.staticLayer;
@@ -47,52 +39,36 @@ function Overlay()
 
 
 
-   
 
+       // tooltip
+      tooltip = new Kinetic.Label({
+        x: 170,
+        y: 75,
+        opacity: 0.75
+      });
+
+      tooltip.add(new Kinetic.Tag({
+        fill: 'black',
+        pointerDirection: 'down',
+        pointerWidth: 10,
+        pointerHeight: 10,
+        lineJoin: 'round',
+        shadowColor: 'black',
+        shadowBlur: 10,
+        shadowOffset: {x:10,y:20},
+        shadowOpacity: 0.5
+      }));
+      
+      tooltip.add(new Kinetic.Text({
+        text: 'Tooltip pointing down',
+        fontFamily: 'Calibri',
+        fontSize: 18,
+        padding: 5,
+        fill: 'white'
+      }));
 
       
      
-
-      this.yellowHex = new Kinetic.RegularPolygon({
-        x: this.stage.width()/2,
-        y: this.stage.height()/2,
-        sides: 6,
-        radius: 70,
-        fill: 'yellow',
-        stroke: 'black',
-        strokeWidth: 4,
-        draggable: true
-      });
-
-      /*
-       * move center point to right side
-       * of hexagon
-       */
-      this.redHex = new Kinetic.RegularPolygon({
-        x: 470,
-        y: this.stage.height()/2,
-        sides: 6,
-        radius: 70,
-        fill: 'red',
-        stroke: 'black',
-        strokeWidth: 4,
-        offset: {
-          x: 70,
-          y: 0
-        },
-        draggable: true
-      });
-      
-
-      this.text = new Kinetic.Text({
-        x: 10,
-        y: 10,
-        text: 'Static Layer',
-        fontSize: '30',
-        fontFamily: 'Calibri',
-        fill: 'black'
-      });
-
 	 }
 
 
@@ -115,10 +91,13 @@ function Overlay()
 
    this.uploadOverlay = function() {
 
-      	this.staticLayer.add(this.text);
-      	this.staticLayer.add(blueHex);
-        this.staticLayer.add(this.yellowHex);
-        this.staticLayer.add(this.redHex);
+      	//this.staticLayer.add(this.text);
+      	//this.staticLayer.add(blueHex);
+        //this.staticLayer.add(this.yellowHex);
+        //this.staticLayer.add(this.redHex);
+
+        this.staticLayer.add(tooltip);
+
         this.stage.add(this.staticLayer);
 
         staticLayer = this.staticLayer;

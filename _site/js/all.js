@@ -9666,10 +9666,12 @@ function zoomOut() {
       var scale = Math.pow(2, map.getZoom());
       var worldPoint = map.getProjection().fromLatLngToPoint(latLng);
 
-      return new google.maps.Point((worldPoint.x - bottomLeft.x) * scale, (worldPoint.y - topRight.y) * scale);
+      return new google.maps.Point((worldPoint.x - bottomLeft.x) * scale-60, (worldPoint.y - topRight.y) * scale);
     }
 
     function fromPointToLatLng(point, map) {
+
+      point.x = point.x +60;
 
       var topRight = map.getProjection().fromLatLngToPoint(map.getBounds().getNorthEast());
       var bottomLeft = map.getProjection().fromLatLngToPoint(map.getBounds().getSouthWest());
@@ -9677,7 +9679,7 @@ function zoomOut() {
       
       var worldPoint = map.getProjection().fromPointToLatLng(
         new google.maps.Point(Math.floor(point.x/scale+bottomLeft.x), Math.floor(point.y/scale+topRight.y)));
-
+//Math.floor(
 
       return worldPoint;
     }
@@ -9702,14 +9704,15 @@ function Events(inputMap, inputOverlay)
 google.maps.event.addListenerOnce(globalMap, 'idle', function(){
   
 
-  var currentHexPoint = new google.maps.Point(blueHex.getAbsolutePosition().x, blueHex.getAbsolutePosition().y);
+  var currentHexPoint = new google.maps.Point(tooltip.getAbsolutePosition().x, tooltip.getAbsolutePosition().y); 
+  //blueHex.getAbsolutePosition().x, blueHex.getAbsolutePosition().y);
 
 
   var hexGeo = fromPointToLatLng(currentHexPoint, globalMap);
   geoLocationSaved = hexGeo;
 
   initialZoom = globalMap.getZoom();
-  //window.alert("lat=" + hexGeo.lat() + "long=" + hexGeo.lng());
+  //window.alert("lat=" + tooltip.getAbsolutePosition().x + "long=" + tooltip.getAbsolutePosition().y);
 
 });
 
@@ -9732,10 +9735,11 @@ google.maps.event.addListenerOnce(globalMap, 'idle', function(){
  
       window.alert("worldCoordinate: x="+Math.floor(actualpixelMouse.x)+" y="+Math.floor(actualpixelMouse.y));
 
-       //blueHex.setAbsolutePosition(Math.floor(actualpixelMouse.x));
+       
+      //blueHex.x(Math.floor(actualpixelMouse.x));
+      //blueHex.y(Math.floor(actualpixelMouse.y));
 
-      blueHex.x(Math.floor(actualpixelMouse.x));
-      blueHex.y(Math.floor(actualpixelMouse.y));
+      blueHex.setAbsolutePosition(actualpixelMouse);
        
 
       staticLayer.add(blueHex);
@@ -9754,49 +9758,18 @@ google.maps.event.addListenerOnce(globalMap, 'idle', function(){
       var actualpixelMouse = fromLatLngToPoint(geoLocationSaved, globalMap);
  
 
-      blueHex.x(Math.floor(actualpixelMouse.x));
-      blueHex.y(Math.floor(actualpixelMouse.y));
-
-
-      blueHex.setRadius(blueHex.getRadius()*(Math.pow(2,globalMap.getZoom()) / Math.pow(2,initialZoom) ));
-      //else blueHex.setRadius(blueHex.getRadius()*globalMap.getZoom());
-      //if (initialZoom>globalMap.getZoom())
-
+     
+      staticLayer.clear();
+      tooltip.setAbsolutePosition(actualpixelMouse);
+      tooltip.draw();
+ 
 
       initialZoom = globalMap.getZoom();
 
        
-
-      staticLayer.add(blueHex);
-      stage.add(staticLayer);
-          
-
-      //blueHex.setX(globalMap.getProjection().fromLatLngToPoint(worldpixelX));
-
-      //blueHex.setY(globalMap.getProjection().fromLatLngToPoint(worldpixelY));
-
-
-
-     //  if (globVar===0) {
-     //     savedPoint = globalMap.getCenter();
-     //     globVar=1;
-     //  }
+     // staticLayer.add(tooltip);
       
-      //worldpixelX = blueHex.getAbsolutePosition().x;
-     
-
-      //window.alert("hi");
-
-      //var container = document.getElementById('container');
-      //window.alert("left=" + $(container).offset().left + " top=" + $(container).offset().top + " right=" + $(container).offset().right);
-
-       //var map = document.getElementById('map-canvas');
-      //window.alert("left=" + $(map).offset().left + " top=" + $(map).offset().top + " right=" + $(map).offset().right);
-
-
-      // window.alert("lat=" +geoLocationSaved.lat() + "long=" + geoLocationSaved.lng());
-
-
+         
     });
 
 
@@ -9919,7 +9892,8 @@ var worldpixelY;
 
 var pixelpoint;
 
-
+// note
+var tooltip;
 
 function Overlay()
 {
@@ -9942,16 +9916,7 @@ function Overlay()
        * at the default which is at the center
        * of the hexagon
        */
-      blueHex = new Kinetic.RegularPolygon({
-        x: 100,
-        y: this.stage.height()/2,
-        sides: 6,
-        radius: 70,
-        fill: '#00D2FF',
-        stroke: 'black',
-        strokeWidth: 4,
-        draggable: true
-      });
+     
 
       stage = this.stage;
       staticLayer=this.staticLayer;
@@ -9959,52 +9924,36 @@ function Overlay()
 
 
 
-   
 
+       // tooltip
+      tooltip = new Kinetic.Label({
+        x: 170,
+        y: 75,
+        opacity: 0.75
+      });
+
+      tooltip.add(new Kinetic.Tag({
+        fill: 'black',
+        pointerDirection: 'down',
+        pointerWidth: 10,
+        pointerHeight: 10,
+        lineJoin: 'round',
+        shadowColor: 'black',
+        shadowBlur: 10,
+        shadowOffset: {x:10,y:20},
+        shadowOpacity: 0.5
+      }));
+      
+      tooltip.add(new Kinetic.Text({
+        text: 'Tooltip pointing down',
+        fontFamily: 'Calibri',
+        fontSize: 18,
+        padding: 5,
+        fill: 'white'
+      }));
 
       
      
-
-      this.yellowHex = new Kinetic.RegularPolygon({
-        x: this.stage.width()/2,
-        y: this.stage.height()/2,
-        sides: 6,
-        radius: 70,
-        fill: 'yellow',
-        stroke: 'black',
-        strokeWidth: 4,
-        draggable: true
-      });
-
-      /*
-       * move center point to right side
-       * of hexagon
-       */
-      this.redHex = new Kinetic.RegularPolygon({
-        x: 470,
-        y: this.stage.height()/2,
-        sides: 6,
-        radius: 70,
-        fill: 'red',
-        stroke: 'black',
-        strokeWidth: 4,
-        offset: {
-          x: 70,
-          y: 0
-        },
-        draggable: true
-      });
-      
-
-      this.text = new Kinetic.Text({
-        x: 10,
-        y: 10,
-        text: 'Static Layer',
-        fontSize: '30',
-        fontFamily: 'Calibri',
-        fill: 'black'
-      });
-
 	 }
 
 
@@ -10027,10 +9976,13 @@ function Overlay()
 
    this.uploadOverlay = function() {
 
-      	this.staticLayer.add(this.text);
-      	this.staticLayer.add(blueHex);
-        this.staticLayer.add(this.yellowHex);
-        this.staticLayer.add(this.redHex);
+      	//this.staticLayer.add(this.text);
+      	//this.staticLayer.add(blueHex);
+        //this.staticLayer.add(this.yellowHex);
+        //this.staticLayer.add(this.redHex);
+
+        this.staticLayer.add(tooltip);
+
         this.stage.add(this.staticLayer);
 
         staticLayer = this.staticLayer;

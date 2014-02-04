@@ -26,10 +26,12 @@ function zoomOut() {
       var scale = Math.pow(2, map.getZoom());
       var worldPoint = map.getProjection().fromLatLngToPoint(latLng);
 
-      return new google.maps.Point((worldPoint.x - bottomLeft.x) * scale, (worldPoint.y - topRight.y) * scale);
+      return new google.maps.Point((worldPoint.x - bottomLeft.x) * scale-60, (worldPoint.y - topRight.y) * scale);
     }
 
     function fromPointToLatLng(point, map) {
+
+      point.x = point.x +60;
 
       var topRight = map.getProjection().fromLatLngToPoint(map.getBounds().getNorthEast());
       var bottomLeft = map.getProjection().fromLatLngToPoint(map.getBounds().getSouthWest());
@@ -37,7 +39,7 @@ function zoomOut() {
       
       var worldPoint = map.getProjection().fromPointToLatLng(
         new google.maps.Point(Math.floor(point.x/scale+bottomLeft.x), Math.floor(point.y/scale+topRight.y)));
-
+//Math.floor(
 
       return worldPoint;
     }
@@ -62,14 +64,15 @@ function Events(inputMap, inputOverlay)
 google.maps.event.addListenerOnce(globalMap, 'idle', function(){
   
 
-  var currentHexPoint = new google.maps.Point(blueHex.getAbsolutePosition().x, blueHex.getAbsolutePosition().y);
+  var currentHexPoint = new google.maps.Point(tooltip.getAbsolutePosition().x, tooltip.getAbsolutePosition().y); 
+  //blueHex.getAbsolutePosition().x, blueHex.getAbsolutePosition().y);
 
 
   var hexGeo = fromPointToLatLng(currentHexPoint, globalMap);
   geoLocationSaved = hexGeo;
 
   initialZoom = globalMap.getZoom();
-  //window.alert("lat=" + hexGeo.lat() + "long=" + hexGeo.lng());
+  //window.alert("lat=" + tooltip.getAbsolutePosition().x + "long=" + tooltip.getAbsolutePosition().y);
 
 });
 
@@ -92,10 +95,11 @@ google.maps.event.addListenerOnce(globalMap, 'idle', function(){
  
       window.alert("worldCoordinate: x="+Math.floor(actualpixelMouse.x)+" y="+Math.floor(actualpixelMouse.y));
 
-       //blueHex.setAbsolutePosition(Math.floor(actualpixelMouse.x));
+       
+      //blueHex.x(Math.floor(actualpixelMouse.x));
+      //blueHex.y(Math.floor(actualpixelMouse.y));
 
-      blueHex.x(Math.floor(actualpixelMouse.x));
-      blueHex.y(Math.floor(actualpixelMouse.y));
+      blueHex.setAbsolutePosition(actualpixelMouse);
        
 
       staticLayer.add(blueHex);
@@ -114,49 +118,18 @@ google.maps.event.addListenerOnce(globalMap, 'idle', function(){
       var actualpixelMouse = fromLatLngToPoint(geoLocationSaved, globalMap);
  
 
-      blueHex.x(Math.floor(actualpixelMouse.x));
-      blueHex.y(Math.floor(actualpixelMouse.y));
-
-
-      blueHex.setRadius(blueHex.getRadius()*(Math.pow(2,globalMap.getZoom()) / Math.pow(2,initialZoom) ));
-      //else blueHex.setRadius(blueHex.getRadius()*globalMap.getZoom());
-      //if (initialZoom>globalMap.getZoom())
-
+     
+      staticLayer.clear();
+      tooltip.setAbsolutePosition(actualpixelMouse);
+      tooltip.draw();
+ 
 
       initialZoom = globalMap.getZoom();
 
        
-
-      staticLayer.add(blueHex);
-      stage.add(staticLayer);
-          
-
-      //blueHex.setX(globalMap.getProjection().fromLatLngToPoint(worldpixelX));
-
-      //blueHex.setY(globalMap.getProjection().fromLatLngToPoint(worldpixelY));
-
-
-
-     //  if (globVar===0) {
-     //     savedPoint = globalMap.getCenter();
-     //     globVar=1;
-     //  }
+     // staticLayer.add(tooltip);
       
-      //worldpixelX = blueHex.getAbsolutePosition().x;
-     
-
-      //window.alert("hi");
-
-      //var container = document.getElementById('container');
-      //window.alert("left=" + $(container).offset().left + " top=" + $(container).offset().top + " right=" + $(container).offset().right);
-
-       //var map = document.getElementById('map-canvas');
-      //window.alert("left=" + $(map).offset().left + " top=" + $(map).offset().top + " right=" + $(map).offset().right);
-
-
-      // window.alert("lat=" +geoLocationSaved.lat() + "long=" + geoLocationSaved.lng());
-
-
+         
     });
 
 
