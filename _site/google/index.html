@@ -44,6 +44,14 @@
         position: relative;
       }
 
+       #cancel-tool {
+        margin-top: 50px;
+        width:100px;
+        position: absolute;
+        right:5px;
+        z-index: 100;
+      }
+
       #annotation-tool {
         margin-top: 100px;
         width:100px;
@@ -58,6 +66,21 @@
         right:5px;
         z-index: 100;
       }
+      #text-debug {
+        margin-top: 300px;
+        width:100px;
+        position: absolute;
+        right:5px;
+        z-index: 100;
+      }
+
+       #text-debug2 {
+        margin-top: 450px;
+        width:100px;
+        position: absolute;
+        right:5px;
+        z-index: 100;
+      }
       
     </style>
 
@@ -67,10 +90,15 @@
        <div id="contents">
         <body onload="SetEasel();">
 	
+    <button id="cancel-tool" type="button">Cancel!</button> 
 
     <button id="line-tool" type="button">Draw Line!</button> 
 
     <button id="annotation-tool" type="button">Draw Annotation!</button> 
+
+    <div id="text-debug">Title</div> 
+     <div id="text-debug2">Title</div> 
+   
     
     
     <div id="container"></div>

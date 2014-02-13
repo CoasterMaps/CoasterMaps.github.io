@@ -32,43 +32,8 @@ function Overlay()
        * of the hexagon
        */
      
-
       stage = this.stage;
-      staticLayer=this.staticLayer;
-
-
-
-
-
-       // tooltip
-      tooltip = new Kinetic.Label({
-        x: 170,
-        y: 75,
-        opacity: 0.75
-      });
-
-      tooltip.add(new Kinetic.Tag({
-        fill: 'black',
-        pointerDirection: 'down',
-        pointerWidth: 10,
-        pointerHeight: 10,
-        lineJoin: 'round',
-        shadowColor: 'black',
-        shadowBlur: 10,
-        shadowOffset: {x:10,y:20},
-        shadowOpacity: 0.5
-      }));
-      
-      tooltip.add(new Kinetic.Text({
-        text: 'Tooltip pointing down',
-        fontFamily: 'Calibri',
-        fontSize: 18,
-        padding: 5,
-        fill: 'white'
-      }));
-
-      
-     
+      staticLayer=this.staticLayer;     
 	 }
 
 
@@ -91,17 +56,54 @@ function Overlay()
 
    this.uploadOverlay = function() {
 
-      	//this.staticLayer.add(this.text);
-      	//this.staticLayer.add(blueHex);
-        //this.staticLayer.add(this.yellowHex);
-        //this.staticLayer.add(this.redHex);
+      var arrayToolTip = toolTips.returnArray();
+   
+    //window.alert("hi2 "+arrayToolTip.length);
 
-        this.staticLayer.add(tooltip);
+    this.staticLayer.clear();
 
-        this.stage.add(this.staticLayer);
+      for (var i=0; i<arrayToolTip.length; i++) {
 
-        staticLayer = this.staticLayer;
-        stage = this.stage;
+        this.staticLayer.add(arrayToolTip[i][0].draw());
+      }
+
+
+      this.stage.add(this.staticLayer);
+
+     // staticLayer.clear();
+     // tooltip.setAbsolutePosition(actualpixelMouse);
+      
+      staticLayer = this.staticLayer;
+      stage = this.stage;
+    }
+
+
+    this.uploadNextObject = function() {
+
+      var arrayToolTip = toolTips.returnArray();
+      var latestPosition = toolTips.returnCounter() - 1;
+    
+      this.staticLayer.add(arrayToolTip[latestPosition][0]);
+
+      this.stage.clear();
+      this.stage.add(this.staticLayer);
+      
+      staticLayer = this.staticLayer;
+      stage = this.stage;
+    }
+
+
+    this.uploadLastLine = function() {
+
+      //var arrayToolTip = toolTips.returnArray();
+      //var latestPosition = toolTips.returnCounter() - 1;
+      this.staticLayer.add(lines.getLastLine());
+
+      this.stage.clear();
+      this.stage.add(this.staticLayer);
+      
+      staticLayer = this.staticLayer;
+      stage = this.stage;
     }
 	
 }

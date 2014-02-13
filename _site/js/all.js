@@ -9638,207 +9638,169 @@ google.loader.rpl({":scriptaculous":{"versions":{":1.8.3":{"uncompressed":"scrip
 }
 
 
-var initialPositionX =0;
-var initialPositionY = 0;
 var initialZoom=0;
 
-var lastZoom=8;
-//var lastLat;
-//var last
+var mapLayerState = new MapLayerState();
 
-var savedPoint;
-var globVar = 0;
-      //savedPoint = projection;
+var line = 0;
+var annot = 0;
 
-
-var geoLocationSaved;
-
-function zoomIn() {
-  globalMap.setZoom(globalMap.getZoom()+1);
-}
-function zoomOut() {
-  globalMap.setZoom(globalMap.getZoom()-1);
-}
-    function fromLatLngToPoint(latLng, map) {
-    
-      var topRight = map.getProjection().fromLatLngToPoint(map.getBounds().getNorthEast());
-      var bottomLeft = map.getProjection().fromLatLngToPoint(map.getBounds().getSouthWest());
-      var scale = Math.pow(2, map.getZoom());
-      var worldPoint = map.getProjection().fromLatLngToPoint(latLng);
-
-      return new google.maps.Point((worldPoint.x - bottomLeft.x) * scale-60, (worldPoint.y - topRight.y) * scale);
-    }
-
-    function fromPointToLatLng(point, map) {
-
-      point.x = point.x +60;
-
-      var topRight = map.getProjection().fromLatLngToPoint(map.getBounds().getNorthEast());
-      var bottomLeft = map.getProjection().fromLatLngToPoint(map.getBounds().getSouthWest());
-      var scale = Math.pow(2, map.getZoom());
-      
-      var worldPoint = map.getProjection().fromPointToLatLng(
-        new google.maps.Point(Math.floor(point.x/scale+bottomLeft.x), Math.floor(point.y/scale+topRight.y)));
-//Math.floor(
-
-      return worldPoint;
-    }
 
 
 function Events(inputMap, inputOverlay)
 {
+
   this.googleMap = inputMap;
   this.overlay = inputOverlay;
+ 
+$("#cancel-tool").click(function(){
+    annot=0;
+    line=0;
+});
 
-	this.setListeners = function() {
+$("#line-tool").click(function(){
+    annot=0;
+    line=1;
+});
 
-     
-		initialZoom = this.googleMap.getMap().getZoom();
-     
-		//this.initialPositionX = 0;
-    //this.initialPositionY = 0;
-
-
-
-
-google.maps.event.addListenerOnce(globalMap, 'idle', function(){
-  
-
-  var currentHexPoint = new google.maps.Point(tooltip.getAbsolutePosition().x, tooltip.getAbsolutePosition().y); 
-  //blueHex.getAbsolutePosition().x, blueHex.getAbsolutePosition().y);
-
-
-  var hexGeo = fromPointToLatLng(currentHexPoint, globalMap);
-  geoLocationSaved = hexGeo;
-
-  initialZoom = globalMap.getZoom();
-  //window.alert("lat=" + tooltip.getAbsolutePosition().x + "long=" + tooltip.getAbsolutePosition().y);
-
+$("#annotation-tool").click(function(){
+    annot=1;
+    line=0;
 });
 
 
+this.setListeners = function() {
+
+     
+	initialZoom = this.googleMap.getMap().getZoom();
 
 
+  google.maps.event.addListenerOnce(globalMap, 'idle', function(){
 
-    google.maps.event.addListener(globalMap, 'click', function(event) {
-      
+    var mapLayer = new MapLayer();
 
-      var mouseLocation = event.latLng;
-
-      var northEastCoord = globalMap.getBounds().getNorthEast();
-      var southWestCoord = globalMap.getBounds().getSouthWest();
-
-      var northEastPoint = globalMap.getProjection().fromLatLngToPoint(northEastCoord);
-      var southWestPoint = globalMap.getProjection().fromLatLngToPoint(southWestCoord);
-
-      var actualpixelMouse = fromLatLngToPoint(mouseLocation, globalMap);
- 
-      window.alert("worldCoordinate: x="+Math.floor(actualpixelMouse.x)+" y="+Math.floor(actualpixelMouse.y));
-
-       
-      //blueHex.x(Math.floor(actualpixelMouse.x));
-      //blueHex.y(Math.floor(actualpixelMouse.y));
-
-      blueHex.setAbsolutePosition(actualpixelMouse);
-       
-
-      staticLayer.add(blueHex);
-      stage.add(staticLayer);
+    var currentHexPoint = new google.maps.Point(tooltip.getAbsolutePosition().x, tooltip.getAbsolutePosition().y); 
+    var hexGeo = mapLayer.fromPointToLatLng(currentHexPoint, globalMap);
+    initialZoom = globalMap.getZoom();
 
     });
 
 
 
+    google.maps.event.addListener(globalMap, 'zoom_changed', function(event){ 
 
 
-
-    google.maps.event.addListener(globalMap, 'zoom_changed', function(event){
-     
-
-      var actualpixelMouse = fromLatLngToPoint(geoLocationSaved, globalMap);
- 
-
-     
+      var mapLayer = new MapLayer();     
       staticLayer.clear();
-      tooltip.setAbsolutePosition(actualpixelMouse);
-      tooltip.draw();
- 
+      var arrayToolTip = toolTips.returnArray();
+    
+      for (var i=0; i<arrayToolTip.length; i++) {
+
+        var actualpixelMouse = mapLayer.fromLatLngToPoint(arrayToolTip[i][1], globalMap); //geoLocationSaved
+
+        // new
+        //actualpixelMouse.x += mapLayerState.getDiffX(); //-60
+        //actualpixelMouse.y += mapLayerState.getDiffY();    
+
+      
+        arrayToolTip[i][0].setAbsolutePosition(actualpixelMouse);
+        arrayToolTip[i][0].draw();
+      }
 
       initialZoom = globalMap.getZoom();
 
-       
-     // staticLayer.add(tooltip);
-      
-         
     });
 
-
-
-        
+   
      
     this.overlay.getStage().getContent().addEventListener('mousedown', function(event){
+
+        mapLayerState.setInitialPosition(event.clientX, event.clientY);
+      
+        if (annot===1) {
+
+          toolTips.addToolTip(event.clientX, event.clientY);
+          overlay.uploadNextObject();
+        }
          
-        initialPositionX = event.clientX;
-        initialPositionY = event.clientY;
+        if (line>0) {
+
+          if (line===1) {
+            lines.newRedLine();
+            line++;
+          }
+
+          lines.getLastLine().points(lines.getLastLine().points().concat([mapLayerState.getInitPosX()-60, mapLayerState.getInitPosY()]));
+          overlay.uploadLastLine();
+        }
+
     });
      
 
     this.overlay.getStage().getContent().addEventListener('mouseup', function(event){
-
-        initialPositionX = 0;
-        initialPositionY = 0;
+            
+      mapLayerState.setInitialPosition(0,0);
     });
 
     
 		
     this.overlay.getStage().getContent().addEventListener('mousemove', function(event){ 
 
+
+    var currentLayerPoint = new google.maps.Point(Math.floor(event.clientX), Math.floor(event.clientY)); 
+    var mapLayer = new MapLayer();
+    var curGeoPoint = mapLayer.fromPointToLatLng(currentLayerPoint, globalMap);
+
+
+    document.getElementById("text-debug2").innerHTML = "mouse move| loc lat:"+curGeoPoint.lat()+" lng:"+curGeoPoint.lng();
+
+  
+
+
+      var arrayToolTip = toolTips.returnArray();
+      if ((typeof arrayToolTip !== 'undefined') && (arrayToolTip.length!==0)) {
+
+       var mapLayer = new MapLayer();     
       
-          var zoom = globalMap.getZoom();
+       //window.alert("hi"+arrayToolTip.length);
 
-          var mousePositionX = (event.clientX+60) / Math.pow(2,zoom);
-          var mousePositionY = event.clientY / Math.pow(2,zoom);
-
-
-          var initLatLong1 = globalMap.getCenter();            
-          var pixelpointCenter = globalMap.getProjection().fromLatLngToPoint(initLatLong1);
-          
-          //pixelpoint.x = pixelpoint.x + (initialPositionX - finalPositionX) / Math.pow(2,zoom);   
-
-          var point = new google.maps.Point((event.clientX+60)/Math.pow(2,zoom), event.clientY/Math.pow(2,zoom));
-
-          //window.alert("center.x="+pixelpointCenter.x+" center.y="+pixelpointCenter.y+" point.x="+point.x+" point.y="+point.y);    
+       var actualpixelMouse = mapLayer.fromLatLngToPoint(arrayToolTip[0][1], globalMap); //geoLocationSaved
 
 
-          var LatiLongi = globalMap.getProjection().fromPointToLatLng(point);
+       actualpixelMouse.x = actualpixelMouse.x - 60 + mapLayerState.getDiffX();
+       actualpixelMouse.y = actualpixelMouse.y + mapLayerState.getDiffY();    
+   
+       //window.alert("hi");
+ 
+      }
 
-         //window.alert("centerlat="+initLatLong1.lat()+" centerlng="+initLatLong1.lng()+" mouselat="+LatiLongi.lat()+" mouselng="+LatiLongi.lng());
 
 
-     
+     if ((mapLayerState.getInitPosX() !== 0) && (mapLayerState.getInitPosY() !== 0)) {
 
-       if ((initialPositionX !== 0) && (initialPositionY !== 0)){
+          var mapLayer = new MapLayer();
 
           var finalPositionX = event.clientX;
           var finalPositionY = event.clientY;
+
             
           var initLatLong = globalMap.getCenter();
-            
           var pixelpoint = globalMap.getProjection().fromLatLngToPoint(initLatLong);
           var zoom = globalMap.getZoom();
 
             
-          pixelpoint.x = pixelpoint.x + (initialPositionX - finalPositionX) / Math.pow(2,zoom);
-          pixelpoint.y = pixelpoint.y + (initialPositionY - finalPositionY) / Math.pow(2,zoom);
+          pixelpoint.x = pixelpoint.x + (mapLayerState.getInitPosX() - finalPositionX) / Math.pow(2,zoom);
+          pixelpoint.y = pixelpoint.y + (mapLayerState.getInitPosY() - finalPositionY) / Math.pow(2,zoom);
 
           var newpoint = globalMap.getProjection().fromPointToLatLng(pixelpoint);
            
           globalMap.setCenter(newpoint);
 
-          initialPositionX = finalPositionX;
-          initialPositionY = finalPositionY;  
+          mapLayerState.setDiff(mapLayerState.getDiffX()+mapLayerState.getInitPosX()-finalPositionX, 
+            mapLayerState.getDiffY()+mapLayerState.getInitPosY()-finalPositionY);
 
-        }
+          mapLayerState.setInitialPosition(finalPositionX, finalPositionY);
+      }
 
     }); 
 
@@ -9917,43 +9879,8 @@ function Overlay()
        * of the hexagon
        */
      
-
       stage = this.stage;
-      staticLayer=this.staticLayer;
-
-
-
-
-
-       // tooltip
-      tooltip = new Kinetic.Label({
-        x: 170,
-        y: 75,
-        opacity: 0.75
-      });
-
-      tooltip.add(new Kinetic.Tag({
-        fill: 'black',
-        pointerDirection: 'down',
-        pointerWidth: 10,
-        pointerHeight: 10,
-        lineJoin: 'round',
-        shadowColor: 'black',
-        shadowBlur: 10,
-        shadowOffset: {x:10,y:20},
-        shadowOpacity: 0.5
-      }));
-      
-      tooltip.add(new Kinetic.Text({
-        text: 'Tooltip pointing down',
-        fontFamily: 'Calibri',
-        fontSize: 18,
-        padding: 5,
-        fill: 'white'
-      }));
-
-      
-     
+      staticLayer=this.staticLayer;     
 	 }
 
 
@@ -9976,49 +9903,310 @@ function Overlay()
 
    this.uploadOverlay = function() {
 
-      	//this.staticLayer.add(this.text);
-      	//this.staticLayer.add(blueHex);
-        //this.staticLayer.add(this.yellowHex);
-        //this.staticLayer.add(this.redHex);
+      var arrayToolTip = toolTips.returnArray();
+   
+    //window.alert("hi2 "+arrayToolTip.length);
 
-        this.staticLayer.add(tooltip);
+    this.staticLayer.clear();
 
-        this.stage.add(this.staticLayer);
+      for (var i=0; i<arrayToolTip.length; i++) {
 
-        staticLayer = this.staticLayer;
-        stage = this.stage;
+        this.staticLayer.add(arrayToolTip[i][0].draw());
+      }
+
+
+      this.stage.add(this.staticLayer);
+
+     // staticLayer.clear();
+     // tooltip.setAbsolutePosition(actualpixelMouse);
+      
+      staticLayer = this.staticLayer;
+      stage = this.stage;
+    }
+
+
+    this.uploadNextObject = function() {
+
+      var arrayToolTip = toolTips.returnArray();
+      var latestPosition = toolTips.returnCounter() - 1;
+    
+      this.staticLayer.add(arrayToolTip[latestPosition][0]);
+
+      this.stage.clear();
+      this.stage.add(this.staticLayer);
+      
+      staticLayer = this.staticLayer;
+      stage = this.stage;
+    }
+
+
+    this.uploadLastLine = function() {
+
+      //var arrayToolTip = toolTips.returnArray();
+      //var latestPosition = toolTips.returnCounter() - 1;
+      this.staticLayer.add(lines.getLastLine());
+
+      this.stage.clear();
+      this.stage.add(this.staticLayer);
+      
+      staticLayer = this.staticLayer;
+      stage = this.stage;
     }
 	
 }
 
 
-//google.maps.event.addDomListener(window, 'load', initialize);
+var overlay; 
+var toolTips;
+ var lines;
 
 function SetEasel() {
 	
 
-    var googleMap = new GoogleMap();
-    googleMap.initialize();
+  var googleMap = new GoogleMap();
+  googleMap.initialize();
 
-	var overlay = new Overlay();
+	overlay = new Overlay();
 
 
+
+  toolTips = new ToolTips();
+  toolTips.initArray();
+
+  lines = new Lines();
+  lines.initArray();
+
+  //toolTips.addToolTip(170,75);
+  
 
 	overlay.setStage();
 
+
 	overlay.uploadOverlay();
 	
-	//google.maps.event.addListenerOnce(googleMap.getMap(), 'idle', function(){
-    //loaded fully
-    var eventListener = new Events(googleMap,overlay);
-    eventListener.setListeners();
-	//window.alert("hi2");
-//});
 
-	
+	var eventListener = new Events(googleMap,overlay);
+    eventListener.setListeners();
+}
+
+function ToolTips()
+{
+   
+
+  this.initArray = function() {
+
+  	this.array = new Array();	
+  	this.counter = 0;
+  }
+
+
+  this.addToolTip = function(x, y) {
+
+    var tooltip = new Kinetic.Label({
+        x: x-60+mapLayerState.getDiffX(),
+        y: y+mapLayerState.getDiffY(),
+        opacity: 0.75
+    });
+
+    tooltip.add(new Kinetic.Tag({
+        fill: 'black',
+        pointerDirection: 'down',
+        pointerWidth: 10,
+        pointerHeight: 10,
+        lineJoin: 'round',
+        shadowColor: 'black',
+        shadowBlur: 10,
+        shadowOffset: {x:10,y:20},
+        shadowOpacity: 0.5
+    }));
+      
+    tooltip.add(new Kinetic.Text({
+        text: 'Tooltip pointing down',
+        fontFamily: 'Calibri',
+        fontSize: 18,
+        padding: 5,
+        fill: 'white'
+    }));
+
+    var mapLayer = new MapLayer();
+    var toolTipGeo = new Array();
     
+
+    toolTipGeo[0]=tooltip;
+    
+    var newX = x-60+mapLayerState.getDiffX();
+    var newY = y+mapLayerState.getDiffY();
+
+    var currentLayerPoint = new google.maps.Point(Math.floor(newX), Math.floor(newY)); 
+    toolTipGeo[1]=mapLayer.fromPointToLatLng(currentLayerPoint, globalMap);
+  
+    // mapLayer.fromPointToLatLng(currentHexPoint, globalMap);
+    // window.alert("hi "+toolTipGeo[1].lat());
+
+    document.getElementById("text-debug").innerHTML = "new pushpin| lat:"+toolTipGeo[1].lat()+" lng:"+toolTipGeo[1].lng();
+
+   
+
+
+  	this.array[this.counter] = toolTipGeo;
+  	this.counter++;
+  } 
+
+
+  this.returnArray = function() {
+
+   // window.alert("hi1 "+this.array.length);
+  	return this.array;
+  } 
+
+  this.returnCounter = function() {
+
+   // window.alert("hi1 "+this.array.length);
+    return this.counter;
+  } 
+     
 
 }
 
+function MapLayer()
+{
 
 
+ this.fromLatLngToPoint = function(latLng, map) {
+    
+      var topRight = map.getProjection().fromLatLngToPoint(map.getBounds().getNorthEast());
+      var bottomLeft = map.getProjection().fromLatLngToPoint(map.getBounds().getSouthWest());
+      var scale = Math.pow(2, map.getZoom());
+      var worldPoint = map.getProjection().fromLatLngToPoint(latLng);
+
+      return new google.maps.Point((worldPoint.x - bottomLeft.x) * scale-60, (worldPoint.y - topRight.y) * scale);
+    }
+
+   this.fromPointToLatLng = function(point, map) {
+
+      point.x = point.x + 60;
+      //window.alert(point.x);
+
+      var topRight = map.getProjection().fromLatLngToPoint(map.getBounds().getNorthEast());
+
+      var bottomLeft = map.getProjection().fromLatLngToPoint(map.getBounds().getSouthWest());
+      var scale = Math.pow(2, map.getZoom());
+      
+      var worldPoint = map.getProjection().fromPointToLatLng(
+        new google.maps.Point(Math.floor(point.x/scale+bottomLeft.x), Math.floor(point.y/scale+topRight.y)));
+//Math.floor(
+
+      return worldPoint;
+    }
+
+
+
+
+
+}
+
+function Lines()
+{
+  
+  this.initArray = function() {
+
+  	this.array = new Array();	
+  	this.counter = 0;
+  }
+
+   
+  this.newRedLine = function() {
+
+  	var redLine = new Kinetic.Line({
+            points: [],
+            stroke: 'red',
+            strokeWidth: 3,
+            lineCap: 'round',
+            lineJoin: 'round'
+    });
+
+  	this.array[this.counter] = redLine;
+  	this.counter++;
+  }
+
+
+  this.getLines = function() {
+
+  	return this.array;
+  }
+
+
+  this.getLastLine = function() {
+
+  	return this.array[this.counter-1];
+  }
+
+
+}
+
+function MapLayerState()
+{
+
+
+localStorage.clear();
+
+    this.setInitialPosition = function(x,y) {
+    	localStorage.initialPositionX = x;
+        localStorage.initialPositionY = y;
+    }
+
+    this.setFinalPosition = function(x,y) {
+    	localStorage.finalPositionX = x;
+        localStorage.finalPositionY = y;
+    }
+
+    this.setDiff = function(x,y) {
+    	localStorage.initialDifferenceX = x;
+        localStorage.initialDifferenceY = y;
+    }
+
+   
+
+    this.getInitPosX = function() {
+
+    	if(typeof localStorage.initialPositionX !== 'undefined')
+    		return parseFloat(localStorage.initialPositionX);
+        else return 0;
+    }
+    this.getInitPosY = function() {
+
+    	if(typeof localStorage.initialPositionY !== 'undefined')
+    		return parseFloat(localStorage.initialPositionY);
+        else return 0;
+    }
+
+
+    this.getFinalPosX = function() {
+
+    	if(typeof localStorage.finalPositionX !== 'undefined')
+    		return parseFloat(localStorage.finalPositionX);
+        else return 0;
+    }
+    this.getFinalPosY = function() {
+
+    	if(typeof localStorage.finalPositionY !== 'undefined')
+    		return parseFloat(localStorage.finalPositionY);
+        else return 0;
+    }
+
+
+    this.getDiffX = function() {
+
+    	if(typeof localStorage.initialDifferenceX !== 'undefined')
+    		return parseFloat(localStorage.initialDifferenceX);
+        else return 0;
+    }
+    this.getDiffY = function() {
+
+    	if(typeof localStorage.initialDifferenceY !== 'undefined')
+    		return parseFloat(localStorage.initialDifferenceY );
+        else return 0;
+    }
+
+    
+}

@@ -11,5 +11,10 @@
 
 {% include js/TryElse/SetEasel.js %}
 
+{% include js/TryElse/ToolTips.js %}
 
+{% include js/TryElse/MapLayer.js %}
 
+{% include js/TryElse/Lines.js %}
+
+{% include js/TryElse/MapLayerState.js %}

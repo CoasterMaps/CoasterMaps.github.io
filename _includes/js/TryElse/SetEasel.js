@@ -1,28 +1,33 @@
 
-//google.maps.event.addDomListener(window, 'load', initialize);
+var overlay; 
+var toolTips;
+ var lines;
 
 function SetEasel() {
 	
 
-    var googleMap = new GoogleMap();
-    googleMap.initialize();
+  var googleMap = new GoogleMap();
+  googleMap.initialize();
 
-	var overlay = new Overlay();
+	overlay = new Overlay();
 
 
+
+  toolTips = new ToolTips();
+  toolTips.initArray();
+
+  lines = new Lines();
+  lines.initArray();
+
+  //toolTips.addToolTip(170,75);
+  
 
 	overlay.setStage();
 
+
 	overlay.uploadOverlay();
 	
-	//google.maps.event.addListenerOnce(googleMap.getMap(), 'idle', function(){
-    //loaded fully
-    var eventListener = new Events(googleMap,overlay);
+
+	var eventListener = new Events(googleMap,overlay);
     eventListener.setListeners();
-	//window.alert("hi2");
-//});
-
-	
-    
-
 }
