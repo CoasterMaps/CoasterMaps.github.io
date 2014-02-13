@@ -8,11 +8,11 @@ function GoogleMap()
 	    	return this.map;
 	    }
 
+
 	    this.getCenterPoint = function() {
 
 	    	return this.point;
 	    }
-
 	  
     
 	    this.initialize = function() {

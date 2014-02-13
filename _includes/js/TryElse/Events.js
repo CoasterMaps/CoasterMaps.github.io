@@ -59,11 +59,16 @@ this.setListeners = function() {
         var actualpixelMouse = mapLayer.fromLatLngToPoint(arrayToolTip[i][1], globalMap); //geoLocationSaved
 
         // new
-        //actualpixelMouse.x += mapLayerState.getDiffX(); //-60
+        //actualpixelMouse.x += mapLayerState.getDiffX()-60;
         //actualpixelMouse.y += mapLayerState.getDiffY();    
 
+        var newLayerPixelX = actualpixelMouse.x;// + mapLayerState.getDiffX() - 60;
+        var newLayerPixelY = actualpixelMouse.y;// + mapLayerState.getDiffY();
+
+        var newLayerPixel = new google.maps.Point(newLayerPixelX, newLayerPixelY);
+
       
-        arrayToolTip[i][0].setAbsolutePosition(actualpixelMouse);
+        arrayToolTip[i][0].setAbsolutePosition(newLayerPixel);
         arrayToolTip[i][0].draw();
       }
 
@@ -82,6 +87,7 @@ this.setListeners = function() {
           toolTips.addToolTip(event.clientX, event.clientY);
           overlay.uploadNextObject();
         }
+
          
         if (line>0) {
 
@@ -100,6 +106,7 @@ this.setListeners = function() {
     this.overlay.getStage().getContent().addEventListener('mouseup', function(event){
             
       mapLayerState.setInitialPosition(0,0);
+
     });
 
     
@@ -107,14 +114,13 @@ this.setListeners = function() {
     this.overlay.getStage().getContent().addEventListener('mousemove', function(event){ 
 
 
-    var currentLayerPoint = new google.maps.Point(Math.floor(event.clientX), Math.floor(event.clientY)); 
+    var currentLayerPoint = new google.maps.Point(event.clientX-60, event.clientY); 
     var mapLayer = new MapLayer();
     var curGeoPoint = mapLayer.fromPointToLatLng(currentLayerPoint, globalMap);
 
+    document.getElementById("text-debug2").innerHTML = "mouse move| loc lat:"+curGeoPoint.lat()+" lng:"+curGeoPoint.lng()+
+    " mouse position| x:"+(event.clientX-60)+" y:"+event.clientY;
 
-    document.getElementById("text-debug2").innerHTML = "mouse move| loc lat:"+curGeoPoint.lat()+" lng:"+curGeoPoint.lng();
-
-  
 
 
       var arrayToolTip = toolTips.returnArray();

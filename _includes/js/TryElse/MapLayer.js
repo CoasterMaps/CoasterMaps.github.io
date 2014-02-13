@@ -23,7 +23,7 @@ function MapLayer()
       var scale = Math.pow(2, map.getZoom());
       
       var worldPoint = map.getProjection().fromPointToLatLng(
-        new google.maps.Point(Math.floor(point.x/scale+bottomLeft.x), Math.floor(point.y/scale+topRight.y)));
+        new google.maps.Point(point.x/scale+bottomLeft.x, point.y/scale+topRight.y));
 //Math.floor(
 
       return worldPoint;

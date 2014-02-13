@@ -43,10 +43,13 @@ function ToolTips()
 
     toolTipGeo[0]=tooltip;
     
-    var newX = x-60+mapLayerState.getDiffX();
-    var newY = y+mapLayerState.getDiffY();
+    // var newX=x-60+mapLayerState.getDiffX();
+    // var newY=y+mapLayerState.getDiffY();
 
-    var currentLayerPoint = new google.maps.Point(Math.floor(newX), Math.floor(newY)); 
+    //var currentLayerPoint = new google.maps.Point(x, y); 
+    //toolTipGeo[1]=mapLayer.fromPointToLatLng(currentLayerPoint, globalMap);
+
+    var currentLayerPoint = new google.maps.Point(x-60, y);
     toolTipGeo[1]=mapLayer.fromPointToLatLng(currentLayerPoint, globalMap);
   
     // mapLayer.fromPointToLatLng(currentHexPoint, globalMap);
