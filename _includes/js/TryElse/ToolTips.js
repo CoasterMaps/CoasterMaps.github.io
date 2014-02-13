@@ -43,23 +43,9 @@ function ToolTips()
 
     toolTipGeo[0]=tooltip;
     
-    // var newX=x-60+mapLayerState.getDiffX();
-    // var newY=y+mapLayerState.getDiffY();
-
-    //var currentLayerPoint = new google.maps.Point(x, y); 
-    //toolTipGeo[1]=mapLayer.fromPointToLatLng(currentLayerPoint, globalMap);
-
     var currentLayerPoint = new google.maps.Point(x-60, y);
     toolTipGeo[1]=mapLayer.fromPointToLatLng(currentLayerPoint, globalMap);
   
-    // mapLayer.fromPointToLatLng(currentHexPoint, globalMap);
-    // window.alert("hi "+toolTipGeo[1].lat());
-
-    document.getElementById("text-debug").innerHTML = "new pushpin| lat:"+toolTipGeo[1].lat()+" lng:"+toolTipGeo[1].lng();
-
-   
-
-
   	this.array[this.counter] = toolTipGeo;
   	this.counter++;
   } 
@@ -67,13 +53,11 @@ function ToolTips()
 
   this.returnArray = function() {
 
-   // window.alert("hi1 "+this.array.length);
   	return this.array;
   } 
 
   this.returnCounter = function() {
 
-   // window.alert("hi1 "+this.array.length);
     return this.counter;
   } 
      

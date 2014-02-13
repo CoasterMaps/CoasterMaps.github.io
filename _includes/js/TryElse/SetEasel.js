@@ -19,9 +19,7 @@ function SetEasel() {
   lines = new Lines();
   lines.initArray();
 
-  //toolTips.addToolTip(170,75);
   
-
 	overlay.setStage();
 
 

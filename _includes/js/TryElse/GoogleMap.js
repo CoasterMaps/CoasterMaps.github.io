@@ -30,4 +30,3 @@ function GoogleMap()
         
 }
 
-//  bottom: -200px;

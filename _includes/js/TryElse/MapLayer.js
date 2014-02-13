@@ -15,8 +15,7 @@ function MapLayer()
    this.fromPointToLatLng = function(point, map) {
 
       point.x = point.x + 60;
-      //window.alert(point.x);
-
+    
       var topRight = map.getProjection().fromLatLngToPoint(map.getBounds().getNorthEast());
 
       var bottomLeft = map.getProjection().fromLatLngToPoint(map.getBounds().getSouthWest());
@@ -24,7 +23,6 @@ function MapLayer()
       
       var worldPoint = map.getProjection().fromPointToLatLng(
         new google.maps.Point(point.x/scale+bottomLeft.x, point.y/scale+topRight.y));
-//Math.floor(
 
       return worldPoint;
     }

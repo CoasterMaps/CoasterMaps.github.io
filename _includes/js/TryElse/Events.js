@@ -56,18 +56,13 @@ this.setListeners = function() {
     
       for (var i=0; i<arrayToolTip.length; i++) {
 
-        var actualpixelMouse = mapLayer.fromLatLngToPoint(arrayToolTip[i][1], globalMap); //geoLocationSaved
+        var actualpixelMouse = mapLayer.fromLatLngToPoint(arrayToolTip[i][1], globalMap); 
 
-        // new
-        //actualpixelMouse.x += mapLayerState.getDiffX()-60;
-        //actualpixelMouse.y += mapLayerState.getDiffY();    
-
-        var newLayerPixelX = actualpixelMouse.x;// + mapLayerState.getDiffX() - 60;
-        var newLayerPixelY = actualpixelMouse.y;// + mapLayerState.getDiffY();
+        var newLayerPixelX = actualpixelMouse.x;
+        var newLayerPixelY = actualpixelMouse.y;
 
         var newLayerPixel = new google.maps.Point(newLayerPixelX, newLayerPixelY);
 
-      
         arrayToolTip[i][0].setAbsolutePosition(newLayerPixel);
         arrayToolTip[i][0].draw();
       }
