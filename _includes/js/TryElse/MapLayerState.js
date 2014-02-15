@@ -19,7 +19,6 @@ localStorage.clear();
         localStorage.initialDifferenceY = y;
     }
 
-   
 
     this.getInitPosX = function() {
 
@@ -61,6 +60,5 @@ localStorage.clear();
     		return parseFloat(localStorage.initialDifferenceY );
         else return 0;
     }
-
     
 }

@@ -95,9 +95,7 @@ function Overlay()
 
     this.uploadLastLine = function() {
 
-      //var arrayToolTip = toolTips.returnArray();
-      //var latestPosition = toolTips.returnCounter() - 1;
-      this.staticLayer.add(lines.getLastLine());
+      this.staticLayer.add(lines.getLastLineContainer().getLine());
 
       this.stage.clear();
       this.stage.add(this.staticLayer);

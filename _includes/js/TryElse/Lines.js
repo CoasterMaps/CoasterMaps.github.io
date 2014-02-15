@@ -10,6 +10,7 @@ function Lines()
    
   this.newRedLine = function() {
 
+   
   	var redLine = new Kinetic.Line({
             points: [],
             stroke: 'red',
@@ -18,18 +19,25 @@ function Lines()
             lineJoin: 'round'
     });
 
-  	this.array[this.counter] = redLine;
+     
+    var newLineContainer = new LineContainer(redLine);
+    newLineContainer.getGeoPoints(redLine.points());
+    
+
+  	this.array[this.counter] = newLineContainer;
+   
   	this.counter++;
   }
 
 
-  this.getLines = function() {
+  this.returnArray = function() {
 
   	return this.array;
   }
 
 
-  this.getLastLine = function() {
+
+  this.getLastLineContainer = function() {
 
   	return this.array[this.counter-1];
   }

@@ -35,36 +35,60 @@ this.setListeners = function() {
 	initialZoom = this.googleMap.getMap().getZoom();
 
 
-  google.maps.event.addListenerOnce(globalMap, 'idle', function(){
+    google.maps.event.addListenerOnce(globalMap, 'idle', function(){
 
-    var mapLayer = new MapLayer();
+      var mapLayer = new MapLayer();
 
-    var currentHexPoint = new google.maps.Point(tooltip.getAbsolutePosition().x, tooltip.getAbsolutePosition().y); 
-    var hexGeo = mapLayer.fromPointToLatLng(currentHexPoint, globalMap);
-    initialZoom = globalMap.getZoom();
-
+      var currentHexPoint = new google.maps.Point(tooltip.getAbsolutePosition().x, tooltip.getAbsolutePosition().y); 
+      var hexGeo = mapLayer.fromPointToLatLng(currentHexPoint, globalMap);
+      initialZoom = globalMap.getZoom();
     });
 
 
 
     google.maps.event.addListener(globalMap, 'zoom_changed', function(event){ 
 
-
       var mapLayer = new MapLayer();     
       staticLayer.clear();
+
       var arrayToolTip = toolTips.returnArray();
-    
       for (var i=0; i<arrayToolTip.length; i++) {
 
         var actualpixelMouse = mapLayer.fromLatLngToPoint(arrayToolTip[i][1], globalMap); 
 
-        var newLayerPixelX = actualpixelMouse.x;
-        var newLayerPixelY = actualpixelMouse.y;
-
-        var newLayerPixel = new google.maps.Point(newLayerPixelX, newLayerPixelY);
+        var newLayerPixel = new google.maps.Point(actualpixelMouse.x, actualpixelMouse.y);
 
         arrayToolTip[i][0].setAbsolutePosition(newLayerPixel);
         arrayToolTip[i][0].draw();
+      }
+
+      var lineArray = lines.returnArray();
+      // look through the lines
+      for (var i=0; i<lineArray.length; i++) {
+
+        var newLineLayerArray = new Array();
+        var newLineLayerArrayIndex = 0;
+   
+        var currentLine = lineArray[i];
+        var geoPoints = currentLine.getGeoArray();
+     
+
+        // create new array of points for this line on the layer
+        for (var counter=0; counter<geoPoints.length; counter++) {
+
+          var actualPixel = mapLayer.fromLatLngToPoint(geoPoints[counter], globalMap); 
+    
+          newLineLayerArray[newLineLayerArrayIndex] = actualPixel.x;
+          
+          newLineLayerArray[newLineLayerArrayIndex+1] =  actualPixel.y;
+          newLineLayerArrayIndex+=2;
+
+
+        }
+
+        currentLine.getLine().points(newLineLayerArray);
+        currentLine.getLine().draw();
+
       }
 
       initialZoom = globalMap.getZoom();
@@ -75,7 +99,10 @@ this.setListeners = function() {
      
     this.overlay.getStage().getContent().addEventListener('mousedown', function(event){
 
+ 
         mapLayerState.setInitialPosition(event.clientX, event.clientY);
+
+
       
         if (annot===1) {
 
@@ -83,16 +110,22 @@ this.setListeners = function() {
           overlay.uploadNextObject();
         }
 
+
          
         if (line>0) {
 
+
           if (line===1) {
+
             lines.newRedLine();
+          
             line++;
           }
+   
+          lines.getLastLineContainer().addNewPoint(event.clientX-60, event.clientY);
 
-          lines.getLastLine().points(lines.getLastLine().points().concat([mapLayerState.getInitPosX()-60, mapLayerState.getInitPosY()]));
           overlay.uploadLastLine();
+         
         }
 
     });
@@ -123,16 +156,13 @@ this.setListeners = function() {
 
        var mapLayer = new MapLayer();     
       
-       //window.alert("hi"+arrayToolTip.length);
-
        var actualpixelMouse = mapLayer.fromLatLngToPoint(arrayToolTip[0][1], globalMap); //geoLocationSaved
 
 
        actualpixelMouse.x = actualpixelMouse.x - 60 + mapLayerState.getDiffX();
        actualpixelMouse.y = actualpixelMouse.y + mapLayerState.getDiffY();    
    
-       //window.alert("hi");
- 
+      
       }
 
 

@@ -18,3 +18,5 @@
 {% include js/TryElse/Lines.js %}
 
 {% include js/TryElse/MapLayerState.js %}
+
+{% include js/TryElse/LineContainer.js %}
