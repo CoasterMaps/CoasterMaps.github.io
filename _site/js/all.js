@@ -9718,11 +9718,10 @@ this.setListeners = function() {
 
           var actualPixel = mapLayer.fromLatLngToPoint(geoPoints[counter], globalMap); 
     
-          newLineLayerArray[newLineLayerArrayIndex] = actualPixel.x;
+          newLineLayerArray[newLineLayerArrayIndex] = actualPixel.x + mapLayerState.getDiffX();
           
-          newLineLayerArray[newLineLayerArrayIndex+1] =  actualPixel.y;
+          newLineLayerArray[newLineLayerArrayIndex+1] =  actualPixel.y + mapLayerState.getDiffY();
           newLineLayerArrayIndex+=2;
-
 
         }
 
@@ -9751,21 +9750,17 @@ this.setListeners = function() {
         }
 
 
-         
         if (line>0) {
 
 
           if (line===1) {
 
             lines.newRedLine();
-          
             line++;
           }
    
           lines.getLastLineContainer().addNewPoint(event.clientX-60, event.clientY);
-
-          overlay.uploadLastLine();
-         
+          overlay.uploadLastLine();         
         }
 
     });
@@ -10272,7 +10267,9 @@ function LineContainer(inputLine) {
            
       var mapLayer = new MapLayer();
 
-      this.line.points(this.line.points().concat([x, y]));
+      //window.alert("diff x:"+mapLayerState.getDiffX()+" y:"+mapLayerState.getDiffY());
+
+      this.line.points(this.line.points().concat([x+mapLayerState.getDiffX(), y+mapLayerState.getDiffY()]));
 
       var currentLayerPoint = new google.maps.Point(x, y);//-60
       this.geoPoints[this.geoPoints.length] = mapLayer.fromPointToLatLng(currentLayerPoint, globalMap);
