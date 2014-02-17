@@ -141,8 +141,8 @@ this.setListeners = function() {
     var mapLayer = new MapLayer();
     var curGeoPoint = mapLayer.fromPointToLatLng(currentLayerPoint, globalMap);
 
-    document.getElementById("text-debug2").innerHTML = "mouse move| loc lat:"+curGeoPoint.lat()+" lng:"+curGeoPoint.lng()+
-    " mouse position| x:"+(event.clientX-60)+" y:"+event.clientY;
+   // document.getElementById("text-debug2").innerHTML = "mouse move| loc lat:"+curGeoPoint.lat()+" lng:"+curGeoPoint.lng()+
+   // " mouse position| x:"+(event.clientX-60)+" y:"+event.clientY;
 
 
 

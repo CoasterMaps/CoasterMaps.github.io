@@ -25,6 +25,26 @@
 
         <script src="http://d3lp1msu2r81bx.cloudfront.net/kjs/js/lib/kinetic-v5.0.0.min.js"></script>
 
+
+        <!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+
+
+<script type="text/javascript">
+    $('#tools').click(function (e) { 
+    window.alert("hi");                  
+      e.stopPropagation();
+    });
+</script>
+
+
+
         <style type="text/css">
 
       #map-canvas {
@@ -44,7 +64,7 @@
         position: relative;
       }
 
-       #cancel-tool {
+       #tools {
         margin-top: 50px;
         width:100px;
         position: absolute;
@@ -52,20 +72,9 @@
         z-index: 100;
       }
 
-      #annotation-tool {
-        margin-top: 100px;
-        width:100px;
-        position: absolute;
-        right:5px;
-        z-index: 100;
-      }
-       #line-tool {
-        margin-top: 200px;
-        width:100px;
-        position: absolute;
-        right:5px;
-        z-index: 100;
-      }
+
+
+
       #text-debug {
         margin-top: 300px;
         width:100px;

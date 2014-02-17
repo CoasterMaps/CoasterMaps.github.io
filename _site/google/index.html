@@ -25,6 +25,26 @@
 
         <script src="http://d3lp1msu2r81bx.cloudfront.net/kjs/js/lib/kinetic-v5.0.0.min.js"></script>
 
+
+        <!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+
+
+<script type="text/javascript">
+    $('#tools').click(function (e) { 
+    window.alert("hi");                  
+      e.stopPropagation();
+    });
+</script>
+
+
+
         <style type="text/css">
 
       #map-canvas {
@@ -44,7 +64,7 @@
         position: relative;
       }
 
-       #cancel-tool {
+       #tools {
         margin-top: 50px;
         width:100px;
         position: absolute;
@@ -52,20 +72,9 @@
         z-index: 100;
       }
 
-      #annotation-tool {
-        margin-top: 100px;
-        width:100px;
-        position: absolute;
-        right:5px;
-        z-index: 100;
-      }
-       #line-tool {
-        margin-top: 200px;
-        width:100px;
-        position: absolute;
-        right:5px;
-        z-index: 100;
-      }
+
+
+
       #text-debug {
         margin-top: 300px;
         width:100px;
@@ -89,15 +98,123 @@
 
        <div id="contents">
         <body onload="SetEasel();">
-	
-    <button id="cancel-tool" type="button">Cancel!</button> 
 
-    <button id="line-tool" type="button">Draw Line!</button> 
 
-    <button id="annotation-tool" type="button">Draw Annotation!</button> 
 
+	<div id="tools" class="btn-group">
+
+		<button class="btn btn-lg btn-success" role="button" id="cancel-tool" type="button">
+			<span class="glyphicon glyphicon-move"></span>
+		</button> 
+
+
+		<div class="btn-group">
+
+			 <button type="button" class="btn btn-lg btn-success" id="annotation-tool"> 
+			 	<span class="glyphicon glyphicon-screenshot"></span>
+			 </button>
+
+			 <button type="button" class="btn btn-lg btn-success dropdown-toggle" data-toggle="dropdown">
+			 	<span class="caret"></span>
+			 </button>
+
+			<ul class="dropdown-menu pull-center">
+				<li><a href="#">Dropdown link</a></li>
+				<li><a href="#">Dropdown link</a></li>
+			</ul>
+		</div>
+
+
+		<div class="btn-group">
+
+			 <button type="button"  class="btn btn-lg btn-success" id="line-tool"> 
+			 	<span class="glyphicon glyphicon-minus"></span>
+			 </button>
+
+			 <button type="button" class="btn btn-lg btn-success dropdown-toggle" data-toggle="dropdown">
+			 	<span class="caret"></span>
+			 </button>
+
+			 <ul class="dropdown-menu pull-center" role="menu">
+			 	<li><a href="#">Action</a></li>
+			 	<li><a href="#">Another action</a></li>
+			 	<li><a href="#">Something else here</a></li>
+			 	<li class="divider"></li>
+			 	<li><a href="#">Separated link</a></li>
+			 </ul>
+		</div>
+
+		
+
+
+		<div class="btn-group">
+
+			 <button type="button"  class="btn btn-lg btn-success" id="hand-tool"> 
+			 	<span class="glyphicon glyphicon-pencil"></span>
+			 </button>
+
+			 <button type="button" class="btn btn-lg btn-success dropdown-toggle" data-toggle="dropdown">
+			 	<span class="caret"></span>
+			 </button>
+
+			 <ul class="dropdown-menu pull-center" role="menu">
+
+			 	<li><a href="#">Colour:</a></li>
+			 
+                <li>
+			 	<div class="btn-group-vertical" data-toggle="buttons-radio">
+
+			 		<button class="btn btn-primary active" value="btn btn-primary" type="button" name="color">
+			 			Blue
+			 			<input type="radio" checked/>
+			 		</button>
+
+			 		<button class="btn btn-info" value="btn btn-info" type="button" name="color">
+			 			Light Blue
+			 			<input type="radio"/>
+			 		</button>
+
+			 		<button class="btn btn-success" value="btn btn-success" type="button" name="color">
+			 			Green
+			 			<input type="radio"/>
+			 		</button>
+
+			 		<button class="btn btn-warning" value="btn btn-warning" type="button" name="color">
+			 			Orange
+			 			<input type="radio"/>
+			 		</button>
+			 		
+			 		<button class="btn btn-danger" value="btn btn-danger" type="button" name="color">
+			 			Red
+			 			<input type="radio"/>
+			 		</button>
+			 		
+			 	</div>
+			 </li>
+
+			 	<li class="divider"></li>
+			 	
+			 	<li><a href="#">Line width:</a></li>
+
+
+			 </ul>
+		</div>
+
+	</div>
+
+
+    
+
+
+
+
+
+   <!-- <button class="btn btn-lg btn-success" role="button" id="annotation-tool" type="button">Annotate</button>  -->
+
+   <!--
+   
     <div id="text-debug">Title</div> 
-     <div id="text-debug2">Title</div> 
+     <div id="text-debug2">Title</div>  -->
    
     
     
