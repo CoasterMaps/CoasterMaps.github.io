@@ -3,6 +3,12 @@ layout: default
 tab: welcome
 ---
 <body onload="SetEasel();">
+	
+	<script>
+		function setColourVar(int col){
+			alert("Colour set to" + col);
+		};
+	</script>
 
 
 
@@ -107,7 +113,9 @@ tab: welcome
 
 	</div>
 
-
+	<script>
+		document.getElementById("btn btn-info").onclick = setColourVar(2);
+	</script>
     
 
 
