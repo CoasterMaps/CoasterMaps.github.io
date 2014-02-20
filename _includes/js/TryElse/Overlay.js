@@ -103,5 +103,17 @@ function Overlay()
       staticLayer = this.staticLayer;
       stage = this.stage;
     }
+
+    this.uploadLastHandLine = function(inputPoints) {
+
+      var lastLine = handLines.getLastLineContainer().getLine();
+      lastLine.points(inputPoints);
+      handLines.getLastLineContainer().getGeoPoints(inputPoints);
+
+      this.staticLayer.add(lastLine);
+
+      lastLine.draw();
+
+    }
 	
 }

@@ -1,5 +1,4 @@
-function LineContainer(inputLine) {
-
+function HandLineContainer(inputLine) {
 
 	this.line = inputLine;
     
@@ -14,7 +13,7 @@ function LineContainer(inputLine) {
 
         for (var i = 0; i<points.length; i+=2) {
          
-    		var currentLayerPoint = new google.maps.Point(points[i], points[i+1]); //-60
+    		var currentLayerPoint = new google.maps.Point(points[i], points[i+1]); 
     		newGeoArray[index] = mapLayer.fromPointToLatLng(currentLayerPoint, globalMap);
             index++;
         }
@@ -41,13 +40,10 @@ function LineContainer(inputLine) {
      
       var mapLayer = new MapLayer();
 
-      //window.alert("diff x:"+mapLayerState.getDiffX()+" y:"+mapLayerState.getDiffY());
-
       this.line.points(this.line.points().concat([x+mapLayerState.getDiffX(), y+mapLayerState.getDiffY()]));
 
       var currentLayerPoint = new google.maps.Point(x, y);//-60
       this.geoPoints[this.geoPoints.length] = mapLayer.fromPointToLatLng(currentLayerPoint, globalMap);
-      
 
   }
 
@@ -55,6 +51,10 @@ function LineContainer(inputLine) {
   this.getLayerPoints = function() {
 
    return this.points;
-}
+  }
+
+
+
+
 
 }

@@ -2,26 +2,10 @@
 layout: default
 tab: welcome
 ---
-
-<script language="javascript" type="text/javascript">
-		function checkColour(){
-
-			if(document.getElementById('Light Blue').checked) {
-				alert("1 is checked");
-			}
-			else { alert("Nada here");}
-		};
-		
-		window.addEventListener('keyup', function (e){
-			if (e.keyCode === 13) {
-				checkColour();
-			}
-		})
-		
-	</script>
-		
 <body onload="SetEasel();">
-	
+
+
+
 	<div id="tools" class="btn-group">
 
 		<button class="btn btn-lg btn-success" role="button" id="cancel-tool" type="button">
@@ -85,27 +69,27 @@ tab: welcome
                 <li>
 			 	<div class="btn-group-vertical" data-toggle="buttons-radio">
 
-			 		<button class="btn btn-primary" value="btn btn-primary" type="button" name="color" id="Blue">
+			 		<button class="btn btn-primary active" value="btn btn-primary" type="button" name="color">
 			 			Blue
-			 			<input type="radio" checked>
+			 			<input type="radio" checked/>
 			 		</button>
 
-			 		<button class="btn btn-info" value="btn btn-info" type="button" name="color" id="Light Blue">
+			 		<button class="btn btn-info" value="btn btn-info" type="button" name="color">
 			 			Light Blue
-			 			<input type="radio" />
+			 			<input type="radio"/>
 			 		</button>
 
-			 		<button class="btn btn-success" value="btn btn-success" type="button" name="color" id="Green">
+			 		<button class="btn btn-success" value="btn btn-success" type="button" name="color">
 			 			Green
 			 			<input type="radio"/>
 			 		</button>
 
-			 		<button class="btn btn-warning" value="btn btn-warning" type="button" name="color" id="Orange">
+			 		<button class="btn btn-warning" value="btn btn-warning" type="button" name="color">
 			 			Orange
 			 			<input type="radio"/>
 			 		</button>
 			 		
-			 		<button class="btn btn-danger" value="btn btn-danger" type="button" name="color" id="Red">
+			 		<button class="btn btn-danger" value="btn btn-danger" type="button" name="color">
 			 			Red
 			 			<input type="radio"/>
 			 		</button>
@@ -122,15 +106,10 @@ tab: welcome
 		</div>
 
 	</div>
-	
-	<script language="javascript" type="text/javascript">
- 
-		document.getElementById('Light Blue').onclick = function()
-		{
-			document.getElementById('Light Blue').focus();
-		}
-		
-		</script>
+
+
+    
+
 
 
 
@@ -148,6 +127,6 @@ tab: welcome
 
    
     <div id="map-canvas"/> 
-    
-    
+
+
 </body>

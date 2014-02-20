@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Prototype</title>
+    <script type="text/javascript" src="http://code.jquery.com/jquery.min.js"></script>
+    <script src="http://d3lp1msu2r81bx.cloudfront.net/kjs/js/lib/kinetic-v5.0.0.min.js"></script>
+
+<style>
+#container{
+  border:solid 1px #ccc;
+  margin-top: 10px;
+}
+</style>        
+<script>
+$(function(){
+
+        // create a stage and a layer
+        var stage = new Kinetic.Stage({
+            container: 'container',
+            width: 400,
+            height: 400
+        });
+        var layer = new Kinetic.Layer();
+        stage.add(layer);
+
+       
+
+        var isMouseDown=false;
+        var newline;
+        var points=[];
+
+        
+        stage.getContent().addEventListener('mousedown', function(event){
+
+            isMouseDown = true;
+            points=[];
+         
+            points = points.concat([event.clientX, event.clientY]);
+
+            var line = new Kinetic.Line({
+                points: points,
+                stroke: "red",
+                strokeWidth: 5,
+                lineCap: 'round',
+                lineJoin: 'round'
+            });
+
+            layer.add(line);
+            newline=line;
+        });
+
+
+        stage.getContent().addEventListener('mouseup', function(event) {
+
+            isMouseDown=false;       
+        });
+
+
+        stage.getContent().addEventListener('mousemove', function(event) {
+     
+            if(!isMouseDown){return;}
+            points = points.concat([event.clientX, event.clientY]);
+            newline.setPoints(points);
+            newline.draw();
+
+   /*        
+document.getElementById("some_text").innerHTML="";
+            for (var i=0; i<points.length; i++) {
+                var stringToWrite = points[i]+" ";
+                document.getElementById("some_text").innerHTML+=stringToWrite;
+            }*/
+            
+        });
+
+
+
+
+
+
+
+
+}); // end $(function(){});
+
+</script>       
+</head>
+
+<body>
+    <div id="container"></div>
+    <div id="some_text"> Hello</div>
+</body>
+</html>
