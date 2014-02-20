@@ -9638,44 +9638,60 @@ google.loader.rpl({":scriptaculous":{"versions":{":1.8.3":{"uncompressed":"scrip
 }
 
 
-var initialZoom=0;
+  var initialZoom=0;
 
-var mapLayerState = new MapLayerState();
+  var mapLayerState = new MapLayerState();
 
-var line = 0;
-var annot = 0;
+  var line = 0;
+  var annot = 0;
+  var hand = 0;
 
-
-
-function Events(inputMap, inputOverlay)
-{
-
-  this.googleMap = inputMap;
-  this.overlay = inputOverlay;
- 
-$("#cancel-tool").click(function(){
-    annot=0;
-    line=0;
-});
-
-$("#line-tool").click(function(){
-    annot=0;
-    line=1;
-});
-
-$("#annotation-tool").click(function(){
-    annot=1;
-    line=0;
-});
+  var isMouseHandDraw=false;
+  var newline;
+  var handpoints=[];
 
 
-this.setListeners = function() {
 
-     
-	initialZoom = this.googleMap.getMap().getZoom();
+  function Events(inputMap, inputOverlay)
+  {
+
+    this.googleMap = inputMap;
+    this.overlay = inputOverlay;
+
+    $("#cancel-tool").click(function(){
+      annot=0;
+      line=0;
+      hand=0;
+    });
+
+    $("#line-tool").click(function(){
+      annot=0;
+      line=1;
+      hand=0;
+    });
+
+    $("#annotation-tool").click(function(){
+      annot=1;
+      line=0;
+      hand=0;
+    });
+
+    $("#hand-tool").click(function(){
+      annot=0;
+      line=0;
+      hand=1;
+    });
+
+    
 
 
-    google.maps.event.addListenerOnce(globalMap, 'idle', function(){
+    this.setListeners = function() {
+
+
+     initialZoom = this.googleMap.getMap().getZoom();
+
+
+     google.maps.event.addListenerOnce(globalMap, 'idle', function(){
 
       var mapLayer = new MapLayer();
 
@@ -9686,7 +9702,7 @@ this.setListeners = function() {
 
 
 
-    google.maps.event.addListener(globalMap, 'zoom_changed', function(event){ 
+     google.maps.event.addListener(globalMap, 'zoom_changed', function(event){ 
 
       var mapLayer = new MapLayer();     
       staticLayer.clear();
@@ -9703,137 +9719,170 @@ this.setListeners = function() {
       }
 
       var lineArray = lines.returnArray();
-      // look through the lines
-      for (var i=0; i<lineArray.length; i++) {
+        // look through the lines
+        for (var i=0; i<lineArray.length; i++) {
 
-        var newLineLayerArray = new Array();
-        var newLineLayerArrayIndex = 0;
-   
-        var currentLine = lineArray[i];
-        var geoPoints = currentLine.getGeoArray();
-     
+          var newLineLayerArray = new Array();
+          var newLineLayerArrayIndex = 0;
 
-        // create new array of points for this line on the layer
-        for (var counter=0; counter<geoPoints.length; counter++) {
+          var currentLine = lineArray[i];
+          var geoPoints = currentLine.getGeoArray();
 
-          var actualPixel = mapLayer.fromLatLngToPoint(geoPoints[counter], globalMap); 
-    
-          newLineLayerArray[newLineLayerArrayIndex] = actualPixel.x + mapLayerState.getDiffX();
-          
-          newLineLayerArray[newLineLayerArrayIndex+1] =  actualPixel.y + mapLayerState.getDiffY();
-          newLineLayerArrayIndex+=2;
 
+          // create new array of points for this line on the layer
+          for (var counter=0; counter<geoPoints.length; counter++) {
+
+            var actualPixel = mapLayer.fromLatLngToPoint(geoPoints[counter], globalMap); 
+
+            newLineLayerArray[newLineLayerArrayIndex] = actualPixel.x + mapLayerState.getDiffX();
+            
+            newLineLayerArray[newLineLayerArrayIndex+1] =  actualPixel.y + mapLayerState.getDiffY();
+            newLineLayerArrayIndex+=2;
+
+          }
+
+          currentLine.getLine().points(newLineLayerArray);
+          currentLine.getLine().draw();
         }
 
-        currentLine.getLine().points(newLineLayerArray);
-        currentLine.getLine().draw();
+        drawHandLines();
 
-      }
+        initialZoom = globalMap.getZoom();
 
-      initialZoom = globalMap.getZoom();
+      });
 
-    });
+  var drawHandLines = function() {
 
-   
-     
-    this.overlay.getStage().getContent().addEventListener('mousedown', function(event){
+    var mapLayer = new MapLayer();
 
- 
+    var handlineArray = handLines.returnArray();
+        // look through the lines
+        for (var i=0; i<handlineArray.length; i++) {
+
+          var newLineLayerArray = new Array();
+          var newLineLayerArrayIndex = 0;
+
+          var currentLine = handlineArray[i];
+          var geoPoints = currentLine.getGeoArray();
+
+          
+          // create new array of points for this line on the layer
+          for (var counter=0; counter<geoPoints.length; counter++) {
+
+            var actualPixel = mapLayer.fromLatLngToPoint(geoPoints[counter], globalMap); 
+            
+            newLineLayerArray[newLineLayerArrayIndex] = actualPixel.x + mapLayerState.getDiffX();    
+            newLineLayerArray[newLineLayerArrayIndex+1] =  actualPixel.y + mapLayerState.getDiffY();
+            newLineLayerArrayIndex+=2;
+
+          }
+
+          currentLine.getLine().points(newLineLayerArray);
+          currentLine.getLine().draw();
+          
+        }
+      } 
+
+
+
+      this.overlay.getStage().getContent().addEventListener('mousedown', function(event){
+
         mapLayerState.setInitialPosition(event.clientX, event.clientY);
 
+    // annot tool trigger
+    if (annot===1) {
 
-      
-        if (annot===1) {
-
-          toolTips.addToolTip(event.clientX, event.clientY);
-          overlay.uploadNextObject();
-        }
-
-
-        if (line>0) {
+      toolTips.addToolTip(event.clientX, event.clientY);
+      overlay.uploadNextObject();
+      isMouseHandDraw=false; 
+      stage.draggable(true); 
+    }
 
 
-          if (line===1) {
+    // line tool trigger
+    if (line>0) {
 
-            lines.newRedLine();
-            line++;
-          }
-   
-          lines.getLastLineContainer().addNewPoint(event.clientX-60, event.clientY);
-          overlay.uploadLastLine();         
-        }
+      if (line===1) {
 
-    });
-     
-
-    this.overlay.getStage().getContent().addEventListener('mouseup', function(event){
-            
-      mapLayerState.setInitialPosition(0,0);
-
-    });
-
-    
-		
-    this.overlay.getStage().getContent().addEventListener('mousemove', function(event){ 
-
-
-    var currentLayerPoint = new google.maps.Point(event.clientX-60, event.clientY); 
-    var mapLayer = new MapLayer();
-    var curGeoPoint = mapLayer.fromPointToLatLng(currentLayerPoint, globalMap);
-
-   // document.getElementById("text-debug2").innerHTML = "mouse move| loc lat:"+curGeoPoint.lat()+" lng:"+curGeoPoint.lng()+
-   // " mouse position| x:"+(event.clientX-60)+" y:"+event.clientY;
-
-
-
-      var arrayToolTip = toolTips.returnArray();
-      if ((typeof arrayToolTip !== 'undefined') && (arrayToolTip.length!==0)) {
-
-       var mapLayer = new MapLayer();     
-      
-       var actualpixelMouse = mapLayer.fromLatLngToPoint(arrayToolTip[0][1], globalMap); //geoLocationSaved
-
-
-       actualpixelMouse.x = actualpixelMouse.x - 60 + mapLayerState.getDiffX();
-       actualpixelMouse.y = actualpixelMouse.y + mapLayerState.getDiffY();    
-   
-      
+        lines.newRedLine();
+        line++;
       }
 
+      lines.getLastLineContainer().addNewPoint(event.clientX-60, event.clientY);
+      overlay.uploadLastLine();  
+      isMouseHandDraw=false;  
+      stage.draggable(true);       
+    }
 
 
-     if ((mapLayerState.getInitPosX() !== 0) && (mapLayerState.getInitPosY() !== 0)) {
+    // hand tool trigger
+    if (hand===1) {
 
-          var mapLayer = new MapLayer();
+      stage.draggable(false);
 
-          var finalPositionX = event.clientX;
-          var finalPositionY = event.clientY;
+      handLines.newRedLine();
 
-            
-          var initLatLong = globalMap.getCenter();
-          var pixelpoint = globalMap.getProjection().fromLatLngToPoint(initLatLong);
-          var zoom = globalMap.getZoom();
+      isMouseHandDraw = true;
+      handpoints=[];
+      handpoints = handpoints.concat([event.clientX-60, event.clientY]);
 
-            
-          pixelpoint.x = pixelpoint.x + (mapLayerState.getInitPosX() - finalPositionX) / Math.pow(2,zoom);
-          pixelpoint.y = pixelpoint.y + (mapLayerState.getInitPosY() - finalPositionY) / Math.pow(2,zoom);
+      overlay.uploadLastHandLine(handpoints);
+    }
 
-          var newpoint = globalMap.getProjection().fromPointToLatLng(pixelpoint);
-           
-          globalMap.setCenter(newpoint);
-
-          mapLayerState.setDiff(mapLayerState.getDiffX()+mapLayerState.getInitPosX()-finalPositionX, 
-            mapLayerState.getDiffY()+mapLayerState.getInitPosY()-finalPositionY);
-
-          mapLayerState.setInitialPosition(finalPositionX, finalPositionY);
-      }
-
-    }); 
-
-	}
+  });
 
 
-	
+      this.overlay.getStage().getContent().addEventListener('mouseup', function(event){
+
+        mapLayerState.setInitialPosition(0,0);
+
+        isMouseHandDraw=false;  
+      });
+
+
+
+      this.overlay.getStage().getContent().addEventListener('mousemove', function(event){ 
+
+    // if hand drawing tool draw, else probably move map
+    if(isMouseHandDraw) {
+      
+      handpoints = handpoints.concat([event.clientX-60, event.clientY]);
+      overlay.uploadLastHandLine(handpoints);
+    }
+
+
+    else if ((mapLayerState.getInitPosX() !== 0) && (mapLayerState.getInitPosY() !== 0)) {
+
+      var mapLayer = new MapLayer();
+
+      var finalPositionX = event.clientX;
+      var finalPositionY = event.clientY;
+
+
+      var initLatLong = globalMap.getCenter();
+      var pixelpoint = globalMap.getProjection().fromLatLngToPoint(initLatLong);
+      var zoom = globalMap.getZoom();
+
+
+      pixelpoint.x = pixelpoint.x + (mapLayerState.getInitPosX() - finalPositionX) / Math.pow(2,zoom);
+      pixelpoint.y = pixelpoint.y + (mapLayerState.getInitPosY() - finalPositionY) / Math.pow(2,zoom);
+
+      var newpoint = globalMap.getProjection().fromPointToLatLng(pixelpoint);
+
+      globalMap.setCenter(newpoint);
+
+      mapLayerState.setDiff(mapLayerState.getDiffX()+mapLayerState.getInitPosX()-finalPositionX, 
+        mapLayerState.getDiffY()+mapLayerState.getInitPosY()-finalPositionY);
+
+      mapLayerState.setInitialPosition(finalPositionX, finalPositionY);
+    }
+
+  }); 
+
+}
+
+
+
 }
 
 
@@ -9976,19 +10025,35 @@ function Overlay()
       staticLayer = this.staticLayer;
       stage = this.stage;
     }
+
+    this.uploadLastHandLine = function(inputPoints) {
+
+      var lastLine = handLines.getLastLineContainer().getLine();
+      lastLine.points(inputPoints);
+      handLines.getLastLineContainer().getGeoPoints(inputPoints);
+
+      this.staticLayer.add(lastLine);
+
+      lastLine.draw();
+
+    }
 	
 }
 
 
 var overlay; 
 var toolTips;
- var lines;
+var lines;
+var handLines;
+
 
 function SetEasel() {
 	
 
   var googleMap = new GoogleMap();
   googleMap.initialize();
+
+  
 
 	overlay = new Overlay();
 
@@ -10000,6 +10065,10 @@ function SetEasel() {
   lines = new Lines();
   lines.initArray();
 
+
+  handLines = new HandLines();
+  handLines.initArray();
+  
   
 	overlay.setStage();
 
@@ -10229,23 +10298,23 @@ function LineContainer(inputLine) {
 
 	this.line = inputLine;
     
-        
+    
 
     this.getGeoPoints = function(points) {
-     
+       
         var mapLayer = new MapLayer();
 
-    	var newGeoArray = new Array();
-    	var index = 0;
+        var newGeoArray = new Array();
+        var index = 0;
 
-    	for (var i = 0; i<points.length; i+=2) {
- 		
+        for (var i = 0; i<points.length; i+=2) {
+         
     		var currentLayerPoint = new google.maps.Point(points[i], points[i+1]); //-60
     		newGeoArray[index] = mapLayer.fromPointToLatLng(currentLayerPoint, globalMap);
             index++;
-    	}
+        }
 
-    	this.geoPoints = newGeoArray;
+        this.geoPoints = newGeoArray;
         this.points = points;
 
     }
@@ -10264,7 +10333,7 @@ function LineContainer(inputLine) {
 
 
     this.addNewPoint = function(x,y) {
-           
+     
       var mapLayer = new MapLayer();
 
       //window.alert("diff x:"+mapLayerState.getDiffX()+" y:"+mapLayerState.getDiffY());
@@ -10273,14 +10342,120 @@ function LineContainer(inputLine) {
 
       var currentLayerPoint = new google.maps.Point(x, y);//-60
       this.geoPoints[this.geoPoints.length] = mapLayer.fromPointToLatLng(currentLayerPoint, globalMap);
+      
+
+  }
+
+
+  this.getLayerPoints = function() {
+
+   return this.points;
+}
+
+}
+
+function HandLines()
+{
+
+
+	this.initArray = function() {
+
+		this.array = new Array();	
+		this.counter = 0;
+	}
+
+
+	this.newRedLine = function() {
+
+
+		var redLine = new Kinetic.Line({
+			points: [],
+			stroke: 'red',
+			strokeWidth: 3,
+			lineCap: 'round',
+			lineJoin: 'round'
+		});
+
+
+		var newHandLineContainer = new HandLineContainer(redLine);
+		newHandLineContainer.getGeoPoints(redLine.points());
+
+		this.array[this.counter] = newHandLineContainer;
+		this.counter++;
+	}
+
+
+	this.returnArray = function() {
+
+		return this.array;
+	}
+
+
+	this.getLastLineContainer = function() {
+
+		return this.array[this.counter-1];
+	}
+
+
+}
+
+function HandLineContainer(inputLine) {
+
+	this.line = inputLine;
+    
+    
+
+    this.getGeoPoints = function(points) {
+       
+        var mapLayer = new MapLayer();
+
+        var newGeoArray = new Array();
+        var index = 0;
+
+        for (var i = 0; i<points.length; i+=2) {
+         
+    		var currentLayerPoint = new google.maps.Point(points[i], points[i+1]); 
+    		newGeoArray[index] = mapLayer.fromPointToLatLng(currentLayerPoint, globalMap);
+            index++;
+        }
+
+        this.geoPoints = newGeoArray;
+        this.points = points;
+
+    }
+
+
+    this.getLine = function() {
+
+    	return this.line;
+    }
+
+
+    this.getGeoArray = function() {
+
+    	return this.geoPoints;
+    }
+
+
+    this.addNewPoint = function(x,y) {
      
+      var mapLayer = new MapLayer();
 
-    }
+      this.line.points(this.line.points().concat([x+mapLayerState.getDiffX(), y+mapLayerState.getDiffY()]));
+
+      var currentLayerPoint = new google.maps.Point(x, y);//-60
+      this.geoPoints[this.geoPoints.length] = mapLayer.fromPointToLatLng(currentLayerPoint, globalMap);
+
+  }
 
 
-    this.getLayerPoints = function() {
+  this.getLayerPoints = function() {
 
-    	return this.points;
-    }
+   return this.points;
+  }
+
+
+
+
 
 }

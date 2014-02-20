@@ -20,3 +20,7 @@
 {% include js/TryElse/MapLayerState.js %}
 
 {% include js/TryElse/LineContainer.js %}
+
+{% include js/TryElse/HandLines.js %}
+
+{% include js/TryElse/HandLineContainer.js %}
