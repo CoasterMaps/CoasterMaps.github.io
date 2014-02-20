@@ -9,8 +9,14 @@ tab: welcome
 				alert("1 is checked");
 			}
 		};
+		
+		window.addEventListener('keyup', function (e){
+			if (e.keyCode === 13) {
+				checkColour();
+			}
+		})
 	</script>
-	
+		
 <body onload="SetEasel();">
 	
 	<div id="tools" class="btn-group">
@@ -113,13 +119,6 @@ tab: welcome
 		</div>
 
 	</div>
-	
-	window.addEventListener('keyup', function(e) {
-		if (e.keyCode === 13) {
-			checkColour();
-		}
-		)
-	})
  
 
 
@@ -139,5 +138,6 @@ tab: welcome
 
    
     <div id="map-canvas"/> 
+    
     
 </body>
