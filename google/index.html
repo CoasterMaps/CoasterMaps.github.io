@@ -3,6 +3,7 @@ layout: default
 tab: welcome
 ---
 
+<!--
 <script language="javascript" type="text/javascript">
 		function checkColour(){
 			if(document.getElementById('btn btn-primary').checked) {
@@ -11,23 +12,11 @@ tab: welcome
 				alert("2 is checked");
 				}
 		};
-	</script>
+	</script>-->
+
 	
 <body onload="SetEasel();">
 	
-
-	<script language="javascript" type="text/javascript">
-		function checkColour(){
-			if(document.getElementById('btn btn-primary').checked) {
-				alert('1 is checked');
-			}else if(document.getElementById('btn btn-info').checked) {
-				alert('2 is checked');
-				}
-		};
-	</script>
-
-
-
 	<div id="tools" class="btn-group">
 
 		<button class="btn btn-lg btn-success" role="button" id="cancel-tool" type="button">
@@ -89,7 +78,6 @@ tab: welcome
 			 	<li><a href="#">Colour:</a></li>
 			 
                 <li>
-                	<p><input type="button" value="Click Here" onClick="checkColour();"></p>
 			 	<div class="btn-group-vertical" data-toggle="buttons-radio">
 
 			 		<button class="btn btn-primary active" value="btn btn-primary" type="button" name="color">
