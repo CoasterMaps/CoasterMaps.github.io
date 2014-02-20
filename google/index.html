@@ -6,8 +6,12 @@ tab: welcome
 	
 
 	<script language="javascript" type="text/javascript">
-		function setColourVar(col){
-			alert("Colour set to" + col);
+		function checkColour(){
+			if(document.getElementById('btn btn-primary').checked) {
+				alert("1 is checked");
+			}else if(document.getElementById('btn btn-info').checked) {
+				alert("2 is checked");
+				}
 		};
 	</script>
 
@@ -78,7 +82,7 @@ tab: welcome
 
 			 		<button class="btn btn-primary active" value="btn btn-primary" type="button" name="color">
 			 			Blue
-			 			<input type="radio"/>
+			 			<input type="radio" checked/>
 			 		</button>
 
 			 		<button class="btn btn-info" value="btn btn-info" type="button" name="color">
