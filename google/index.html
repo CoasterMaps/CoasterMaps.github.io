@@ -5,6 +5,7 @@ tab: welcome
 
 <script language="javascript" type="text/javascript">
 		function checkColour(){
+
 			if(document.getElementById('Blue').checked) {
 				alert("1 is checked");
 			}
@@ -16,6 +17,7 @@ tab: welcome
 				checkColour();
 			}
 		})
+		
 	</script>
 		
 <body onload="SetEasel();">
@@ -88,22 +90,22 @@ tab: welcome
 			 			<input type="radio" checked>
 			 		</button>
 
-			 		<button class="btn btn-info" value="btn btn-info" type="button" name="color">
+			 		<button class="btn btn-info" value="btn btn-info" type="button" name="color" id="Light Blue">
 			 			Light Blue
 			 			<input type="radio" />
 			 		</button>
 
-			 		<button class="btn btn-success" value="btn btn-success" type="button" name="color">
+			 		<button class="btn btn-success" value="btn btn-success" type="button" name="color" id="Green">
 			 			Green
 			 			<input type="radio"/>
 			 		</button>
 
-			 		<button class="btn btn-warning" value="btn btn-warning" type="button" name="color">
+			 		<button class="btn btn-warning" value="btn btn-warning" type="button" name="color" id="Orange">
 			 			Orange
 			 			<input type="radio"/>
 			 		</button>
 			 		
-			 		<button class="btn btn-danger" value="btn btn-danger" type="button" name="color">
+			 		<button class="btn btn-danger" value="btn btn-danger" type="button" name="color" id="Red">
 			 			Red
 			 			<input type="radio"/>
 			 		</button>
@@ -120,8 +122,15 @@ tab: welcome
 		</div>
 
 	</div>
+	
+	<script language="javascript" type="text/javascript">
  
-
+		document.getElementById('Bright Blue').onclick = function()
+		{
+			document.getElementById('BrightBlue').focus();
+		}
+		
+		</script>
 
 
 
