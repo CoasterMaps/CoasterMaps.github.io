@@ -27,6 +27,7 @@ function Lines()
   	this.array[this.counter] = newLineContainer;
    
   	this.counter++;
+   // return redLine;
   }
 
 

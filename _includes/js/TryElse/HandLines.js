@@ -26,6 +26,10 @@ function HandLines()
 
 		this.array[this.counter] = newHandLineContainer;
 		this.counter++;
+
+		staticLayer.add(redLine);
+
+		return redLine;
 	}
 
 

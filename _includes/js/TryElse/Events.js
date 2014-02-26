@@ -9,6 +9,7 @@
   var isMouseHandDraw=false;
   var newline;
   var handpoints=[];
+  var currentHandLine;
 
 
 
@@ -17,6 +18,7 @@
 
     this.googleMap = inputMap;
     this.overlay = inputOverlay;
+
 
     $("#cancel-tool").click(function(){
       annot=0;
@@ -41,7 +43,6 @@
       line=0;
       hand=1;
     });
-
     
 
 
@@ -180,13 +181,13 @@
 
       stage.draggable(false);
 
-      handLines.newRedLine();
+      currentHandLine = handLines.newRedLine();
 
       isMouseHandDraw = true;
       handpoints=[];
       handpoints = handpoints.concat([event.clientX-60, event.clientY]);
 
-      overlay.uploadLastHandLine(handpoints);
+      overlay.uploadLastHandLine(currentHandLine, handpoints);
     }
 
   });
@@ -207,7 +208,7 @@
     if(isMouseHandDraw) {
       
       handpoints = handpoints.concat([event.clientX-60, event.clientY]);
-      overlay.uploadLastHandLine(handpoints);
+      overlay.uploadLastHandLine(currentHandLine, handpoints);
     }
 
 

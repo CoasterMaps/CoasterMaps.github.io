@@ -15,7 +15,7 @@ function Overlay()
 
 	 this.setStage = function() {
 
-	   this.stage = new Kinetic.Stage({
+	   stage = new Kinetic.Stage({
 	   		container: 'container',
 	   		width: $(window).width()-200,
 	   		height: $(window).height(),
@@ -23,7 +23,7 @@ function Overlay()
 	   	});
 
 	    this.eventLayer = new Kinetic.Layer();
-      this.staticLayer = new Kinetic.Layer();
+      staticLayer = new Kinetic.Layer();
 
 
       /*
@@ -31,15 +31,12 @@ function Overlay()
        * at the default which is at the center
        * of the hexagon
        */
-     
-      stage = this.stage;
-      staticLayer=this.staticLayer;     
-	 }
+     }
 
 
 	 this.getStage = function() {
 
-	   	return this.stage;
+	   	return stage;
     }
 
 	 
@@ -60,21 +57,15 @@ function Overlay()
    
     //window.alert("hi2 "+arrayToolTip.length);
 
-    this.staticLayer.clear();
+    staticLayer.clear();
 
       for (var i=0; i<arrayToolTip.length; i++) {
 
-        this.staticLayer.add(arrayToolTip[i][0].draw());
+        staticLayer.add(arrayToolTip[i][0].draw());
       }
 
 
-      this.stage.add(this.staticLayer);
-
-     // staticLayer.clear();
-     // tooltip.setAbsolutePosition(actualpixelMouse);
-      
-      staticLayer = this.staticLayer;
-      stage = this.stage;
+      stage.add(staticLayer);
     }
 
 
@@ -83,37 +74,24 @@ function Overlay()
       var arrayToolTip = toolTips.returnArray();
       var latestPosition = toolTips.returnCounter() - 1;
     
-      this.staticLayer.add(arrayToolTip[latestPosition][0]);
+      staticLayer.add(arrayToolTip[latestPosition][0]);
+      arrayToolTip[latestPosition][0].draw();
 
-      this.stage.clear();
-      this.stage.add(this.staticLayer);
-      
-      staticLayer = this.staticLayer;
-      stage = this.stage;
-    }
+      }
 
 
     this.uploadLastLine = function() {
 
-      this.staticLayer.add(lines.getLastLineContainer().getLine());
+      staticLayer.add(lines.getLastLineContainer().getLine());
 
-      this.stage.clear();
-      this.stage.add(this.staticLayer);
-      
-      staticLayer = this.staticLayer;
-      stage = this.stage;
+      lines.getLastLineContainer().getLine().draw();
     }
 
-    this.uploadLastHandLine = function(inputPoints) {
+    this.uploadLastHandLine = function(lastLine, inputPoints) {
 
-      var lastLine = handLines.getLastLineContainer().getLine();
       lastLine.points(inputPoints);
       handLines.getLastLineContainer().getGeoPoints(inputPoints);
-
-      this.staticLayer.add(lastLine);
-
       lastLine.draw();
-
     }
-	
+    
 }
