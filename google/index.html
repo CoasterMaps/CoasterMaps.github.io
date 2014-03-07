@@ -53,6 +53,61 @@ tab: welcome
 	<script src="http://code.jquery.com/jquery.js"></script>
     <script src="../js/bootstrap.min.js"></script>
     <script src="../js/bootstrap-slider.js"></script>
+    
+    <script>
+          
+          var red = 0;
+          var green = 0;
+          var blue = 0;
+		$(function(){
+			window.prettyPrint && prettyPrint();
+
+        $('#sl1').slider({
+          formater: function(value) {
+            return 'Current value: '+value;
+          }
+        });
+        
+        var RGBChange = function() {
+        	red = r.getValue();				//These 3 variables give values between 1 and 255 for each RGB colour
+        	green = g.getValue();
+        	blue = b.getValue();
+          $('#RGB').css('background', 'rgb('+r.getValue()+','+g.getValue()+','+b.getValue()+')') //Overall rgb value defined here
+        };
+        
+        document.onkeydown=function(e) {
+        	if (e.keyCode == '38') {
+        		alert("Red:" + red + " Green:" + green + " Blue:" + blue); //relays RGB values, used it to test if it was working
+        	}
+        }
+        
+        /*
+        document.onkeydown=function(e) {
+                    if (e.keyCode == '40') {
+                        var stroke = document.getElementById("sl1").value;    //Gets slider value
+                        alert(stroke);
+                    }
+                }*/
+        
+
+        var r = $('#R').slider()
+                .on('slide', RGBChange)
+                .data('slider');
+        var g = $('#G').slider()
+                .on('slide', RGBChange)
+                .data('slider');
+        var b = $('#B').slider()
+                .on('slide', RGBChange)
+                .data('slider');
+
+        $('#eg input').slider();
+    });
+ 
+    $('#sl1').slider()
+  .on('slide', function(ev){
+     $('#bar').val(ev.value);
+  });
+  </script>
 
 
 
@@ -131,39 +186,31 @@ tab: welcome
 				<li><a href="#">Colour:</a></li>
 
 				<li>
-					<div class="btn-group-vertical" data-toggle="buttons-radio">
-
-						<button class="btn btn-primary active" value="btn btn-primary" type="button" name="color">
-							Blue
-							<input type="radio" checked/>
-						</button>
-
-						<button class="btn btn-info" value="btn btn-info" type="button" name="color">
-							Light Blue
-							<input type="radio"/>
-						</button>
-
-						<button class="btn btn-success" value="btn btn-success" type="button" name="color">
-							Green
-							<input type="radio"/>
-						</button>
-
-						<button class="btn btn-warning" value="btn btn-warning" type="button" name="color">
-							Orange
-							<input type="radio"/>
-						</button>
-
-						<button class="btn btn-danger" value="btn btn-danger" type="button" name="color">
-							Red
-							<input type="radio"/>
-						</button>
-
-					</div>
+					<div>
+            <p>
+            <b>R</b> <input type="text" class="span2" value="" data-slider-min="0" data-slider-max="255" data-slider-step="1" data-slider-value="128" data-slider-id="RC" id="R" data-slider-tooltip="hide" data-slider-handle="round" >
+            </p>
+            <p>
+            <b>G</b> <input type="text" class="span2" value="" data-slider-min="0" data-slider-max="255" data-slider-step="1" data-slider-value="128" data-slider-id="GC" id="G" data-slider-tooltip="hide" data-slider-handle="round" >
+            </p>
+            <p>
+            <b>B</b> <input type="text" class="span2" value="" data-slider-min="0" data-slider-max="255" data-slider-step="1" data-slider-value="128" data-slider-id="BC" id="B" data-slider-tooltip="hide" data-slider-handle="round" >
+            </p>
+            <div id="RGB"></div>
+          </div>
 				</li>
 
 				<li class="divider"></li>
 
 				<li><a href="#">Line width:</a></li>
+				
+				<li>
+					<div>
+            <input type="text" class="span2" value="5" id="sl1" >
+          </div>
+          
+          <input type="text" id="bar" value="5">
+				</li>
 
 
 			</ul>
