@@ -2,7 +2,57 @@
 layout: default
 tab: welcome
 ---
+<head>
+    <!-- Bootstrap -->
+    <link href="../css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <link href="../css/shenanigans.css" rel="stylesheet" media="screen">
+    <link href="../css/slider.css" rel="stylesheet">
+	<style>
+	.container {
+		background: #fff;
+	}
+	#alert {
+		display: none;
+	}
+  #sl1 {
+    width: 200px;
+  }
+  #RGB {
+    height: 20px;
+    background: rgb(128, 128, 128);
+    width: 330px;
+  }
+  #RC .slider-selection {
+    background: #FF8282;
+  }
+  #RC .slider-handle {
+    background: red;
+  }
+  #GC .slider-selection {
+    background: #428041;
+  }
+  #GC .slider-handle {
+    background: green;
+  }
+  #BC .slider-selection {
+    background: #8283FF;
+  }
+  #BC .slider-handle {
+    border-bottom-color: blue;
+  }
+  #R, #G, #B {
+    width: 300px;
+  }
+  #eg .slider-selection {
+    background: #BABABA;
+  }
+	</style>
+  </head>
 <body onload="SetEasel();">
+	
+	<script src="http://code.jquery.com/jquery.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/bootstrap-slider.js"></script>
 
 
 
