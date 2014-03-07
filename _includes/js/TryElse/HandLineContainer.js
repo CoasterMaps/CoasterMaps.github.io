@@ -1,4 +1,4 @@
-function HandLineContainer(inputLine) {
+  function HandLineContainer(inputLine) {
 
 	this.line = inputLine;
     

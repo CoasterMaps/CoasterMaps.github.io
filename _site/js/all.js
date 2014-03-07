@@ -9659,30 +9659,102 @@ google.loader.rpl({":scriptaculous":{"versions":{":1.8.3":{"uncompressed":"scrip
     this.googleMap = inputMap;
     this.overlay = inputOverlay;
 
+    var disableButton = function(buttonString) {
+
+      document.getElementById("cancel-tool").disabled = false; 
+      document.getElementById("line-tool").disabled = false; 
+      document.getElementById("annotation-tool").disabled = false; 
+      document.getElementById("hand-tool").disabled = false; 
+      document.getElementById("delete-tool").disabled = false;
+
+      document.getElementById(buttonString).disabled = true; 
+    }
+
 
     $("#cancel-tool").click(function(){
       annot=0;
       line=0;
       hand=0;
+      
+      disableButton("cancel-tool");
     });
+
 
     $("#line-tool").click(function(){
       annot=0;
       line=1;
       hand=0;
+      disableButton("line-tool"); 
+      
     });
+
 
     $("#annotation-tool").click(function(){
       annot=1;
       line=0;
       hand=0;
+      disableButton("annotation-tool"); 
+      
     });
+
 
     $("#hand-tool").click(function(){
       annot=0;
       line=0;
       hand=1;
+      disableButton("hand-tool"); 
+      
     });
+
+    $("#delete-tool").click(function(){
+      localStorage.clear();
+      staticLayer.clear();
+
+      toolTips.array=[];
+      toolTips.counter = 0
+
+      lines.array=[];
+      lines.counter = 0;
+
+      handLines.array=[];// = handLines.returnArray();
+      handLines.counter = 0;
+
+      document.getElementById("delete-tool").disabled = true; 
+    });
+
+
+    $("#save-tool").click(function(){
+
+      var arrayToolTip = toolTips.returnArray();
+      var lineArray = lines.returnArray();
+      var handlineArray = handLines.returnArray();
+
+      var saveDrawings = new Save();
+
+      if (arrayToolTip.length > 0) saveDrawings.saveAnnot(arrayToolTip);
+      
+      if (lineArray.length > 0) saveDrawings.saveLines(lineArray);
+      
+      if (handlineArray.length > 0) saveDrawings.saveHandLines(handlineArray);
+
+      document.getElementById("save-tool").disabled = true; 
+      document.getElementById("get-tool").disabled = false;
+      document.getElementById("delete-tool").disabled = false;
+    });
+    
+
+    $("#get-tool").click(function(){
+
+      var saveDrawings = new Save();
+      staticLayer.clear(); 
+      
+
+      saveDrawings.getAnnot();
+      saveDrawings.getLines();
+      saveDrawings.getHandLines();
+      document.getElementById("get-tool").disabled = true;
+    });
+
     
 
 
@@ -9699,6 +9771,7 @@ google.loader.rpl({":scriptaculous":{"versions":{":1.8.3":{"uncompressed":"scrip
       var currentHexPoint = new google.maps.Point(tooltip.getAbsolutePosition().x, tooltip.getAbsolutePosition().y); 
       var hexGeo = mapLayer.fromPointToLatLng(currentHexPoint, globalMap);
       initialZoom = globalMap.getZoom();
+
     });
 
 
@@ -9736,10 +9809,8 @@ google.loader.rpl({":scriptaculous":{"versions":{":1.8.3":{"uncompressed":"scrip
             var actualPixel = mapLayer.fromLatLngToPoint(geoPoints[counter], globalMap); 
 
             newLineLayerArray[newLineLayerArrayIndex] = actualPixel.x + mapLayerState.getDiffX();
-            
-            newLineLayerArray[newLineLayerArrayIndex+1] =  actualPixel.y + mapLayerState.getDiffY();
+            newLineLayerArray[newLineLayerArrayIndex+1] = actualPixel.y + mapLayerState.getDiffY();
             newLineLayerArrayIndex+=2;
-
           }
 
           currentLine.getLine().points(newLineLayerArray);
@@ -9793,15 +9864,17 @@ google.loader.rpl({":scriptaculous":{"versions":{":1.8.3":{"uncompressed":"scrip
     // annot tool trigger
     if (annot===1) {
 
+
       toolTips.addToolTip(event.clientX, event.clientY);
       overlay.uploadNextObject();
       isMouseHandDraw=false; 
       stage.draggable(true); 
+      document.getElementById("save-tool").disabled = false;
     }
 
 
     // line tool trigger
-    if (line>0) {
+    else if (line>0) {
 
       if (line===1) {
 
@@ -9812,12 +9885,15 @@ google.loader.rpl({":scriptaculous":{"versions":{":1.8.3":{"uncompressed":"scrip
       lines.getLastLineContainer().addNewPoint(event.clientX-60, event.clientY);
       overlay.uploadLastLine();  
       isMouseHandDraw=false;  
-      stage.draggable(true);       
+      stage.draggable(true); 
+      document.getElementById("save-tool").disabled = false;
     }
 
 
     // hand tool trigger
-    if (hand===1) {
+    else if (hand===1) {
+
+      //var mapLayer = new MapLayer();
 
       stage.draggable(false);
 
@@ -9825,30 +9901,42 @@ google.loader.rpl({":scriptaculous":{"versions":{":1.8.3":{"uncompressed":"scrip
 
       isMouseHandDraw = true;
       handpoints=[];
-      handpoints = handpoints.concat([event.clientX-60, event.clientY]);
+      handpoints = handpoints.concat([event.clientX-60+mapLayerState.getDiffX(), event.clientY+mapLayerState.getDiffY()]);
 
       overlay.uploadLastHandLine(currentHandLine, handpoints);
+      document.getElementById("save-tool").disabled = false;
     }
+
+    else  {
+      stage.draggable(true);
+      isMouseHandDraw = false;
+    }
+
 
   });
 
 
-      this.overlay.getStage().getContent().addEventListener('mouseup', function(event){
+  this.overlay.getStage().getContent().addEventListener('mouseup', function(event){
 
-        mapLayerState.setInitialPosition(0,0);
+    mapLayerState.setInitialPosition(0,0);
 
-        isMouseHandDraw=false;  
-      });
+    isMouseHandDraw=false;  
+  });
 
 
 
-      this.overlay.getStage().getContent().addEventListener('mousemove', function(event){ 
+  this.overlay.getStage().getContent().addEventListener('mousemove', function(event){ 
 
     // if hand drawing tool draw, else probably move map
     if(isMouseHandDraw) {
+
+      stage.draggable(false);
       
-      handpoints = handpoints.concat([event.clientX-60, event.clientY]);
+      handpoints = handpoints.concat([event.clientX-60+mapLayerState.getDiffX(), event.clientY+mapLayerState.getDiffY()]);
+
       overlay.uploadLastHandLine(currentHandLine, handpoints);
+      stage.draggable(true);
+      
     }
 
 
@@ -9947,13 +10035,7 @@ function Overlay()
 
 	    this.eventLayer = new Kinetic.Layer();
       staticLayer = new Kinetic.Layer();
-
-
-      /*
-       * leave center point positioned
-       * at the default which is at the center
-       * of the hexagon
-       */
+ 
      }
 
 
@@ -9978,8 +10060,7 @@ function Overlay()
 
       var arrayToolTip = toolTips.returnArray();
    
-    //window.alert("hi2 "+arrayToolTip.length);
-
+    
     staticLayer.clear();
 
       for (var i=0; i<arrayToolTip.length; i++) {
@@ -10010,6 +10091,13 @@ function Overlay()
       lines.getLastLineContainer().getLine().draw();
     }
 
+    this.uploadLastLineHand = function() {
+
+      staticLayer.add(handLines.getLastLineContainer().getLine());
+      handLines.getLastLineContainer().getLine().draw();
+ 
+    }
+
     this.uploadLastHandLine = function(lastLine, inputPoints) {
 
       lastLine.points(inputPoints);
@@ -10032,10 +10120,17 @@ function SetEasel() {
   var googleMap = new GoogleMap();
   googleMap.initialize();
 
+  document.getElementById("cancel-tool").disabled = false; 
+  document.getElementById("line-tool").disabled = false; 
+  document.getElementById("annotation-tool").disabled = false; 
+  document.getElementById("hand-tool").disabled = false; 
+  document.getElementById("delete-tool").disabled = false;
+  document.getElementById("get-tool").disabled = false;
+
+  document.getElementById("save-tool").disabled = true;
   
 
 	overlay = new Overlay();
-
 
 
   toolTips = new ToolTips();
@@ -10097,6 +10192,9 @@ function ToolTips()
         padding: 5,
         fill: 'white'
     }));
+
+    //staticLayer.add(redLine);
+
 
     var mapLayer = new MapLayer();
     var toolTipGeo = new Array();
@@ -10212,62 +10310,62 @@ function MapLayerState()
 {
 
 
-localStorage.clear();
+//this.clear();
 
     this.setInitialPosition = function(x,y) {
-    	localStorage.initialPositionX = x;
-        localStorage.initialPositionY = y;
+    	this.initialPositionX = x;
+        this.initialPositionY = y;
     }
 
     this.setFinalPosition = function(x,y) {
-    	localStorage.finalPositionX = x;
-        localStorage.finalPositionY = y;
+    	this.finalPositionX = x;
+        this.finalPositionY = y;
     }
 
     this.setDiff = function(x,y) {
-    	localStorage.initialDifferenceX = x;
-        localStorage.initialDifferenceY = y;
+    	this.initialDifferenceX = x;
+        this.initialDifferenceY = y;
     }
 
 
     this.getInitPosX = function() {
 
-    	if(typeof localStorage.initialPositionX !== 'undefined')
-    		return parseFloat(localStorage.initialPositionX);
+    	if(typeof this.initialPositionX !== 'undefined')
+    		return parseFloat(this.initialPositionX);
         else return 0;
     }
     this.getInitPosY = function() {
 
-    	if(typeof localStorage.initialPositionY !== 'undefined')
-    		return parseFloat(localStorage.initialPositionY);
+    	if(typeof this.initialPositionY !== 'undefined')
+    		return parseFloat(this.initialPositionY);
         else return 0;
     }
 
 
     this.getFinalPosX = function() {
 
-    	if(typeof localStorage.finalPositionX !== 'undefined')
-    		return parseFloat(localStorage.finalPositionX);
+    	if(typeof this.finalPositionX !== 'undefined')
+    		return parseFloat(this.finalPositionX);
         else return 0;
     }
     this.getFinalPosY = function() {
 
-    	if(typeof localStorage.finalPositionY !== 'undefined')
-    		return parseFloat(localStorage.finalPositionY);
+    	if(typeof this.finalPositionY !== 'undefined')
+    		return parseFloat(this.finalPositionY);
         else return 0;
     }
 
 
     this.getDiffX = function() {
 
-    	if(typeof localStorage.initialDifferenceX !== 'undefined')
-    		return parseFloat(localStorage.initialDifferenceX);
+    	if(typeof this.initialDifferenceX !== 'undefined')
+    		return parseFloat(this.initialDifferenceX);
         else return 0;
     }
     this.getDiffY = function() {
 
-    	if(typeof localStorage.initialDifferenceY !== 'undefined')
-    		return parseFloat(localStorage.initialDifferenceY );
+    	if(typeof this.initialDifferenceY !== 'undefined')
+    		return parseFloat(this.initialDifferenceY );
         else return 0;
     }
     
@@ -10324,8 +10422,8 @@ function LineContainer(inputLine) {
 
       this.line.points(this.line.points().concat([x+mapLayerState.getDiffX(), y+mapLayerState.getDiffY()]));
 
-      //var currentLayerPoint = new google.maps.Point(x, y);//-60
-      //this.geoPoints[this.geoPoints.length] = mapLayer.fromPointToLatLng(currentLayerPoint, globalMap);
+      var currentLayerPoint = new google.maps.Point(x, y);//-60
+      this.geoPoints[this.geoPoints.length] = mapLayer.fromPointToLatLng(currentLayerPoint, globalMap);
       
 
   }
@@ -10387,7 +10485,7 @@ function HandLines()
 
 }
 
-function HandLineContainer(inputLine) {
+  function HandLineContainer(inputLine) {
 
 	this.line = inputLine;
     
@@ -10444,6 +10542,241 @@ function HandLineContainer(inputLine) {
 
 
 
+
+
+}
+
+function Save() {
+
+  //localStorage.clear();
+
+  
+
+  this.saveAnnot = function(annotArray) {
+
+    var newStringAnnotArray=[{"lat" : annotArray[0][1].lat().toString(), "lng" : annotArray[0][1].lng().toString()}] ;
+
+    for(var i=1; i<annotArray.length; i++) {
+
+      var stringLat = annotArray[i][1].lat().toString();
+      var stringLng = annotArray[i][1].lng().toString();
+
+      newStringAnnotArray = newStringAnnotArray.concat([{"lat": stringLat, "lng": stringLng}]);
+    } 
+
+    var finalArray = {"annot":newStringAnnotArray};
+
+    var myJsonString = JSON.stringify(finalArray);
+
+    localStorage.annot = myJsonString; 
+        //window.alert(obj.annot.lat);
+  }
+
+
+ this.getAnnot = function() {
+
+   if(typeof localStorage.annot !== 'undefined') {
+
+      var myJsonString = localStorage.annot;
+
+      this.obj = JSON.parse(myJsonString);
+
+      var mapLayer = new MapLayer();
+             
+
+      for(var i=0; i<this.obj.annot.length; i++) {
+
+       var curLatLng = new google.maps.LatLng(parseFloat(this.obj.annot[i].lat), parseFloat(this.obj.annot[i].lng));
+
+       var actualpixelMouse = mapLayer.fromLatLngToPoint(curLatLng, globalMap); 
+       var newLayerPixel = new google.maps.Point(actualpixelMouse.x, actualpixelMouse.y);
+
+       toolTips.addToolTip(actualpixelMouse.x+60, actualpixelMouse.y);
+
+       //var annotArray = toolTips.returnArray();
+
+       overlay.uploadNextObject();
+     }
+
+   }
+   
+}
+
+
+
+
+      this.saveLines = function(inputLinesArray) {
+
+        //window.alert(inputLinesArray.length);
+        
+        var newLine=[];
+        var lineGeoPoints=[];
+
+        for(var i=0; i<inputLinesArray.length; i++) {
+
+          var geoPointsArray = inputLinesArray[i].getGeoArray();
+     
+          for(var ii=0; ii<geoPointsArray.length; ii++) {
+
+            var stringLat = geoPointsArray[ii].lat().toString();
+            var stringLng = geoPointsArray[ii].lng().toString();
+
+            lineGeoPoints = lineGeoPoints.concat( [{ "point" : {"lat" : stringLat, "lng" : stringLng } }] );
+          }
+
+          newLine = newLine.concat([ {"line": lineGeoPoints} ]);
+
+     
+          lineGeoPoints = [];
+        }
+
+        var finalArray = {"linesArray" : newLine};
+
+        var myJsonString = JSON.stringify(finalArray);
+
+        localStorage.linesArraySaved = myJsonString; 
+
+     }
+    // { "linesArray" : { "line" : { "point" : {"lat", "lng"}  }   } }
+
+
+
+
+  this.getLines = function() {
+
+     if(typeof localStorage.linesArraySaved !== 'undefined') {
+   
+    
+    var myJsonString = localStorage.linesArraySaved;
+
+    this.obj = JSON.parse(myJsonString);
+
+    var mapLayer = new MapLayer();
+
+     // loop through lines
+     for (var i=0; i<this.obj.linesArray.length; i++) {
+
+      var curLine = this.obj.linesArray[i].line;
+
+      lines.newRedLine();
+
+      // parse through points
+      for (var ii=0; ii<curLine.length; ii++) {
+
+        var curLat = parseFloat(curLine[ii].point.lat);
+        var cutLng = parseFloat(curLine[ii].point.lng);
+
+        var latLng = new google.maps.LatLng(curLat, cutLng);
+
+        var curPoint = mapLayer.fromLatLngToPoint(latLng, globalMap); 
+
+        lines.getLastLineContainer().addNewPoint(curPoint.x, curPoint.y);
+        overlay.uploadLastLine(); 
+      }
+
+    }
+
+  }
+
+  }
+
+
+
+
+
+
+
+ this.saveHandLines = function(inputLinesArray) {
+
+        //window.alert(inputLinesArray.length);
+
+        
+        var newLine=[];
+        var lineGeoPoints=[];
+
+        for(var i=0; i<inputLinesArray.length; i++) {
+
+          var geoPointsArray = inputLinesArray[i].getGeoArray();
+     
+          for(var ii=0; ii<geoPointsArray.length; ii++) {
+
+            var stringLat = geoPointsArray[ii].lat().toString();
+            var stringLng = geoPointsArray[ii].lng().toString();
+
+            lineGeoPoints = lineGeoPoints.concat( [{ "point" : {"lat" : stringLat, "lng" : stringLng } }] );
+          }
+
+          newLine = newLine.concat([ {"line": lineGeoPoints} ]);
+
+     
+          lineGeoPoints = [];
+        }
+
+        var finalArray = {"linesArray" : newLine};
+
+        var myJsonString = JSON.stringify(finalArray);
+
+         //window.alert(myJsonString);
+
+        localStorage.handLinesArraySaved = myJsonString; 
+
+     }
+    // { "linesArray" : { "line" : { "point" : {"lat", "lng"}  }   } }
+
+
+
+
+  this.getHandLines = function() {
+
+    //window.alert(localStorage.handLinesArraySaved);
+
+    if(typeof localStorage.handLinesArraySaved !== 'undefined') {
+      
+
+    var myJsonString = localStorage.handLinesArraySaved;
+
+    //window.alert(myJsonString);
+
+
+    this.obj = JSON.parse(myJsonString);
+
+    var mapLayer = new MapLayer();
+
+     // loop through lines
+     for (var i=0; i<this.obj.linesArray.length; i++) {
+
+      var curLine = this.obj.linesArray[i].line;
+
+      handLines.newRedLine();
+
+      // parse through points
+      for (var ii=0; ii<curLine.length; ii++) {
+
+        var curLat = parseFloat(curLine[ii].point.lat);
+        var cutLng = parseFloat(curLine[ii].point.lng);
+
+        var latLng = new google.maps.LatLng(curLat, cutLng);
+
+        var curPoint = mapLayer.fromLatLngToPoint(latLng, globalMap); 
+
+        handLines.getLastLineContainer().addNewPoint(curPoint.x, curPoint.y);
+
+        overlay.uploadLastLineHand(); 
+        //uploadLastHandLine
+      }
+    }
+
+  }
+}
+
+
+ 
+
+
+   
+
+
+  
 
 
 }

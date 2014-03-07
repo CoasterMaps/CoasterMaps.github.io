@@ -1,104 +1,142 @@
 <!DOCTYPE html>
 <html>
-    <head>
-    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
-        <title>COMP2013 Group Blog. COASTER 3D PROJECT. | That's techSoc to you
-        </title>
-        
-        <link href="/css/all.css" rel="stylesheet" type="text/css" />
+<head>
+  <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+  <title>COMP2013 Group Blog. COASTER 3D PROJECT. | That's techSoc to you
+  </title>
 
-        <script type="text/javascript"
-        src="https://maps.googleapis.com/maps/api/js?v=3key={AIzaSyBiVydJrssXEs9BpQoO7MX7RSsU13CuJ20}&sensor=false">
-        </script>
+  <link href="/css/all.css" rel="stylesheet" type="text/css" />
 
-        <script type="text/javascript"
-        src="http://ecn.dev.virtualearth.net/mapcontrol/mapcontrol.ashx?v=7.0">
-        </script>
+  <script type="text/javascript"
+  src="https://maps.googleapis.com/maps/api/js?v=3key={AIzaSyBiVydJrssXEs9BpQoO7MX7RSsU13CuJ20}&sensor=false">
+  </script>
 
-        <script 
-        src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=drawing">
-        </script>
+  <script type="text/javascript"
+  src="http://ecn.dev.virtualearth.net/mapcontrol/mapcontrol.ashx?v=7.0">
+  </script>
 
-        <script type="text/javascript" src="http://openspace.ordnancesurvey.co.uk/osmapapi/openspace.js?key=BA08531D8339984EE0405F0AC86026A9"></script>  
+  <script 
+  src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=drawing">
+  </script>
 
-        <script type="text/javascript" src="/js/all.js"></script>
+  <script type="text/javascript" src="http://openspace.ordnancesurvey.co.uk/osmapapi/openspace.js?key=BA08531D8339984EE0405F0AC86026A9"></script>  
 
-        <script src="http://d3lp1msu2r81bx.cloudfront.net/kjs/js/lib/kinetic-v5.0.0.min.js"></script>
+  <script type="text/javascript" src="/js/all.js"></script>
 
-
-        <!-- Latest compiled and minified CSS -->
-<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
-
-<!-- Optional theme -->
-<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
-
-<!-- Latest compiled and minified JavaScript -->
-<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+  <script src="http://d3lp1msu2r81bx.cloudfront.net/kjs/js/lib/kinetic-v5.0.0.min.js"></script>
 
 
-<script type="text/javascript">
-    $('#tools').click(function (e) { 
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+
+  <!-- Optional theme -->
+  <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
+
+  <!-- Latest compiled and minified JavaScript -->
+  <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+
+
+  <script type="text/javascript">
+  $('#tools').click(function (e) { 
     window.alert("hi");                  
-      e.stopPropagation();
-    });
-</script>
+    e.stopPropagation();
+  });
+  </script>
 
 
 
-        <style type="text/css">
+  <style type="text/css">
 
-      #map-canvas {
-        height: 100%;
-        position: absolute;
-        top: 0;    
-        left: 0;
-        right: 0;
-        z-index: 0;
-      }
+  #map-canvas {
+    height: 100%;
+    position: absolute;
+    top: 0;    
+    left: 0;
+    right: 0;
+    z-index: 0;
+  }
 
-      #container {
-        margin-left: 60px;   
-        height: 100%;
-        width: 85%;
-        z-index: 100;
-        position: relative;
-      }
+  #container {
+    margin-left: 60px;   
+    height: 100%;
+    width: 85%;
+    z-index: 100;
+    position: relative;
+  }
 
-       #tools {
-        margin-top: 50px;
-        width:100px;
-        position: absolute;
-        right:5px;
-        z-index: 100;
-      }
+  #save-tool {
+    margin-top: 50px;
+    width:100px;
+    position: absolute;
+    right:5px;
+    z-index: 100;
+  }
+
+  #delete-tool {
+    margin-top: 100px;
+    width:100px;
+    position: absolute;
+    right:5px;
+    z-index: 100;
+  }
+
+  #get-tool {
+    margin-top: 150px;
+    width:100px;
+    position: absolute;
+    right:5px;
+    z-index: 100;
+  }
+
+  #tools {
+    margin-top: 200px;
+    width:100px;
+    position: absolute;
+    right:5px;
+    z-index: 100;
+  }
 
 
 
 
-      #text-debug {
-        margin-top: 300px;
-        width:100px;
-        position: absolute;
-        right:5px;
-        z-index: 100;
-      }
+  #text-debug {
+    margin-top: 300px;
+    width:100px;
+    position: absolute;
+    right:5px;
+    z-index: 100;
+  }
 
-       #text-debug2 {
-        margin-top: 450px;
-        width:100px;
-        position: absolute;
-        right:5px;
-        z-index: 100;
-      }
-      
-    </style>
+  #text-debug2 {
+    margin-top: 450px;
+    width:100px;
+    position: absolute;
+    right:5px;
+    z-index: 100;
+  }
 
-    </head>
+  </style>
+
+</head>
 
 
-       <div id="contents">
-        <body onload="SetEasel();">
+<div id="contents">
+  <body onload="SetEasel();">
 
+
+
+	<button class="btn btn-lg btn-success" role="button" id="save-tool" type="button">
+		<span class="glyphicon glyphicon-save"></span>
+	</button> 
+
+	<button class="btn btn-lg btn-success" role="button" id="delete-tool" type="button">
+		<span class="glyphicon glyphicon-remove"></span>
+	</button> 
+
+
+	<button class="btn btn-lg btn-success" role="button" id="get-tool" type="button">
+		<span class="glyphicon glyphicon-folder-open"></span>
+	</button> 
 
 
 	<div id="tools" class="btn-group">
@@ -110,13 +148,13 @@
 
 		<div class="btn-group">
 
-			 <button type="button" class="btn btn-lg btn-success" id="annotation-tool"> 
-			 	<span class="glyphicon glyphicon-screenshot"></span>
-			 </button>
+			<button type="button" class="btn btn-lg btn-success" id="annotation-tool"> 
+				<span class="glyphicon glyphicon-screenshot"></span>
+			</button>
 
-			 <button type="button" class="btn btn-lg btn-success dropdown-toggle" data-toggle="dropdown">
-			 	<span class="caret"></span>
-			 </button>
+			<button type="button" class="btn btn-lg btn-success dropdown-toggle" data-toggle="dropdown">
+				<span class="caret"></span>
+			</button>
 
 			<ul class="dropdown-menu pull-center">
 				<li><a href="#">Dropdown link</a></li>
@@ -127,21 +165,21 @@
 
 		<div class="btn-group">
 
-			 <button type="button"  class="btn btn-lg btn-success" id="line-tool"> 
-			 	<span class="glyphicon glyphicon-minus"></span>
-			 </button>
+			<button type="button"  class="btn btn-lg btn-success" id="line-tool"> 
+				<span class="glyphicon glyphicon-minus"></span>
+			</button>
 
-			 <button type="button" class="btn btn-lg btn-success dropdown-toggle" data-toggle="dropdown">
-			 	<span class="caret"></span>
-			 </button>
+			<button type="button" class="btn btn-lg btn-success dropdown-toggle" data-toggle="dropdown">
+				<span class="caret"></span>
+			</button>
 
-			 <ul class="dropdown-menu pull-center" role="menu">
-			 	<li><a href="#">Action</a></li>
-			 	<li><a href="#">Another action</a></li>
-			 	<li><a href="#">Something else here</a></li>
-			 	<li class="divider"></li>
-			 	<li><a href="#">Separated link</a></li>
-			 </ul>
+			<ul class="dropdown-menu pull-center" role="menu">
+				<li><a href="#">Action</a></li>
+				<li><a href="#">Another action</a></li>
+				<li><a href="#">Something else here</a></li>
+				<li class="divider"></li>
+				<li><a href="#">Separated link</a></li>
+			</ul>
 		</div>
 
 		
@@ -149,83 +187,83 @@
 
 		<div class="btn-group">
 
-			 <button type="button"  class="btn btn-lg btn-success" id="hand-tool"> 
-			 	<span class="glyphicon glyphicon-pencil"></span>
-			 </button>
+			<button type="button"  class="btn btn-lg btn-success" id="hand-tool"> 
+				<span class="glyphicon glyphicon-pencil"></span>
+			</button>
 
-			 <button type="button" class="btn btn-lg btn-success dropdown-toggle" data-toggle="dropdown">
-			 	<span class="caret"></span>
-			 </button>
+			<button type="button" class="btn btn-lg btn-success dropdown-toggle" data-toggle="dropdown">
+				<span class="caret"></span>
+			</button>
 
-			 <ul class="dropdown-menu pull-center" role="menu">
+			<ul class="dropdown-menu pull-center" role="menu">
 
-			 	<li><a href="#">Colour:</a></li>
-			 
-                <li>
-			 	<div class="btn-group-vertical" data-toggle="buttons-radio">
+				<li><a href="#">Colour:</a></li>
 
-			 		<button class="btn btn-primary active" value="btn btn-primary" type="button" name="color">
-			 			Blue
-			 			<input type="radio" checked/>
-			 		</button>
+				<li>
+					<div class="btn-group-vertical" data-toggle="buttons-radio">
 
-			 		<button class="btn btn-info" value="btn btn-info" type="button" name="color">
-			 			Light Blue
-			 			<input type="radio"/>
-			 		</button>
+						<button class="btn btn-primary active" value="btn btn-primary" type="button" name="color">
+							Blue
+							<input type="radio" checked/>
+						</button>
 
-			 		<button class="btn btn-success" value="btn btn-success" type="button" name="color">
-			 			Green
-			 			<input type="radio"/>
-			 		</button>
+						<button class="btn btn-info" value="btn btn-info" type="button" name="color">
+							Light Blue
+							<input type="radio"/>
+						</button>
 
-			 		<button class="btn btn-warning" value="btn btn-warning" type="button" name="color">
-			 			Orange
-			 			<input type="radio"/>
-			 		</button>
-			 		
-			 		<button class="btn btn-danger" value="btn btn-danger" type="button" name="color">
-			 			Red
-			 			<input type="radio"/>
-			 		</button>
-			 		
-			 	</div>
-			 </li>
+						<button class="btn btn-success" value="btn btn-success" type="button" name="color">
+							Green
+							<input type="radio"/>
+						</button>
 
-			 	<li class="divider"></li>
-			 	
-			 	<li><a href="#">Line width:</a></li>
+						<button class="btn btn-warning" value="btn btn-warning" type="button" name="color">
+							Orange
+							<input type="radio"/>
+						</button>
+
+						<button class="btn btn-danger" value="btn btn-danger" type="button" name="color">
+							Red
+							<input type="radio"/>
+						</button>
+
+					</div>
+				</li>
+
+				<li class="divider"></li>
+
+				<li><a href="#">Line width:</a></li>
 
 
-			 </ul>
+			</ul>
 		</div>
 
 	</div>
 
 
-    
 
 
 
 
 
-   <!-- <button class="btn btn-lg btn-success" role="button" id="annotation-tool" type="button">Annotate</button>  -->
+
+	<!-- <button class="btn btn-lg btn-success" role="button" id="annotation-tool" type="button">Annotate</button>  -->
 
    <!--
    
     <div id="text-debug">Title</div> 
-     <div id="text-debug2">Title</div>  -->
-   
+    <div id="text-debug2">Title</div>  -->
+
     
     
     <div id="container"></div>
 
-   
+
     <div id="map-canvas"/> 
 
 
 </body>
-       </div>
+</div>
 
 </html>
 

@@ -19,30 +19,102 @@
     this.googleMap = inputMap;
     this.overlay = inputOverlay;
 
+    var disableButton = function(buttonString) {
+
+      document.getElementById("cancel-tool").disabled = false; 
+      document.getElementById("line-tool").disabled = false; 
+      document.getElementById("annotation-tool").disabled = false; 
+      document.getElementById("hand-tool").disabled = false; 
+      document.getElementById("delete-tool").disabled = false;
+
+      document.getElementById(buttonString).disabled = true; 
+    }
+
 
     $("#cancel-tool").click(function(){
       annot=0;
       line=0;
       hand=0;
+      
+      disableButton("cancel-tool");
     });
+
 
     $("#line-tool").click(function(){
       annot=0;
       line=1;
       hand=0;
+      disableButton("line-tool"); 
+      
     });
+
 
     $("#annotation-tool").click(function(){
       annot=1;
       line=0;
       hand=0;
+      disableButton("annotation-tool"); 
+      
     });
+
 
     $("#hand-tool").click(function(){
       annot=0;
       line=0;
       hand=1;
+      disableButton("hand-tool"); 
+      
     });
+
+    $("#delete-tool").click(function(){
+      localStorage.clear();
+      staticLayer.clear();
+
+      toolTips.array=[];
+      toolTips.counter = 0
+
+      lines.array=[];
+      lines.counter = 0;
+
+      handLines.array=[];// = handLines.returnArray();
+      handLines.counter = 0;
+
+      document.getElementById("delete-tool").disabled = true; 
+    });
+
+
+    $("#save-tool").click(function(){
+
+      var arrayToolTip = toolTips.returnArray();
+      var lineArray = lines.returnArray();
+      var handlineArray = handLines.returnArray();
+
+      var saveDrawings = new Save();
+
+      if (arrayToolTip.length > 0) saveDrawings.saveAnnot(arrayToolTip);
+      
+      if (lineArray.length > 0) saveDrawings.saveLines(lineArray);
+      
+      if (handlineArray.length > 0) saveDrawings.saveHandLines(handlineArray);
+
+      document.getElementById("save-tool").disabled = true; 
+      document.getElementById("get-tool").disabled = false;
+      document.getElementById("delete-tool").disabled = false;
+    });
+    
+
+    $("#get-tool").click(function(){
+
+      var saveDrawings = new Save();
+      staticLayer.clear(); 
+      
+
+      saveDrawings.getAnnot();
+      saveDrawings.getLines();
+      saveDrawings.getHandLines();
+      document.getElementById("get-tool").disabled = true;
+    });
+
     
 
 
@@ -59,6 +131,7 @@
       var currentHexPoint = new google.maps.Point(tooltip.getAbsolutePosition().x, tooltip.getAbsolutePosition().y); 
       var hexGeo = mapLayer.fromPointToLatLng(currentHexPoint, globalMap);
       initialZoom = globalMap.getZoom();
+
     });
 
 
@@ -96,10 +169,8 @@
             var actualPixel = mapLayer.fromLatLngToPoint(geoPoints[counter], globalMap); 
 
             newLineLayerArray[newLineLayerArrayIndex] = actualPixel.x + mapLayerState.getDiffX();
-            
-            newLineLayerArray[newLineLayerArrayIndex+1] =  actualPixel.y + mapLayerState.getDiffY();
+            newLineLayerArray[newLineLayerArrayIndex+1] = actualPixel.y + mapLayerState.getDiffY();
             newLineLayerArrayIndex+=2;
-
           }
 
           currentLine.getLine().points(newLineLayerArray);
@@ -153,15 +224,17 @@
     // annot tool trigger
     if (annot===1) {
 
+
       toolTips.addToolTip(event.clientX, event.clientY);
       overlay.uploadNextObject();
       isMouseHandDraw=false; 
       stage.draggable(true); 
+      document.getElementById("save-tool").disabled = false;
     }
 
 
     // line tool trigger
-    if (line>0) {
+    else if (line>0) {
 
       if (line===1) {
 
@@ -172,12 +245,15 @@
       lines.getLastLineContainer().addNewPoint(event.clientX-60, event.clientY);
       overlay.uploadLastLine();  
       isMouseHandDraw=false;  
-      stage.draggable(true);       
+      stage.draggable(true); 
+      document.getElementById("save-tool").disabled = false;
     }
 
 
     // hand tool trigger
-    if (hand===1) {
+    else if (hand===1) {
+
+      //var mapLayer = new MapLayer();
 
       stage.draggable(false);
 
@@ -185,30 +261,42 @@
 
       isMouseHandDraw = true;
       handpoints=[];
-      handpoints = handpoints.concat([event.clientX-60, event.clientY]);
+      handpoints = handpoints.concat([event.clientX-60+mapLayerState.getDiffX(), event.clientY+mapLayerState.getDiffY()]);
 
       overlay.uploadLastHandLine(currentHandLine, handpoints);
+      document.getElementById("save-tool").disabled = false;
     }
+
+    else  {
+      stage.draggable(true);
+      isMouseHandDraw = false;
+    }
+
 
   });
 
 
-      this.overlay.getStage().getContent().addEventListener('mouseup', function(event){
+  this.overlay.getStage().getContent().addEventListener('mouseup', function(event){
 
-        mapLayerState.setInitialPosition(0,0);
+    mapLayerState.setInitialPosition(0,0);
 
-        isMouseHandDraw=false;  
-      });
+    isMouseHandDraw=false;  
+  });
 
 
 
-      this.overlay.getStage().getContent().addEventListener('mousemove', function(event){ 
+  this.overlay.getStage().getContent().addEventListener('mousemove', function(event){ 
 
     // if hand drawing tool draw, else probably move map
     if(isMouseHandDraw) {
+
+      stage.draggable(false);
       
-      handpoints = handpoints.concat([event.clientX-60, event.clientY]);
+      handpoints = handpoints.concat([event.clientX-60+mapLayerState.getDiffX(), event.clientY+mapLayerState.getDiffY()]);
+
       overlay.uploadLastHandLine(currentHandLine, handpoints);
+      stage.draggable(true);
+      
     }
 
 

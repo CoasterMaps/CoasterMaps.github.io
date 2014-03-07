@@ -24,13 +24,7 @@ function Overlay()
 
 	    this.eventLayer = new Kinetic.Layer();
       staticLayer = new Kinetic.Layer();
-
-
-      /*
-       * leave center point positioned
-       * at the default which is at the center
-       * of the hexagon
-       */
+ 
      }
 
 
@@ -55,8 +49,7 @@ function Overlay()
 
       var arrayToolTip = toolTips.returnArray();
    
-    //window.alert("hi2 "+arrayToolTip.length);
-
+    
     staticLayer.clear();
 
       for (var i=0; i<arrayToolTip.length; i++) {
@@ -85,6 +78,13 @@ function Overlay()
       staticLayer.add(lines.getLastLineContainer().getLine());
 
       lines.getLastLineContainer().getLine().draw();
+    }
+
+    this.uploadLastLineHand = function() {
+
+      staticLayer.add(handLines.getLastLineContainer().getLine());
+      handLines.getLastLineContainer().getLine().draw();
+ 
     }
 
     this.uploadLastHandLine = function(lastLine, inputPoints) {

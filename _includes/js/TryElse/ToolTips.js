@@ -37,6 +37,9 @@ function ToolTips()
         fill: 'white'
     }));
 
+    //staticLayer.add(redLine);
+
+
     var mapLayer = new MapLayer();
     var toolTipGeo = new Array();
     

@@ -49,8 +49,8 @@ function LineContainer(inputLine) {
 
       this.line.points(this.line.points().concat([x+mapLayerState.getDiffX(), y+mapLayerState.getDiffY()]));
 
-      //var currentLayerPoint = new google.maps.Point(x, y);//-60
-      //this.geoPoints[this.geoPoints.length] = mapLayer.fromPointToLatLng(currentLayerPoint, globalMap);
+      var currentLayerPoint = new google.maps.Point(x, y);//-60
+      this.geoPoints[this.geoPoints.length] = mapLayer.fromPointToLatLng(currentLayerPoint, globalMap);
       
 
   }
