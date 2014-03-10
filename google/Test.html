@@ -59,6 +59,61 @@ tab: welcome
     <script src="../js/bootstrap.min.js"></script>
     <script src="../js/bootstrap-slider.js"></script>
     
+    <script>
+          
+          var red = 0;
+          var green = 0;
+          var blue = 0;
+		$(function(){
+			window.prettyPrint && prettyPrint();
+
+        $('#sl1').slider({
+          formater: function(value) {
+            return 'Current value: '+value;
+          }
+        });
+        
+        var RGBChange = function() {
+        	red = r.getValue();				//These 3 variables give values between 1 and 255 for each RGB colour
+        	green = g.getValue();
+        	blue = b.getValue();
+          $('#RGB').css('background', 'rgb('+r.getValue()+','+g.getValue()+','+b.getValue()+')') //Overall rgb value defined here
+        };
+        
+        document.onkeydown=function(e) {
+        	if (e.keyCode == '38') {
+        		alert("Red:" + red + " Green:" + green + " Blue:" + blue); //relays RGB values, used it to test if it was working
+        	}
+        }
+        
+        /*
+        document.onkeydown=function(e) {
+                    if (e.keyCode == '40') {
+                        var stroke = document.getElementById("sl1").value;    //Gets slider value
+                        alert(stroke);
+                    }
+                }*/
+        
+
+        var r = $('#R').slider()
+                .on('slide', RGBChange)
+                .data('slider');
+        var g = $('#G').slider()
+                .on('slide', RGBChange)
+                .data('slider');
+        var b = $('#B').slider()
+                .on('slide', RGBChange)
+                .data('slider');
+
+        $('#eg input').slider();
+    });
+ 
+    $('#sl1').slider()
+  .on('slide', function(ev){
+     $('#bar').val(ev.value);
+  });
+  </script>
+    
     <div id="tools" class="btn-group">
 
 		<button class="btn btn-lg btn-success" role="button" id="cancel-tool" type="button">
@@ -70,13 +125,7 @@ tab: welcome
 		</button>
 		
 	</div>
-    
-    <!--
-    <button class="btn btn-lg btn-success" role="button" id="save-tool" type="button">
-            <span class="glyphicon glyphicon-save"></span>
-        </button>-->
-     
- 
+         
     <div id="container"></div>
 
 
