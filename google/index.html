@@ -2,11 +2,13 @@
 layout: default
 tab: welcome
 ---
+<!--
 <head>
     <!-- Bootstrap -->
     <link href="../css/bootstrap.min.css" rel="stylesheet" media="screen">
     <link href="../css/shenanigans.css" rel="stylesheet" media="screen">
     <link href="../css/slider.css" rel="stylesheet">
+    
 	<style>
 	.container {
 		background: #fff;
@@ -47,67 +49,70 @@ tab: welcome
     background: #BABABA;
   }
 	</style>
-  </head>
+  </head>-->
+
 <body onload="SetEasel();">
 	
 	<script src="http://code.jquery.com/jquery.js"></script>
     <script src="../js/bootstrap.min.js"></script>
     <script src="../js/bootstrap-slider.js"></script>
     
+    <!--
     <script>
-          
-          var red = 0;
-          var green = 0;
-          var blue = 0;
-		$(function(){
-			window.prettyPrint && prettyPrint();
-
-        $('#sl1').slider({
-          formater: function(value) {
-            return 'Current value: '+value;
-          }
+              
+              var red = 0;
+              var green = 0;
+              var blue = 0;
+            $(function(){
+                window.prettyPrint && prettyPrint();
+    
+            $('#sl1').slider({
+              formater: function(value) {
+                return 'Current value: '+value;
+              }
+            });
+            
+            var RGBChange = function() {
+                red = r.getValue();				//These 3 variables give values between 1 and 255 for each RGB colour
+                green = g.getValue();
+                blue = b.getValue();
+              $('#RGB').css('background', 'rgb('+r.getValue()+','+g.getValue()+','+b.getValue()+')') //Overall rgb value defined here
+            };
+            
+            document.onkeydown=function(e) {
+                if (e.keyCode == '38') {
+                    alert("Red:" + red + " Green:" + green + " Blue:" + blue); //relays RGB values, used it to test if it was working
+                }
+            }
+            
+            /*
+            document.onkeydown=function(e) {
+                        if (e.keyCode == '40') {
+                            var stroke = document.getElementById("sl1").value;    //Gets slider value
+                            alert(stroke);
+                        }
+                    }*/
+            
+    
+            var r = $('#R').slider()
+                    .on('slide', RGBChange)
+                    .data('slider');
+            var g = $('#G').slider()
+                    .on('slide', RGBChange)
+                    .data('slider');
+            var b = $('#B').slider()
+                    .on('slide', RGBChange)
+                    .data('slider');
+    
+            $('#eg input').slider();
         });
-        
-        var RGBChange = function() {
-        	red = r.getValue();				//These 3 variables give values between 1 and 255 for each RGB colour
-        	green = g.getValue();
-        	blue = b.getValue();
-          $('#RGB').css('background', 'rgb('+r.getValue()+','+g.getValue()+','+b.getValue()+')') //Overall rgb value defined here
-        };
-        
-        document.onkeydown=function(e) {
-        	if (e.keyCode == '38') {
-        		alert("Red:" + red + " Green:" + green + " Blue:" + blue); //relays RGB values, used it to test if it was working
-        	}
-        }
-        
-        /*
-        document.onkeydown=function(e) {
-                    if (e.keyCode == '40') {
-                        var stroke = document.getElementById("sl1").value;    //Gets slider value
-                        alert(stroke);
-                    }
-                }*/
-        
-
-        var r = $('#R').slider()
-                .on('slide', RGBChange)
-                .data('slider');
-        var g = $('#G').slider()
-                .on('slide', RGBChange)
-                .data('slider');
-        var b = $('#B').slider()
-                .on('slide', RGBChange)
-                .data('slider');
-
-        $('#eg input').slider();
-    });
- 
-    $('#sl1').slider()
-  .on('slide', function(ev){
-     $('#bar').val(ev.value);
-  });
-  </script>
+     
+        $('#sl1').slider()
+      .on('slide', function(ev){
+         $('#bar').val(ev.value);
+      });
+      </script>-->
+    
 
 
 
