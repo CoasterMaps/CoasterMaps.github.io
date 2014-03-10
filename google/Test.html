@@ -61,9 +61,21 @@ tab: welcome
     <script src="../js/all.js"></script>
     <link href="../css/all.css" rel="stylesheet">
     
-    <button class="btn btn-lg btn-success" role="button" id="save-tool" type="button">
-		<span class="glyphicon glyphicon-save"></span>
-	</button>
+    <div class="btn-group">
+
+			<button type="button" class="btn btn-lg btn-success" id="annotation-tool"> 
+				<span class="glyphicon glyphicon-screenshot"></span>
+			</button>
+
+			<button type="button" class="btn btn-lg btn-success dropdown-toggle" data-toggle="dropdown">
+				<span class="caret"></span>
+			</button>
+
+			<ul class="dropdown-menu pull-center">
+				<li><a href="#">Dropdown link</a></li>
+				<li><a href="#">Dropdown link</a></li>
+			</ul>
+		</div>
     
     
     <div id="container"></div>
