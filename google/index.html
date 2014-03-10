@@ -72,6 +72,25 @@ tab: welcome
               }
             });
             
+            function getStrokeWidth() {
+            	var stroke = document.getElementById("sl1").value;
+            	return stroke;
+            }
+            
+            function getR() {
+            	var red = r.getValue();
+            	return red;
+            }
+            
+            function getG() {
+            	var green = g.getValue();
+            	return green;
+            }
+            
+            function getB() {
+            	var blue = b.getValue();
+            	return blue;
+            }
             
             var RGBChange = function() {
                             red = r.getValue();				//These 3 variables give values between 1 and 255 for each RGB colour
@@ -175,8 +194,6 @@ tab: welcome
 					<div>
             <input type="text" class="span2" value="5" id="sl1" >
           </div>
-          
-          <input type="text" id="bar1" value="5">
 				</li>
 			</ul>
 		</div>
