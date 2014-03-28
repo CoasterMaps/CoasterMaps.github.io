@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+  <title>COMP2013 Group Blog. COASTER 3D PROJECT. | That's techSoc to you
+  </title>
+
+   {% load staticfiles %}
+
+   {% url 'update_annotation_json_view' current_project.id current_user.id as the_url %}
+   {% url 'delete_annotation_view' current_project.id current_user.id as delete_url %}
+
+    <link href={% static 'annotator/all.css' %} rel="stylesheet" type="text/css" />
+
+    <script type="text/javascript" src ={% static 'annotator/all.js' %}></script>
+    
+    <script type="text/javascript"
+    src="https://maps.googleapis.com/maps/api/js?v=3key={AIzaSyBiVydJrssXEs9BpQoO7MX7RSsU13CuJ20}&sensor=false">
+    </script>
+
+    <script src="http://d3lp1msu2r81bx.cloudfront.net/kjs/js/lib/kinetic-v5.0.0.min.js"></script>
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+
+
+  <script type="text/javascript">
+
+  $('#tools').click(function (e) {
+    window.alert("hi");
+    e.stopPropagation();
+  });
+
+  function buttonClicked(){
+      var arrayToolTip = toolTips.returnArray();
+      var lineArray = lines.returnArray();
+      var handlineArray = handLines.returnArray();
+
+      var saveDrawings = new Save();
+
+      if (arrayToolTip.length > 0) saveDrawings.saveAnnot(arrayToolTip);
+      
+      if (lineArray.length > 0) saveDrawings.saveLines(lineArray);
+      
+      if (handlineArray.length > 0) saveDrawings.saveHandLines(handlineArray);
+
+      var jsonstr = ""
+      if(typeof annotGlobalString != 'undefined'){
+          jsonstr += annotGlobalString;
+          jsonstr += "+";
+      }
+      if(typeof lineGlobalString != 'undefined'){
+          jsonstr +=lineGlobalString;
+          jsonstr += "+";
+      }
+      if(typeof handLinesGlobalString != 'undefined'){
+          jsonstr += handLinesGlobalString;
+      }
+
+      jQuery.post("{{ the_url }}", {json_annotation:JSON.stringify(jsonstr)}, function(a,b){
+              console.log(a,b)
+          })
+
+  }
+
+
+    function get_value(callback){
+         jQuery.getJSON("{{ the_url }}", function(a,b){
+              //console.log(a,b)
+              //console.log(a)
+
+              d = JSON.stringify(a)
+              //console.log(d)
+              //getData(a)
+               callback(a)
+              //console.log(d)
+            })
+        }
+
+       function get_annotation_from_database(){
+              console.log("helo")
+             $(document).ready(function(){
+                get_value( function(value){
+                    //alert('Do something with ' + value + ' here!');
+                    console.log(value)
+                    veraString = value;
+
+                    var saveDrawings = new Save();
+                    staticLayer.clear();
+
+
+                    //console.log(veraString)
+                   
+                    var res = veraString.split("+");
+                    
+
+                    saveDrawings.getLines(res[0]);
+                    saveDrawings.getHandLines(res[1]);
+                    saveDrawings.getAnnot(res[2]);
+                    document.getElementById("get-tool").disabled = true;
+
+
+
+                    return value;
+                });
+              });
+          }
+          function deleteAllAnnotations(){
+            jQuery.post("{{ delete_url }}", function(a,b){
+              console.log(a,b)
+            })
+          }
+
+ 
+
+
+  </script>
+
+
+
+  <style type="text/css">
+
+  #map-canvas {
+    height: 100%;
+    position: absolute;
+    top: 0;    
+    left: 0;
+    right: 0;
+    z-index: 0;
+  }
+
+  #container {
+    margin-left: 60px;   
+    width: 80%;
+    z-index: 99;
+    position: relative;
+  }
+
+   #prev-tool {
+    margin-top: 50px;
+    width:100px;
+    position: absolute;
+    right:5px;
+    z-index: 100;
+  }
+
+   #next-tool {
+    margin-top: 100px;
+    width:100px;
+    position: absolute;
+    right:5px;
+    z-index: 100;
+  }
+
+  #save-tool {
+    margin-top: 150px;
+    width:100px;
+    position: absolute;
+    right:5px;
+    z-index: 100;
+  }
+
+  #delete-tool {
+    margin-top: 200px;
+    width:100px;
+    position: absolute;
+    right:5px;
+    z-index: 100;
+  }
+
+  #get-tool {
+    margin-top: 250px;
+    width:100px;
+    position: absolute;
+    right:5px;
+    z-index: 100;
+  }
+
+  #tools {
+    margin-top: 300px;
+    width:100px;
+    position: absolute;
+    right:5px;
+    z-index: 100;
+  }
+
+  #text-debug {
+    margin-top: 500px;
+    width:100px;
+    position: absolute;
+    right:5px;
+    z-index: 100;
+    color: red;
+  }
+
+  #text-debug2 {
+    margin-top: 450px;
+    width:100px;
+    position: absolute;
+    right:5px;
+    z-index: 100;
+  }
+
+  </style>
+
+</head>
+
+
+<div id="contents">
+  <body onload="SetEasel();">
+
+
+
+<button class="btn btn-lg btn-success" role="button" id="prev-tool" type="button">
+  <span class="glyphicon glyphicon-arrow-left"></span>
+</button> 
+
+<button class="btn btn-lg btn-success" role="button" id="next-tool" type="button">
+  <span class="glyphicon glyphicon-arrow-right"></span>
+</button> 
+
+
+  <button class="btn btn-lg btn-success" role="button" id="save-tool" type="button" onclick = "buttonClicked()">
+    <span class="glyphicon glyphicon-save"></span>
+  </button>
+
+  <button class="btn btn-lg btn-success" role="button" id="delete-tool" type="button" onclick = "deleteAllAnnotations()">
+    <span class="glyphicon glyphicon-remove"></span>
+  </button>
+
+
+  <button class="btn btn-lg btn-success" role="button" id="get-tool" type="button" onclick = "get_annotation_from_database()">
+    <span class="glyphicon glyphicon-folder-open"></span>
+  </button>
+
+
+  <div id="tools" class="btn-group">
+
+    <button class="btn btn-lg btn-success" role="button" id="cancel-tool" type="button">
+      <span class="glyphicon glyphicon-move"></span>
+    </button>
+
+
+    <div class="btn-group">
+
+      <button type="button" class="btn btn-lg btn-success" id="annotation-tool">
+        <span class="glyphicon glyphicon-screenshot"></span>
+      </button>
+
+      <button type="button" class="btn btn-lg btn-success dropdown-toggle" data-toggle="dropdown">
+        <span class="caret"></span>
+      </button>
+
+      <ul class="dropdown-menu pull-center">
+        <li><a href="#">Dropdown link</a></li>
+        <li><a href="#">Dropdown link</a></li>
+      </ul>
+    </div>
+
+
+    <div class="btn-group">
+
+      <button type="button" class="btn btn-lg btn-success" id="line-tool">
+        <span class="glyphicon glyphicon-minus"></span>
+      </button>
+
+      <button type="button" class="btn btn-lg btn-success dropdown-toggle" data-toggle="dropdown">
+        <span class="caret"></span>
+      </button>
+
+      <ul class="dropdown-menu pull-center" role="menu">
+        <li><a href="#">Action</a></li>
+        <li><a href="#">Another action</a></li>
+        <li><a href="#">Something else here</a></li>
+        <li class="divider"></li>
+        <li><a href="#">Separated link</a></li>
+      </ul>
+    </div>
+
+    
+
+
+    <div class="btn-group">
+
+      <button type="button" class="btn btn-lg btn-success" id="hand-tool">
+        <span class="glyphicon glyphicon-pencil"></span>
+      </button>
+
+      <button type="button" class="btn btn-lg btn-success dropdown-toggle" data-toggle="dropdown">
+        <span class="caret"></span>
+      </button>
+
+      <ul class="dropdown-menu pull-center" role="menu">
+
+        <li><a href="#">Colour:</a></li>
+
+        <li>
+          <div class="btn-group-vertical" data-toggle="buttons-radio">
+
+            <button class="btn btn-primary active" value="btn btn-primary" type="button" name="color">
+              Blue
+              <input type="radio" checked/>
+            </button>
+
+            <button class="btn btn-info" value="btn btn-info" type="button" name="color">
+              Light Blue
+              <input type="radio"/>
+            </button>
+
+            <button class="btn btn-success" value="btn btn-success" type="button" name="color">
+              Green
+              <input type="radio"/>
+            </button>
+
+            <button class="btn btn-warning" value="btn btn-warning" type="button" name="color">
+              Orange
+              <input type="radio"/>
+            </button>
+
+            <button class="btn btn-danger" value="btn btn-danger" type="button" name="color">
+              Red
+              <input type="radio"/>
+            </button>
+
+          </div>
+        </li>
+
+        <li class="divider"></li>
+
+        <li><a href="#">Line width:</a></li>
+
+
+      </ul>
+    </div>
+
+  </div>
+
+
+
+
+
+
+
+
+  <!-- <button class="btn btn-lg btn-success" role="button" id="annotation-tool" type="button">Annotate</button> -->
+
+   <!--
+<div id="text-debug">Title</div>
+<div id="text-debug2">Title</div> -->
+
+    
+    
+    <div id="container"></div>
+
+
+    <div id="map-canvas"/>
+
+
+</body>
+</div>
+
+</html>

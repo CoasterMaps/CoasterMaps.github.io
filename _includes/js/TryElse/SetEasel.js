@@ -4,6 +4,12 @@ var toolTips;
 var lines;
 var handLines;
 
+var mapLayer;
+
+var currentToolType;
+var currentToolTypePos;
+
+var curViewQueue;
 
 function SetEasel() {
 	
@@ -20,6 +26,7 @@ function SetEasel() {
 
   document.getElementById("save-tool").disabled = true;
   
+  mapLayer = new MapLayer();
 
 	overlay = new Overlay();
 
@@ -39,7 +46,16 @@ function SetEasel() {
 
 
 	overlay.uploadOverlay();
-	
+  currentToolType = new Array();
+  currentToolTypePos = 0;
+
+
+
+  curViewQueue = new CurrentDrawView();
+  curViewQueue.initViewArray();
+
+
+  
 
 	var eventListener = new Events(googleMap,overlay);
     eventListener.setListeners();

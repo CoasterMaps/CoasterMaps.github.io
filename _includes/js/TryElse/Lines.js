@@ -14,7 +14,7 @@ function Lines()
   	var redLine = new Kinetic.Line({
             points: [],
             stroke: 'red',
-            strokeWidth: 3,
+            strokeWidth: globalLineStroke,
             lineCap: 'round',
             lineJoin: 'round'
     });
@@ -27,6 +27,8 @@ function Lines()
   	this.array[this.counter] = newLineContainer;
    
   	this.counter++;
+
+    staticLayer.add(redLine);
    // return redLine;
   }
 
@@ -36,6 +38,19 @@ function Lines()
   	return this.array;
   }
 
+  this.clearArray = function() {
+
+    this.array=[];
+    this.counter=0;
+  }
+
+
+
+  this.deleteLastLineContainer = function() {
+
+    return this.array.pop();
+    this.counter--;
+  }
 
 
   this.getLastLineContainer = function() {

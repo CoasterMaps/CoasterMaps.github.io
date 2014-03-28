@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
-  <title>COMP2013 Group Blog. COASTER 3D PROJECT. | That's techSoc to you
+  <title>COMP2013 Group Blog. COASTER 3D PROJECT. | {% if page.title %}{{ page.title }}{% else %}That's techSoc to you{% endif %}
   </title>
 
   <link href="/css/all.css" rel="stylesheet" type="text/css" />
@@ -37,10 +37,10 @@
 
 
   <script type="text/javascript">
-  //$('#tools').click(function (e) { 
-  //  window.alert("hi");                  
-  //  e.stopPropagation();
-  //});
+  $('#tools').click(function (e) { 
+    window.alert("hi");                  
+    e.stopPropagation();
+  });
   </script>
 
 
@@ -130,72 +130,70 @@
 
   </style>
 
+
+  <link href="../css/shenanigans.css" rel="stylesheet" media="screen">
+  <link href="../css/slider.css" rel="stylesheet">
+
+  <style>
+  .container {
+    background: #fff;
+  }
+  #alert {
+    display: none;
+  }
+  #sl1 {
+    width: 100px;
+  }
+  #spanHandLine {
+    width: 100px;
+  }
+  #bar1 {
+    width: 100px;
+  }
+  #RGB {
+    height: 20px;
+    background: rgb(128, 128, 128);
+    width: 100px;
+  }
+  #RC .slider-selection {
+    background: #FF8282;
+  }
+  #RC .slider-handle {
+    background: red;
+  }
+  #GC .slider-selection {
+    background: #428041;
+  }
+  #GC .slider-handle {
+    background: green;
+  }
+  #BC .slider-selection {
+    background: #8283FF;
+  }
+  #BC .slider-handle {
+    border-bottom-color: blue;
+  }
+  #R, #G, #B {
+    width: 100px;
+  }
+  #eg .slider-selection {
+    background: #BABABA;
+  }
+  </style>
+
 </head>
 
 
 <div id="contents">
-  <head>
-	<link href="../css/shenanigans.css" rel="stylesheet" media="screen">
-	<link href="../css/slider.css" rel="stylesheet">
-
-	<style>
-	.container {
-		background: #fff;
-	}
-	#alert {
-		display: none;
-	}
-	#sl1 {
-		width: 100px;
-	}
-	#spanHandLine {
-		width: 100px;
-	}
-	#bar1 {
-		width: 100px;
-	}
-	#RGB {
-		height: 20px;
-		background: rgb(128, 128, 128);
-		width: 100px;
-	}
-	#RC .slider-selection {
-		background: #FF8282;
-	}
-	#RC .slider-handle {
-		background: red;
-	}
-	#GC .slider-selection {
-		background: #428041;
-	}
-	#GC .slider-handle {
-		background: green;
-	}
-	#BC .slider-selection {
-		background: #8283FF;
-	}
-	#BC .slider-handle {
-		border-bottom-color: blue;
-	}
-	#R, #G, #B {
-		width: 100px;
-	}
-	#eg .slider-selection {
-		background: #BABABA;
-	}
-	</style>
-</head>
+ <body style="overflow: hidden" onload="SetEasel();">
 
 
-<body style="overflow: hidden" onload="SetEasel();">
+  
+  <script>
 
-
-	
-	<script>
-
-	var redHand = 0;
-	var greenHand = 0;
-	var blueHand = 0;
+  var redHand = 0;
+  var greenHand = 0;
+  var blueHand = 0;
     var globalLineStroke = 0;
     var globalHandLineStroke = 0;
 
@@ -203,49 +201,49 @@
     var g;
     var b;
 
-	$(function(){
-		window.prettyPrint && prettyPrint();
+  $(function(){
+    window.prettyPrint && prettyPrint();
 
-		$('#sl1').slider({
-			formater: function(value) {
-				globalLineStroke = document.getElementById("sl1").value;
-				return 'Current value: '+value;
-			}
-		});
+    $('#sl1').slider({
+      formater: function(value) {
+        globalLineStroke = document.getElementById("sl1").value;
+        return 'Current value: '+value;
+      }
+    });
 
-		function getStrokeWidth() {
-			globalLineStroke = document.getElementById("sl1").value;
-			return globalLineStroke;
-		}
+    function getStrokeWidth() {
+      globalLineStroke = document.getElementById("sl1").value;
+      return globalLineStroke;
+    }
 
-		$('#spanHandLine').slider({
-			formater: function(value) {
-				globalHandLineStroke = document.getElementById("spanHandLine").value;
-				return 'Current value: '+value;
-			}
-		});
+    $('#spanHandLine').slider({
+      formater: function(value) {
+        globalHandLineStroke = document.getElementById("spanHandLine").value;
+        return 'Current value: '+value;
+      }
+    });
 
 
 
-		function getR() {
-			var red = r.getValue();
-			return red;
-		}
+    function getR() {
+      var red = r.getValue();
+      return red;
+    }
 
-		function getG() {
-			var green = g.getValue();
-			return green;
-		}
+    function getG() {
+      var green = g.getValue();
+      return green;
+    }
 
-		function getB() {
-			var blue = b.getValue();
-			return blue;
-		}
+    function getB() {
+      var blue = b.getValue();
+      return blue;
+    }
 
-		var RGBChange = function() {
-			redHand = r.getValue();			
-			greenHand = g.getValue();
-			blueHand = b.getValue();
+    var RGBChange = function() {
+      redHand = r.getValue();     
+      greenHand = g.getValue();
+      blueHand = b.getValue();
                           $('#RGB').css('background', 'rgb('+r.getValue()+','+g.getValue()+','+b.getValue()+')') //Overall rgb value defined here
                       };
 
@@ -265,20 +263,20 @@
 
 $('#sl1').slider()
 .on('slide', function(ev){
-	$('#bar').val(ev.value);
+  $('#bar').val(ev.value);
 });
 </script>
 
 <script type="text/javascript">
 
 $(document).ready(function() {
-	$(document).on('click', '.dropdown-menu', function (e) {
+  $(document).on('click', '.dropdown-menu', function (e) {
             $(this).hasClass('keep_open') && e.stopPropagation(); // This replace if conditional.
         }); 
 });
 
 function get_value(callback){
-         jQuery.getJSON("", function(a,b){
+         jQuery.getJSON("{{ the_url }}", function(a,b){
               //console.log(a,b)
               //console.log(a)
 
@@ -320,7 +318,7 @@ function get_value(callback){
           }
 
           function deleteAllAnnotations(){
-            jQuery.post("", function(a,b){
+            jQuery.post("{{ delete_url }}", function(a,b){
               console.log(a,b)
             })
           }
@@ -330,11 +328,11 @@ function get_value(callback){
 
 
 <button class="btn btn-lg btn-success" role="button" id="prev-tool" type="button">
-	<span class="glyphicon glyphicon-arrow-left"></span>
+  <span class="glyphicon glyphicon-arrow-left"></span>
 </button> 
 
 <button class="btn btn-lg btn-success" role="button" id="next-tool" type="button">
-	<span class="glyphicon glyphicon-arrow-right"></span>
+  <span class="glyphicon glyphicon-arrow-right"></span>
 </button> 
 
 
@@ -356,92 +354,92 @@ function get_value(callback){
 
 <div id="tools" class="btn-group">
 
-	<button class="btn btn-lg btn-success" role="button" id="cancel-tool" type="button">
-		<span class="glyphicon glyphicon-move"></span>
-	</button> 
+  <button class="btn btn-lg btn-success" role="button" id="cancel-tool" type="button">
+    <span class="glyphicon glyphicon-move"></span>
+  </button> 
 
 
-	<div class="btn-group">
+  <div class="btn-group">
 
-		<button type="button" class="btn btn-lg btn-success" id="annotation-tool"> 
-			<span class="glyphicon glyphicon-screenshot"></span>
-		</button>
+    <button type="button" class="btn btn-lg btn-success" id="annotation-tool"> 
+      <span class="glyphicon glyphicon-screenshot"></span>
+    </button>
 
-		<button type="button" class="btn btn-lg btn-success dropdown-toggle" data-toggle="dropdown">
-			<span class="caret"></span>
-		</button>
+    <button type="button" class="btn btn-lg btn-success dropdown-toggle" data-toggle="dropdown">
+      <span class="caret"></span>
+    </button>
 
-		<ul class="dropdown-menu pull-center">
-			<li><a href="#">Dropdown link</a></li>
-			<li><a href="#">Dropdown link</a></li>
-		</ul>
-	</div>
-
-
-	<div class="btn-group">
-
-		<button type="button"  class="btn btn-lg btn-success" id="line-tool"> 
-			<span class="glyphicon glyphicon-minus"></span>
-		</button>
-
-		<button type="button" class="btn btn-lg btn-success dropdown-toggle" data-toggle="dropdown">
-			<span class="caret"></span>
-		</button>
-
-		<ul class="dropdown-menu pull-center" role="menu">
-			<li><a href="#">Line width:</a></li>
-
-			<li>
-				<div>
-					<input type="text" class="span2" value="5" id="sl1" >
-				</div>
-			</li>
-		
-		</ul>
-	</div>
+    <ul class="dropdown-menu pull-center">
+      <li><a href="#">Dropdown link</a></li>
+      <li><a href="#">Dropdown link</a></li>
+    </ul>
+  </div>
 
 
+  <div class="btn-group">
+
+    <button type="button"  class="btn btn-lg btn-success" id="line-tool"> 
+      <span class="glyphicon glyphicon-minus"></span>
+    </button>
+
+    <button type="button" class="btn btn-lg btn-success dropdown-toggle" data-toggle="dropdown">
+      <span class="caret"></span>
+    </button>
+
+    <ul class="dropdown-menu pull-center" role="menu">
+      <li><a href="#">Line width:</a></li>
+
+      <li>
+        <div>
+          <input type="text" class="span2" value="5" id="sl1" >
+        </div>
+      </li>
+    
+    </ul>
+  </div>
 
 
-	<div class="btn-group">
 
-		<button type="button"  class="btn btn-lg btn-success" id="hand-tool"> 
-			<span class="glyphicon glyphicon-pencil"></span>
-		</button>
 
-		<button type="button" class="btn btn-lg btn-success dropdown-toggle" data-toggle="dropdown">
-			<span class="caret"></span>
-		</button>
+  <div class="btn-group">
 
-		<ul class="dropdown-menu pull-center" role="menu">
+    <button type="button"  class="btn btn-lg btn-success" id="hand-tool"> 
+      <span class="glyphicon glyphicon-pencil"></span>
+    </button>
 
-			<li><a href="#">Line width:</a></li>
+    <button type="button" class="btn btn-lg btn-success dropdown-toggle" data-toggle="dropdown">
+      <span class="caret"></span>
+    </button>
 
-			<li>
-				<div>
-					<input type="text" class="span2" value="5" id="spanHandLine" >
-				</div>
-			</li>
+    <ul class="dropdown-menu pull-center" role="menu">
 
-			<li>
+      <li><a href="#">Line width:</a></li>
 
-			<div>
-				<p><b>R</b> <input type="text" class="span2" value="" data-slider-min="0" data-slider-max="255" data-slider-step="1" data-slider-value="128" data-slider-id="RC" id="R" data-slider-tooltip="hide" data-slider-handle="round" ></p>
-				<p><b>G</b> <input type="text" class="span2" value="" data-slider-min="0" data-slider-max="255" data-slider-step="1" data-slider-value="128" data-slider-id="GC" id="G" data-slider-tooltip="hide" data-slider-handle="round" ></p>
-				<p><b>B</b> <input type="text" class="span2" value="" data-slider-min="0" data-slider-max="255" data-slider-step="1" data-slider-value="128" data-slider-id="BC" id="B" data-slider-tooltip="hide" data-slider-handle="round" ></p>
-				<div id="RGB"></div>
-			</div>
-		</li>
-			
-		</ul>
-	</div>
+      <li>
+        <div>
+          <input type="text" class="span2" value="5" id="spanHandLine" >
+        </div>
+      </li>
+
+      <li>
+
+      <div>
+        <p><b>R</b> <input type="text" class="span2" value="" data-slider-min="0" data-slider-max="255" data-slider-step="1" data-slider-value="128" data-slider-id="RC" id="R" data-slider-tooltip="hide" data-slider-handle="round" ></p>
+        <p><b>G</b> <input type="text" class="span2" value="" data-slider-min="0" data-slider-max="255" data-slider-step="1" data-slider-value="128" data-slider-id="GC" id="G" data-slider-tooltip="hide" data-slider-handle="round" ></p>
+        <p><b>B</b> <input type="text" class="span2" value="" data-slider-min="0" data-slider-max="255" data-slider-step="1" data-slider-value="128" data-slider-id="BC" id="B" data-slider-tooltip="hide" data-slider-handle="round" ></p>
+        <div id="RGB"></div>
+      </div>
+    </li>
+      
+    </ul>
+  </div>
 
 </div>
 
 
 
 <div id="text-debug">
-</div> 	
+</div>  
 
 
 
@@ -464,7 +462,3 @@ function get_value(callback){
 </div>
 
 </html>
-
-
-
-

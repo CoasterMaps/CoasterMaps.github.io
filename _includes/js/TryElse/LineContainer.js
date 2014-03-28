@@ -10,7 +10,7 @@ function LineContainer(inputLine) {
 
     this.getGeoPoints = function(points) {
        
-        var mapLayer = new MapLayer();
+        //var mapLayer = new MapLayer();
 
         var newGeoArray = new Array();
         var index = 0;
@@ -43,7 +43,7 @@ function LineContainer(inputLine) {
 
     this.addNewPoint = function(x,y) {
      
-      var mapLayer = new MapLayer();
+      //var mapLayer = new MapLayer();
 
       //window.alert("diff x:"+mapLayerState.getDiffX()+" y:"+mapLayerState.getDiffY());
 

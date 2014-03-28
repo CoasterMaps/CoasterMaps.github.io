@@ -37,10 +37,10 @@
 
 
   <script type="text/javascript">
-  $('#tools').click(function (e) { 
-    window.alert("hi");                  
-    e.stopPropagation();
-  });
+  //$('#tools').click(function (e) { 
+  //  window.alert("hi");                  
+  //  e.stopPropagation();
+  //});
   </script>
 
 
@@ -58,13 +58,12 @@
 
   #container {
     margin-left: 60px;   
-    height: 100%;
-    width: 85%;
-    z-index: 100;
+    width: 80%;
+    z-index: 99;
     position: relative;
   }
 
-  #save-tool {
+   #prev-tool {
     margin-top: 50px;
     width:100px;
     position: absolute;
@@ -72,7 +71,7 @@
     z-index: 100;
   }
 
-  #delete-tool {
+   #next-tool {
     margin-top: 100px;
     width:100px;
     position: absolute;
@@ -80,7 +79,7 @@
     z-index: 100;
   }
 
-  #get-tool {
+  #save-tool {
     margin-top: 150px;
     width:100px;
     position: absolute;
@@ -88,7 +87,7 @@
     z-index: 100;
   }
 
-  #tools {
+  #delete-tool {
     margin-top: 200px;
     width:100px;
     position: absolute;
@@ -96,15 +95,29 @@
     z-index: 100;
   }
 
+  #get-tool {
+    margin-top: 250px;
+    width:100px;
+    position: absolute;
+    right:5px;
+    z-index: 100;
+  }
 
-
-
-  #text-debug {
+  #tools {
     margin-top: 300px;
     width:100px;
     position: absolute;
     right:5px;
     z-index: 100;
+  }
+
+  #text-debug {
+    margin-top: 500px;
+    width:100px;
+    position: absolute;
+    right:5px;
+    z-index: 100;
+    color: red;
   }
 
   #text-debug2 {

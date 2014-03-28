@@ -37,10 +37,8 @@ function ToolTips()
         fill: 'white'
     }));
 
-    //staticLayer.add(redLine);
+   
 
-
-    var mapLayer = new MapLayer();
     var toolTipGeo = new Array();
     
 
@@ -53,11 +51,22 @@ function ToolTips()
   	this.counter++;
   } 
 
+  this.deleteItem = function() {
+
+    this.array.pop();
+    this.counter--;
+  }
 
   this.returnArray = function() {
 
   	return this.array;
   } 
+
+  this.clearArray = function() {
+
+    this.array=[];
+    this.counter=0;
+  }
 
   this.returnCounter = function() {
 

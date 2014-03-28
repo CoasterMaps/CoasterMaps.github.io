@@ -9650,7 +9650,6 @@ google.loader.rpl({":scriptaculous":{"versions":{":1.8.3":{"uncompressed":"scrip
   var newline;
   var handpoints=[];
   var currentHandLine;
-  
 
 
 
@@ -9660,135 +9659,41 @@ google.loader.rpl({":scriptaculous":{"versions":{":1.8.3":{"uncompressed":"scrip
     this.googleMap = inputMap;
     this.overlay = inputOverlay;
 
+    var disableButton = function(buttonString) {
 
-  window.addEventListener("keypress", function(e) { 
-  
-      var curPoint = globalMap.getProjection().fromLatLngToPoint(globalMap.getCenter());
-      var pixelDiff = 0.0005;
+      document.getElementById("cancel-tool").disabled = false; 
+      document.getElementById("line-tool").disabled = false; 
+      document.getElementById("annotation-tool").disabled = false; 
+      document.getElementById("hand-tool").disabled = false; 
+      document.getElementById("delete-tool").disabled = false;
 
-     
-      if ( (e.keyCode == 38) || (e.keyCode == 87) ) { 
-        
-        curPoint.y-=pixelDiff;   
-        e.preventDefault(); 
-      }
-
-      else if ( (e.keyCode == 40) || (e.keyCode == 83) )  { 
-      
-        curPoint.y+=pixelDiff;
-        e.preventDefault();
-      }
-
-      else if ( (e.keyCode == 37) || (e.keyCode == 65) )  { 
- 
-        curPoint.x-=pixelDiff;
-        e.preventDefault();
-      }
-
-      else if ( (e.keyCode == 39) || (e.keyCode == 68) )   { 
-     
-        curPoint.x+=pixelDiff;
-        e.preventDefault();
-      }
-
-     staticLayer.clear();
-
-     var newCenter = globalMap.getProjection().fromPointToLatLng(curPoint); 
-     globalMap.setCenter(newCenter);
-
-     overlay.drawLines();
-     overlay.drawHandLines();
-     overlay.drawAnnot();   
-   }); 
-
-  
-
-   var disableButton = function(buttonString) {
-
-      //$(".btn").removeAttr('disabled');
-      //$(buttonString).attr('disabled','disabled');
-
-      console.log(buttonString);
+      document.getElementById(buttonString).disabled = true; 
     }
-
-
-
-    $("#prev-tool").click(function(){
-
-     var newAnnotString = curViewQueue.getPrevView();
-     //window.alert("prev-tool annot:"+newAnnotString);
-      if (newAnnotString!== undefined) {
-     
-      var saveDrawings = new Save();
-      staticLayer.clear(); 
-      overlay.hideAll();
-     // var veraString = jsonstr;
-      var res = newAnnotString.split("+");
-      //window.alert("res splitted");
-      //window.alert("gettingLines:"+res[1]);
-      saveDrawings.getLines(res[1]);
-      //window.alert("gettingHandLines:"+res[2]);
-      saveDrawings.getHandLines(res[2]);
-      //window.alert("gettingAnnot:"+res[0]);
-      saveDrawings.getAnnot(res[0]);
-      
-      document.getElementById("get-tool").disabled = true;
-
-    }
-    });
-
-
-    $("#next-tool").click(function(){
-
-      var newAnnotString = curViewQueue.getNextView();
-
-      if (newAnnotString!== undefined) {
-      
-      var saveDrawings = new Save();
-      staticLayer.clear(); 
-      overlay.hideAll();
-     // var veraString = jsonstr;
-      var res = newAnnotString.split("+");
-      //window.alert("res splitted");
-      //window.alert("gettingLines:"+res[1]);
-      saveDrawings.getLines(res[1]);
-      //window.alert("gettingHandLines:"+res[2]);
-      saveDrawings.getHandLines(res[2]);
-      //window.alert("gettingAnnot:"+res[0]);
-      saveDrawings.getAnnot(res[0]);
-      
-      document.getElementById("get-tool").disabled = true;
-    }
-    });
-
 
 
     $("#cancel-tool").click(function(){
-      var cancel_tool = this;
       annot=0;
       line=0;
       hand=0;
-      disableButton(cancel_tool);
-
+      
+      disableButton("cancel-tool");
     });
-
-
 
 
     $("#line-tool").click(function(){
       annot=0;
       line=1;
       hand=0;
-      disableButton("#line-tool"); 
+      disableButton("line-tool"); 
+      
     });
-    
 
 
     $("#annotation-tool").click(function(){
       annot=1;
       line=0;
       hand=0;
-      disableButton("#annotation-tool"); 
+      disableButton("annotation-tool"); 
       
     });
 
@@ -9797,46 +9702,77 @@ google.loader.rpl({":scriptaculous":{"versions":{":1.8.3":{"uncompressed":"scrip
       annot=0;
       line=0;
       hand=1;
-      disableButton("#hand-tool"); 
+      disableButton("hand-tool"); 
       
     });
 
     $("#delete-tool").click(function(){
-     
-      overlay.deleteLast(currentToolType[currentToolTypePos-1]);
-      currentToolTypePos--;  
+      localStorage.clear();
+      staticLayer.clear();
 
-      if (currentToolTypePos===0) {
-        document.getElementById("#delete-tool").disabled = true; 
-      }
-      else {
-        currentToolType.pop();
-        document.getElementById("#delete-tool").disabled = false;
-      }
+      toolTips.array=[];
+      toolTips.counter = 0
 
+      lines.array=[];
+      lines.counter = 0;
+
+      handLines.array=[];
+      handLines.counter = 0;
+
+      document.getElementById("delete-tool").disabled = true; 
     });
 
 
     $("#save-tool").click(function(){
 
-     
+      var arrayToolTip = toolTips.returnArray();
+      var lineArray = lines.returnArray();
+      var handlineArray = handLines.returnArray();
+
+      var saveDrawings = new Save();
+
+      if (arrayToolTip.length > 0) saveDrawings.saveAnnot(arrayToolTip);
+      
+      if (lineArray.length > 0) saveDrawings.saveLines(lineArray);
+      
+      if (handlineArray.length > 0) saveDrawings.saveHandLines(handlineArray);
+
+      // saveWithVera
+      jsonstr = annotGlobalString + "+" + lineGlobalString + "+" + handLinesGlobalString;
+
+      document.getElementById("save-tool").disabled = true; 
+      document.getElementById("get-tool").disabled = false;
+      document.getElementById("delete-tool").disabled = false;
     });
     
 
     $("#get-tool").click(function(){
 
 
-     });
+      var saveDrawings = new Save();
+      staticLayer.clear(); 
 
+      var veraString = jsonstr;
+      var res = veraString.split("+");
+      
+
+      saveDrawings.getLines(res[0]);
+      saveDrawings.getHandLines(res[1]);
+      saveDrawings.getAnnot(res[2]);
+      document.getElementById("get-tool").disabled = true;
+    });
 
     
 
 
     this.setListeners = function() {
 
+
      initialZoom = this.googleMap.getMap().getZoom();
 
+
      google.maps.event.addListenerOnce(globalMap, 'idle', function(){
+
        
       var currentHexPoint = new google.maps.Point(tooltip.getAbsolutePosition().x, tooltip.getAbsolutePosition().y); 
       var hexGeo = mapLayer.fromPointToLatLng(currentHexPoint, globalMap);
@@ -9848,6 +9784,7 @@ google.loader.rpl({":scriptaculous":{"versions":{":1.8.3":{"uncompressed":"scrip
 
      google.maps.event.addListener(globalMap, 'zoom_changed', function(event){ 
 
+      var mapLayer = new MapLayer();     
       staticLayer.clear();
 
       overlay.drawLines();
@@ -9864,7 +9801,6 @@ google.loader.rpl({":scriptaculous":{"versions":{":1.8.3":{"uncompressed":"scrip
 
       mapLayerState.setInitialPosition(event.clientX, event.clientY);
 
-
     // annot tool trigger
     if (annot===1) {
 
@@ -9874,60 +9810,45 @@ google.loader.rpl({":scriptaculous":{"versions":{":1.8.3":{"uncompressed":"scrip
       isMouseHandDraw=false; 
       stage.draggable(true); 
       document.getElementById("save-tool").disabled = false;
-      document.getElementById("delete-tool").disabled = false;
-
-      currentToolType[currentToolTypePos] = "annot";
-      currentToolTypePos++;
-      curViewQueue.newPrevView();
     }
 
 
     // line tool trigger
     else if (line>0) {
 
-      stage.draggable(false);
-      isMouseHandDraw=true; 
-
       if (line===1) {
 
         lines.newRedLine();
         line++;
-        currentToolType[currentToolTypePos] = "line";
-        currentToolTypePos++;
       }
 
       lines.getLastLineContainer().addNewPoint(event.clientX-60, event.clientY);
       overlay.uploadLastLine();  
-      
+      isMouseHandDraw=false;  
+      stage.draggable(true); 
       document.getElementById("save-tool").disabled = false;
-      document.getElementById("delete-tool").disabled = false;
-      curViewQueue.newPrevView();
     }
 
 
     // hand tool trigger
     else if (hand===1) {
 
+      
       stage.draggable(false);
-      isMouseHandDraw = true;
-
-      currentToolType[currentToolTypePos] = "hand";
-      currentToolTypePos++;
 
       currentHandLine = handLines.newRedLine();
 
+      isMouseHandDraw = true;
       handpoints=[];
       handpoints = handpoints.concat([event.clientX-60+mapLayerState.getDiffX(), event.clientY+mapLayerState.getDiffY()]);
 
       overlay.uploadLastHandLine(currentHandLine, handpoints);
       document.getElementById("save-tool").disabled = false;
-      document.getElementById("delete-tool").disabled = false;
     }
 
     else  {
       stage.draggable(true);
       isMouseHandDraw = false;
-      document.getElementById("container").style["cursor"] = "move";
     }
 
 
@@ -9939,8 +9860,6 @@ google.loader.rpl({":scriptaculous":{"versions":{":1.8.3":{"uncompressed":"scrip
     mapLayerState.setInitialPosition(0,0);
 
     isMouseHandDraw=false;  
-    document.getElementById("container").style["cursor"] = "default";
-
   });
 
 
@@ -9950,16 +9869,12 @@ google.loader.rpl({":scriptaculous":{"versions":{":1.8.3":{"uncompressed":"scrip
     // if hand drawing tool draw, else probably move map
     if(isMouseHandDraw) {
 
-      if (hand===1) {
+      stage.draggable(false);
+      
+      handpoints = handpoints.concat([event.clientX-60+mapLayerState.getDiffX(), event.clientY+mapLayerState.getDiffY()]);
 
-        stage.draggable(false);
-
-        handpoints = handpoints.concat([event.clientX-60+mapLayerState.getDiffX(), event.clientY+mapLayerState.getDiffY()]);
-
-        overlay.uploadLastHandLine(currentHandLine, handpoints);
-        stage.draggable(true);
-         curViewQueue.newPrevView();
-      }
+      overlay.uploadLastHandLine(currentHandLine, handpoints);
+      stage.draggable(true);
       
     }
 
@@ -9984,7 +9899,7 @@ google.loader.rpl({":scriptaculous":{"versions":{":1.8.3":{"uncompressed":"scrip
       globalMap.setCenter(newpoint);
 
       mapLayerState.setDiff(mapLayerState.getDiffX()+mapLayerState.getInitPosX()-finalPositionX, 
-      mapLayerState.getDiffY()+mapLayerState.getInitPosY()-finalPositionY);
+        mapLayerState.getDiffY()+mapLayerState.getInitPosY()-finalPositionY);
 
       mapLayerState.setInitialPosition(finalPositionX, finalPositionY);
     }
@@ -10018,10 +9933,9 @@ function GoogleMap()
 	    this.initialize = function() {
 
 	    	var mapOptions = {
-	    		center: new google.maps.LatLng(50.582746,-2.464678),//64.555816,40.525793),//50.582746,-2.464678),//64.54785,40.561295
-	    		mapTypeId: google.maps.MapTypeId.SATELLITE,
-	    		zoom: 16,
-	    		draggable: false
+	    		center: new google.maps.LatLng(-34.397, 150.644),
+	    		 mapTypeId: google.maps.MapTypeId.SATELLITE,
+	    		zoom: 8
             };
 
             this.map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
@@ -10053,15 +9967,13 @@ function Overlay()
 
     stage = new Kinetic.Stage({
       container: 'container',
-      width: 2500,
-      height: 1500,//window.innerHeight,//$(window).height(),
+      width: $(window).width()-200,
+      height: $(window).height(),
       draggable: true
     });
 
-    //this.eventLayer = new Kinetic.Layer();
+    this.eventLayer = new Kinetic.Layer();
     staticLayer = new Kinetic.Layer();
-
-    stage.add(staticLayer);
 
   }
 
@@ -10085,50 +9997,58 @@ function Overlay()
 
  this.uploadOverlay = function() {
 
+  var arrayToolTip = toolTips.returnArray();
+
+
   staticLayer.clear();
-  
+
+  for (var i=0; i<arrayToolTip.length; i++) {
+
+    staticLayer.add(arrayToolTip[i][0].draw());
+  }
+
+
   stage.add(staticLayer);
 }
 
 
- this.uploadNextObject = function() {
+this.uploadNextObject = function() {
 
   var arrayToolTip = toolTips.returnArray();
   var latestPosition = toolTips.returnCounter() - 1;
 
   staticLayer.add(arrayToolTip[latestPosition][0]);
   arrayToolTip[latestPosition][0].draw();
- }
+
+}
 
 
- this.uploadLastLine = function() {
+this.uploadLastLine = function() {
 
   staticLayer.add(lines.getLastLineContainer().getLine());
-  lines.getLastLineContainer().getLine().draw();
- }
 
- this.uploadLastLineHand = function() {
+  lines.getLastLineContainer().getLine().draw();
+}
+
+this.uploadLastLineHand = function() {
 
   staticLayer.add(handLines.getLastLineContainer().getLine());
   handLines.getLastLineContainer().getLine().draw();
- }
 
+}
 
- this.uploadLastHandLine = function(lastLine, inputPoints) {
+this.uploadLastHandLine = function(lastLine, inputPoints) {
 
   lastLine.points(inputPoints);
   handLines.getLastLineContainer().getGeoPoints(inputPoints);
   lastLine.draw();
- }
+}
 
 
 
 
   this.drawAnnot = function() {
     var arrayToolTip = toolTips.returnArray();
-    
-     if (arrayToolTip.length > 0) {
-     
       for (var i=0; i<arrayToolTip.length; i++) {
 
         var actualpixelMouse = mapLayer.fromLatLngToPoint(arrayToolTip[i][1], globalMap); 
@@ -10138,16 +10058,11 @@ function Overlay()
         arrayToolTip[i][0].setAbsolutePosition(newLayerPixel);
         arrayToolTip[i][0].draw();
       }
-    }
   }
 
   this.drawLines = function() {
-  
     var lineArray = lines.returnArray();
       // look through the lines
-      
-     if (lineArray.length > 0) {
-      
       for (var i=0; i<lineArray.length; i++) {
 
           var newLineLayerArray = new Array();
@@ -10155,6 +10070,7 @@ function Overlay()
 
           var currentLine = lineArray[i];
           var geoPoints = currentLine.getGeoArray();
+
 
           // create new array of points for this line on the layer
           for (var counter=0; counter<geoPoints.length; counter++) {
@@ -10169,18 +10085,13 @@ function Overlay()
           currentLine.getLine().points(newLineLayerArray);
           currentLine.getLine().draw();
       }
-    }
   }
-
-
-
 
   this.drawHandLines = function() {
 
    
     var handlineArray = handLines.returnArray();
         // look through the lines
-      if (handlineArray.length > 0) {
         for (var i=0; i<handlineArray.length; i++) {
 
           var newLineLayerArray = new Array();
@@ -10198,93 +10109,14 @@ function Overlay()
             newLineLayerArray[newLineLayerArrayIndex] = actualPixel.x + mapLayerState.getDiffX();    
             newLineLayerArray[newLineLayerArrayIndex+1] =  actualPixel.y + mapLayerState.getDiffY();
             newLineLayerArrayIndex+=2;
+
           }
 
           currentLine.getLine().points(newLineLayerArray);
           currentLine.getLine().draw();
-        }
-      }
-  } 
-
-
-  this.deleteLast = function(lastType) {
-
-    if (lastType === "line") {
-     
-      lines.getLastLineContainer().getLine().hide();
-      lines.deleteLastLineContainer();  
-    }
-
-    else if (lastType === "annot") {
-     
-      var annotsArray = toolTips.returnArray();
-     
-      annotsArray[annotsArray.length-1][0].hide();
-      toolTips.deleteItem();  
-    }
-
-    else if (lastType === "hand") {
-
-      handLines.getLastLineContainer().getLine().hide();
-      handLines.deleteLastLineContainer();
-    }
-    
-    staticLayer.clear();
-
-    this.drawLines();
-    this.drawHandLines();
-    this.drawAnnot();
-  }
-
-
-  this.hideAll = function() {
-
-    //window.alert("hide all");
-
-     var handlineArray = handLines.returnArray();
-      if (handlineArray.length > 0) {
-        for (var i=0; i<handlineArray.length; i++) {
-
-          var newLineLayerArray = new Array();
-          var newLineLayerArrayIndex = 0;
-
-          var currentHandLine = handlineArray[i];
           
-          currentHandLine.getLine().hide();//draw();
         }
-      }
-
-
-     var lineArray = lines.returnArray();
-      // look through the lines
-      if (lineArray.length > 0) {
-        for (var i=0; i<lineArray.length; i++) {
-
-          var newLineLayerArray = new Array();
-          var newLineLayerArrayIndex = 0;
-
-          var currentLine = lineArray[i];
-         
-          currentLine.getLine().hide();
-        }
-      }
-
-
-      var arrayToolTip = toolTips.returnArray();
-    
-     if (arrayToolTip.length > 0) {
-     
-      for (var i=0; i<arrayToolTip.length; i++) {
-
-        var actualpixelMouse = mapLayer.fromLatLngToPoint(arrayToolTip[i][1], globalMap); 
-
-        var newLayerPixel = new google.maps.Point(actualpixelMouse.x, actualpixelMouse.y);
-
-        arrayToolTip[i][0].hide();
-      }
-    }
-    
-  }
+  } 
 
 
 }
@@ -10297,10 +10129,6 @@ var handLines;
 
 var mapLayer;
 
-var currentToolType;
-var currentToolTypePos;
-
-var curViewQueue;
 
 function SetEasel() {
 	
@@ -10337,16 +10165,7 @@ function SetEasel() {
 
 
 	overlay.uploadOverlay();
-  currentToolType = new Array();
-  currentToolTypePos = 0;
-
-
-
-  curViewQueue = new CurrentDrawView();
-  curViewQueue.initViewArray();
-
-
-  
+	
 
 	var eventListener = new Events(googleMap,overlay);
     eventListener.setListeners();
@@ -10405,22 +10224,11 @@ function ToolTips()
   	this.counter++;
   } 
 
-  this.deleteItem = function() {
-
-    this.array.pop();
-    this.counter--;
-  }
 
   this.returnArray = function() {
 
   	return this.array;
   } 
-
-  this.clearArray = function() {
-
-    this.array=[];
-    this.counter=0;
-  }
 
   this.returnCounter = function() {
 
@@ -10480,7 +10288,7 @@ function Lines()
   	var redLine = new Kinetic.Line({
             points: [],
             stroke: 'red',
-            strokeWidth: globalLineStroke,
+            strokeWidth: 3,
             lineCap: 'round',
             lineJoin: 'round'
     });
@@ -10493,8 +10301,6 @@ function Lines()
   	this.array[this.counter] = newLineContainer;
    
   	this.counter++;
-
-    staticLayer.add(redLine);
    // return redLine;
   }
 
@@ -10504,19 +10310,6 @@ function Lines()
   	return this.array;
   }
 
-  this.clearArray = function() {
-
-    this.array=[];
-    this.counter=0;
-  }
-
-
-
-  this.deleteLastLineContainer = function() {
-
-    return this.array.pop();
-    this.counter--;
-  }
 
 
   this.getLastLineContainer = function() {
@@ -10526,8 +10319,6 @@ function Lines()
 
 
 }
-
-
 
 function MapLayerState()
 {
@@ -10587,7 +10378,7 @@ function MapLayerState()
     this.getDiffY = function() {
 
     	if(typeof this.initialDifferenceY !== 'undefined')
-    		return parseFloat(this.initialDifferenceY);
+    		return parseFloat(this.initialDifferenceY );
         else return 0;
     }
     
@@ -10672,11 +10463,10 @@ function HandLines()
 	this.newRedLine = function() {
 
 
-
 		var redLine = new Kinetic.Line({
 			points: [],
-			stroke: 'red',//'' rgb(r.getValue(),g.getValue(),b.getValue()
-			strokeWidth: globalHandLineStroke,
+			stroke: 'red',
+			strokeWidth: 3,
 			lineCap: 'round',
 			lineJoin: 'round'
 		});
@@ -10693,25 +10483,14 @@ function HandLines()
 		return redLine;
 	}
 
-	this.deleteLastLineContainer = function() {
-		this.array.pop();
-		this.counter--;
-	}
 
 	this.returnArray = function() {
 
 		return this.array;
 	}
 
-	this.clearArray = function() {
-
-		this.array=[];
-        this.counter=0;
-    }
 
 	this.getLastLineContainer = function() {
-
-		//window.alert("len:"+this.array.length+" counter"+this.counter);
 
 		return this.array[this.counter-1];
 	}
@@ -10721,23 +10500,24 @@ function HandLines()
 
   function HandLineContainer(inputLine) {
 
-  	this.line = inputLine;
+	this.line = inputLine;
+    
     
 
     this.getGeoPoints = function(points) {
        
-      var newGeoArray = new Array();
-      var index = 0;
+        var newGeoArray = new Array();
+        var index = 0;
 
-      for (var i = 0; i<points.length; i+=2) {
-
-        var currentLayerPoint = new google.maps.Point(points[i]-mapLayerState.getDiffX(), points[i+1]-mapLayerState.getDiffY()); 
+        for (var i = 0; i<points.length; i+=2) {
+         
+    		var currentLayerPoint = new google.maps.Point(points[i], points[i+1]); 
     		newGeoArray[index] = mapLayer.fromPointToLatLng(currentLayerPoint, globalMap);
-        index++;
-      }
+            index++;
+        }
 
-      this.geoPoints = newGeoArray;
-      this.points = points;
+        this.geoPoints = newGeoArray;
+        this.points = points;
 
     }
 
@@ -10757,749 +10537,248 @@ function HandLines()
     this.addNewPoint = function(x,y) {
      
     
-      this.line.points(this.line.points().concat([x-60+mapLayerState.getDiffX(), y+mapLayerState.getDiffY()]));
+      this.line.points(this.line.points().concat([x+mapLayerState.getDiffX(), y+mapLayerState.getDiffY()]));
 
       var currentLayerPoint = new google.maps.Point(x, y);//-60
       this.geoPoints[this.geoPoints.length] = mapLayer.fromPointToLatLng(currentLayerPoint, globalMap);
-    }
+
+  }
 
 
-    this.getLayerPoints = function() {
+  this.getLayerPoints = function() {
 
-      return this.points;
-    }
+   return this.points;
+  }
+
+
+
+
 
 }
 
-
-function CurrentDrawView() {
-
-
-
-	this.initViewArray = function() {
-
-		this.prevStates = new Array();
-		this.prevStatesCounter = 0;
-
-		this.nextStates = new Array();
-		this.nextStatesCounter = 0;
-	};
+var annotGlobalString;
+var lineGlobalString;
+var handLinesGlobalString;
 
 
-	this.newPrevView = function() {
-        
-        // prev and current states saved in the array
-       // window.alert("new prev view saved");
+function Save() {
+
+  
+
+  this.saveAnnot = function(annotArray) {
+
+    var newStringAnnotArray=[{"lat" : annotArray[0][1].lat().toString(), "lng" : annotArray[0][1].lng().toString()}] ;
+
+    for(var i=1; i<annotArray.length; i++) {
+
+      var stringLat = annotArray[i][1].lat().toString();
+      var stringLng = annotArray[i][1].lng().toString();
+
+      newStringAnnotArray = newStringAnnotArray.concat([{"lat": stringLat, "lng": stringLng}]);
+    } 
+
+    var finalArray = {"annot":newStringAnnotArray};
+
+    var myJsonString = JSON.stringify(finalArray);
+
+    //localStorage.annot = myJsonString; 
+    annotGlobalString = myJsonString;
+    
+  }
+
+
+  this.getAnnot = function(inputAnnot) {
+
+   if(typeof inputAnnot !== 'undefined') {
+
+    var myJsonString = inputAnnot;//localStorage.annot;
+
+    this.obj = JSON.parse(myJsonString);
+
+    
+    for(var i=0; i<this.obj.annot.length; i++) {
+
+     var curLatLng = new google.maps.LatLng(parseFloat(this.obj.annot[i].lat), parseFloat(this.obj.annot[i].lng));
+
+     var actualpixelMouse = mapLayer.fromLatLngToPoint(curLatLng, globalMap); 
+     var newLayerPixel = new google.maps.Point(actualpixelMouse.x, actualpixelMouse.y);
+
+     toolTips.addToolTip(actualpixelMouse.x+60, actualpixelMouse.y);
+
+     overlay.uploadNextObject();
+   }
+
+ }
+ 
+}
+
+
+
+
+this.saveLines = function(inputLinesArray) {
+
+  
+  var newLine=[];
+  var lineGeoPoints=[];
+
+  for(var i=0; i<inputLinesArray.length; i++) {
+
+    var geoPointsArray = inputLinesArray[i].getGeoArray();
+    
+    for(var ii=0; ii<geoPointsArray.length; ii++) {
+
+      var stringLat = geoPointsArray[ii].lat().toString();
+      var stringLng = geoPointsArray[ii].lng().toString();
+
+      lineGeoPoints = lineGeoPoints.concat( [{ "point" : {"lat" : stringLat, "lng" : stringLng } }] );
+    }
+
+    newLine = newLine.concat([ {"line": lineGeoPoints} ]);
+
+    
+    lineGeoPoints = [];
+  }
+
+  var finalArray = {"linesArray" : newLine};
+
+  var myJsonString = JSON.stringify(finalArray);
+
+  //localStorage.linesArraySaved = myJsonString; 
+  lineGlobalString = myJsonString;
+
+}
+    // { "linesArray" : { "line" : { "point" : {"lat", "lng"}  }   } }
+
+
+
+
+    this.getLines = function(inputLines) {
+
+     if(typeof inputLines !== 'undefined') {
        
-        this.prevStates[this.prevStatesCounter] = this.getCurrentView();
-		this.prevStatesCounter++;
-		//window.alert("new prev");
-		
-		//window.alert("new prev view created");    
-	};
-
-
-	this.getPrevView = function() {
-
-		//window.alert("get new prev view");
-        
-		this.prevStatesCounter--;
-		this.newNextView(this.prevStates[this.prevStatesCounter]);
-		
-		this.prevStatesCounter--;
-
-		var returnView = this.prevStates[this.prevStatesCounter];
-		this.prevStatesCounter++;
-
-		//window.alert("return new prev view");
-		this.prevStates.pop();    
-
-		//window.alert("- prev");    
-
-		return returnView;
-	};
-
-
-	this.newNextView = function(view) {
-
-		//window.alert("new next");
-
-		this.nextStates[this.nextStatesCounter] = view;
-		this.nextStatesCounter++;
-		//window.alert(this.nextStates.length);
-	}
-
-	this.getNextView = function() {
-
-		//window.alert(this.nextStates.length);
-	    
-
-		this.nextStatesCounter--;
-		//window.alert("counter"+this.nextStatesCounter);
-		var returnView = this.nextStates[this.nextStatesCounter];
-		this.newPrevView(returnView);
-		this.nextStates.pop();
-
-	    //window.alert("- next");
-		
-
-		return returnView;
-	}
-
-
-	this.getCurrentView = function() {
-
-	  var saveDrawings = new Save();
       
-      //staticLayer.clear(); 
-      
-      //window.alert("got annotations cleared");
-
-	  var arrayToolTip = toolTips.returnArray();
-      var lineArray = lines.returnArray();
-      var handlineArray = handLines.returnArray();
-
-      //window.alert("got current once");
-
-      var saveDrawings = new Save();
-
-      if (arrayToolTip.length > 0) saveDrawings.saveAnnot(arrayToolTip);
-      
-      if (lineArray.length > 0) saveDrawings.saveLines(lineArray);
-      
-      if (handlineArray.length > 0) saveDrawings.saveHandLines(handlineArray);
-
-      // saveWithVera
-      jsonstr = annotGlobalString + "+" + lineGlobalString + "+" + handLinesGlobalString;
-      //window.alert("returning saved annotation string");
-
-      return jsonstr;
-	}
-
-}
-
-  var annotGlobalString;
-  var lineGlobalString;
-  var handLinesGlobalString;
-
-
-  function Save() {
-
-
-
-    this.saveAnnot = function(annotArray) {
-
-      var newStringAnnotArray=[{"lat" : annotArray[0][1].lat().toString(), "lng" : annotArray[0][1].lng().toString()}] ;
-
-      for(var i=1; i<annotArray.length; i++) {
-
-        var stringLat = annotArray[i][1].lat().toString();
-        var stringLng = annotArray[i][1].lng().toString();
-
-        newStringAnnotArray = newStringAnnotArray.concat([{"lat": stringLat, "lng": stringLng}]);
-      } 
-
-      var finalArray = {"annot":newStringAnnotArray};
-
-      var myJsonString = JSON.stringify(finalArray);
-
-      annotGlobalString = myJsonString;
-    }
-
-
-    this.getAnnot = function(inputAnnot) {
-
-     if(inputAnnot !== 'undefined') {
-
-      var myJsonString = inputAnnot;//localStorage.annot;
+      var myJsonString = inputLines;//localStorage.linesArraySaved;
 
       this.obj = JSON.parse(myJsonString);
 
-      if(typeof this.obj.annot !== 'undefined') {
       
-      for(var i=0; i<this.obj.annot.length; i++) {
+     // loop through lines
+     for (var i=0; i<this.obj.linesArray.length; i++) {
 
-       var curLatLng = new google.maps.LatLng(this.obj.annot[i].lat, this.obj.annot[i].lng);
-       // parseFloat( parseFloat(
+      var curLine = this.obj.linesArray[i].line;
 
-       var actualpixelMouse = mapLayer.fromLatLngToPoint(curLatLng, globalMap); 
-       var newLayerPixel = new google.maps.Point(actualpixelMouse.x + mapLayerState.getDiffX(), 
-                                                  actualpixelMouse.y + mapLayerState.getDiffY());
+      lines.newRedLine();
 
-       toolTips.addToolTip(newLayerPixel.x+60, newLayerPixel.y); //+60,
+      // parse through points
+      for (var ii=0; ii<curLine.length; ii++) {
 
-       overlay.uploadNextObject();
-     }
+        var curLat = parseFloat(curLine[ii].point.lat);
+        var cutLng = parseFloat(curLine[ii].point.lng);
 
-   }
+        var latLng = new google.maps.LatLng(curLat, cutLng);
 
-   }
-   
-  }
+        var curPoint = mapLayer.fromLatLngToPoint(latLng, globalMap); 
 
-
-
-
-  this.saveLines = function(inputLinesArray) {
-
-
-    var newLine=[];
-    var lineGeoPoints=[];
-
-    for(var i=0; i<inputLinesArray.length; i++) {
-
-      var geoPointsArray = inputLinesArray[i].getGeoArray();
-      
-      for(var ii=0; ii<geoPointsArray.length; ii++) {
-
-        var stringLat = geoPointsArray[ii].lat().toString();
-        var stringLng = geoPointsArray[ii].lng().toString();
-
-        lineGeoPoints = lineGeoPoints.concat( [{ "point" : {"lat" : stringLat, "lng" : stringLng } }] );
+        lines.getLastLineContainer().addNewPoint(curPoint.x, curPoint.y);
+        overlay.uploadLastLine(); 
       }
 
-      newLine = newLine.concat([ {"line": lineGeoPoints} ]);
-
-      
-      lineGeoPoints = [];
     }
 
-    var finalArray = {"linesArray" : newLine};
-
-    var myJsonString = JSON.stringify(finalArray);
-
-    //localStorage.linesArraySaved = myJsonString; 
-    lineGlobalString = myJsonString;
-
   }
-      // { "linesArray" : { "line" : { "point" : {"lat", "lng"}  }   } }
+
+}
 
 
 
 
-      this.getLines = function(inputLines) {
-
-       if(inputLines !== 'undefined') {
 
 
-        var myJsonString = inputLines;//localStorage.linesArraySaved;
 
+this.saveHandLines = function(inputLinesArray) {
+
+  
+  var newLine=[];
+  var lineGeoPoints=[];
+
+  for(var i=0; i<inputLinesArray.length; i++) {
+
+    var geoPointsArray = inputLinesArray[i].getGeoArray();
+    
+    for(var ii=0; ii<geoPointsArray.length; ii++) {
+
+      var stringLat = geoPointsArray[ii].lat().toString();
+      var stringLng = geoPointsArray[ii].lng().toString();
+
+      lineGeoPoints = lineGeoPoints.concat( [{ "point" : {"lat" : stringLat, "lng" : stringLng } }] );
+    }
+
+    newLine = newLine.concat([ {"line": lineGeoPoints} ]);
+
+    
+    lineGeoPoints = [];
+  }
+
+  var finalArray = {"linesArray" : newLine};
+
+  var myJsonString = JSON.stringify(finalArray);
+
+         //window.alert(myJsonString);
+
+         //localStorage.handLinesArraySaved = myJsonString; 
+         handLinesGlobalString = myJsonString;
+
+       }
+    // { "linesArray" : { "line" : { "point" : {"lat", "lng"}  }   } }
+
+
+
+
+    this.getHandLines = function(inputHandLines) {
+
+     
+      if(typeof inputHandLines !== 'undefined') {
+        
+
+        var myJsonString = inputHandLines; //localStorage.handLinesArraySaved;
+        
         this.obj = JSON.parse(myJsonString);
+        
+     // loop through lines
+     for (var i=0; i<this.obj.linesArray.length; i++) {
 
+      var curLine = this.obj.linesArray[i].line;
 
-        if(typeof this.obj.linesArray !== 'undefined') {
+      handLines.newRedLine();
 
-       // loop through lines
-       for (var i=0; i<this.obj.linesArray.length; i++) {
+      // parse through points
+      for (var ii=0; ii<curLine.length; ii++) {
 
-        var curLine = this.obj.linesArray[i].line;
+        var curLat = parseFloat(curLine[ii].point.lat);
+        var cutLng = parseFloat(curLine[ii].point.lng);
 
-        lines.newRedLine();
+        var latLng = new google.maps.LatLng(curLat, cutLng);
 
-        // parse through points
-        for (var ii=0; ii<curLine.length; ii++) {
+        var curPoint = mapLayer.fromLatLngToPoint(latLng, globalMap); 
 
-          var curLat = curLine[ii].point.lat; //parseFloat()
-          var cutLng = curLine[ii].point.lng; // parseFloat()
+        handLines.getLastLineContainer().addNewPoint(curPoint.x, curPoint.y);
 
-          var latLng = new google.maps.LatLng(curLat, cutLng);
-
-          var curPoint = mapLayer.fromLatLngToPoint(latLng, globalMap); 
-
-          lines.getLastLineContainer().addNewPoint(curPoint.x, curPoint.y);
-          overlay.uploadLastLine(); 
-        }
-
+        overlay.uploadLastLineHand(); 
+        //uploadLastHandLine
       }
-
     }
 
   }
+}
 
-  }
 
 
 
-  this.saveHandLines = function(inputLinesArray) {
 
 
-    var newLine=[];
-    var lineGeoPoints=[];
 
-    for(var i=0; i<inputLinesArray.length; i++) {
 
-      var geoPointsArray = inputLinesArray[i].getGeoArray();
-      
-      for(var ii=0; ii<geoPointsArray.length; ii++) {
 
-        var stringLat = geoPointsArray[ii].lat().toString();
-        var stringLng = geoPointsArray[ii].lng().toString();
 
-        lineGeoPoints = lineGeoPoints.concat( [{ "point" : {"lat" : stringLat, "lng" : stringLng } }] );
-      }
 
-      newLine = newLine.concat([ {"line": lineGeoPoints} ]);
-
-      
-      lineGeoPoints = [];
-    }
-
-    var finalArray = {"linesArray" : newLine};
-
-    var myJsonString = JSON.stringify(finalArray);
-
-           //window.alert(myJsonString);
-
-           //localStorage.handLinesArraySaved = myJsonString; 
-           handLinesGlobalString = myJsonString;
-
-    }
-      // { "linesArray" : { "line" : { "point" : {"lat", "lng"}  }   } }
-
-
-
-
-      this.getHandLines = function(inputHandLines) {
-
-       // window.alert(inputHandLines);
-
-        if(inputHandLines !== 'undefined') {
-
-         // window.alert(inputHandLines);
-
-          var myJsonString = inputHandLines; //localStorage.handLinesArraySaved;
-
-          //window.alert(myJsonString);
-          
-          this.obj = JSON.parse(myJsonString);
-
-         if(typeof this.obj.linesArray !== 'undefined') {
-          
-       // loop through lines
-       for (var i=0; i<this.obj.linesArray.length; i++) {
-
-        var curLine = this.obj.linesArray[i].line;
-
-        handLines.newRedLine();
-
-        // parse through points
-        for (var ii=0; ii<curLine.length; ii++) {
-
-          var curLat = curLine[ii].point.lat; // parseFloat()
-          var cutLng = curLine[ii].point.lng; // parseFloat()
-
-          var latLng = new google.maps.LatLng(curLat, cutLng);
-
-          var curPoint = mapLayer.fromLatLngToPoint(latLng, globalMap); 
-
-          handLines.getLastLineContainer().addNewPoint(curPoint.x + 60, curPoint.y);
-
-          overlay.uploadLastLineHand(); 
-          //uploadLastHandLine
-        }
-      }
-      }
-
-    }
-  }
-
-
-
-
-
-
-
-
-
-
-
-  }
-
-/* =========================================================
- * bootstrap-slider.js v2.0.0
- * http://www.eyecon.ro/bootstrap-slider
- * =========================================================
- * Copyright 2012 Stefan Petre
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * ========================================================= */
- 
-!function( $ ) {
-
-	var Slider = function(element, options) {
-		this.element = $(element);
-		this.picker = $('<div class="slider">'+
-							'<div class="slider-track">'+
-								'<div class="slider-selection"></div>'+
-								'<div class="slider-handle"></div>'+
-								'<div class="slider-handle"></div>'+
-							'</div>'+
-							'<div class="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>'+
-						'</div>')
-							.insertBefore(this.element)
-							.append(this.element);
-		this.id = this.element.data('slider-id')||options.id;
-		if (this.id) {
-			this.picker[0].id = this.id;
-		}
-
-		if (typeof Modernizr !== 'undefined' && Modernizr.touch) {
-			this.touchCapable = true;
-		}
-
-		var tooltip = this.element.data('slider-tooltip')||options.tooltip;
-
-		this.tooltip = this.picker.find('.tooltip');
-		this.tooltipInner = this.tooltip.find('div.tooltip-inner');
-
-		this.orientation = this.element.data('slider-orientation')||options.orientation;
-		switch(this.orientation) {
-			case 'vertical':
-				this.picker.addClass('slider-vertical');
-				this.stylePos = 'top';
-				this.mousePos = 'pageY';
-				this.sizePos = 'offsetHeight';
-				this.tooltip.addClass('right')[0].style.left = '100%';
-				break;
-			default:
-				this.picker
-					.addClass('slider-horizontal')
-					.css('width', this.element.outerWidth());
-				this.orientation = 'horizontal';
-				this.stylePos = 'left';
-				this.mousePos = 'pageX';
-				this.sizePos = 'offsetWidth';
-				this.tooltip.addClass('top')[0].style.top = -this.tooltip.outerHeight() - 14 + 'px';
-				break;
-		}
-
-		this.min = this.element.data('slider-min')||options.min;
-		this.max = this.element.data('slider-max')||options.max;
-		this.step = this.element.data('slider-step')||options.step;
-		this.value = this.element.data('slider-value')||options.value;
-		if (this.value[1]) {
-			this.range = true;
-		}
-
-		this.selection = this.element.data('slider-selection')||options.selection;
-		this.selectionEl = this.picker.find('.slider-selection');
-		if (this.selection === 'none') {
-			this.selectionEl.addClass('hide');
-		}
-		this.selectionElStyle = this.selectionEl[0].style;
-
-
-		this.handle1 = this.picker.find('.slider-handle:first');
-		this.handle1Stype = this.handle1[0].style;
-		this.handle2 = this.picker.find('.slider-handle:last');
-		this.handle2Stype = this.handle2[0].style;
-
-		var handle = this.element.data('slider-handle')||options.handle;
-		switch(handle) {
-			case 'round':
-				this.handle1.addClass('round');
-				this.handle2.addClass('round');
-				break
-			case 'triangle':
-				this.handle1.addClass('triangle');
-				this.handle2.addClass('triangle');
-				break
-		}
-
-		if (this.range) {
-			this.value[0] = Math.max(this.min, Math.min(this.max, this.value[0]));
-			this.value[1] = Math.max(this.min, Math.min(this.max, this.value[1]));
-		} else {
-			this.value = [ Math.max(this.min, Math.min(this.max, this.value))];
-			this.handle2.addClass('hide');
-			if (this.selection == 'after') {
-				this.value[1] = this.max;
-			} else {
-				this.value[1] = this.min;
-			}
-		}
-		this.diff = this.max - this.min;
-		this.percentage = [
-			(this.value[0]-this.min)*100/this.diff,
-			(this.value[1]-this.min)*100/this.diff,
-			this.step*100/this.diff
-		];
-
-		this.offset = this.picker.offset();
-		this.size = this.picker[0][this.sizePos];
-
-		this.formater = options.formater;
-
-		this.layout();
-
-		if (this.touchCapable) {
-			// Touch: Bind touch events:
-			this.picker.on({
-				touchstart: $.proxy(this.mousedown, this)
-			});
-		} else {
-			this.picker.on({
-				mousedown: $.proxy(this.mousedown, this)
-			});
-		}
-
-		if (tooltip === 'show') {
-			this.picker.on({
-				mouseenter: $.proxy(this.showTooltip, this),
-				mouseleave: $.proxy(this.hideTooltip, this)
-			});
-		} else {
-			this.tooltip.addClass('hide');
-		}
-	};
-
-	Slider.prototype = {
-		constructor: Slider,
-
-		over: false,
-		inDrag: false,
-		
-		showTooltip: function(){
-			this.tooltip.addClass('in');
-			//var left = Math.round(this.percent*this.width);
-			//this.tooltip.css('left', left - this.tooltip.outerWidth()/2);
-			this.over = true;
-		},
-		
-		hideTooltip: function(){
-			if (this.inDrag === false) {
-				this.tooltip.removeClass('in');
-			}
-			this.over = false;
-		},
-
-		layout: function(){
-			this.handle1Stype[this.stylePos] = this.percentage[0]+'%';
-			this.handle2Stype[this.stylePos] = this.percentage[1]+'%';
-			if (this.orientation == 'vertical') {
-				this.selectionElStyle.top = Math.min(this.percentage[0], this.percentage[1]) +'%';
-				this.selectionElStyle.height = Math.abs(this.percentage[0] - this.percentage[1]) +'%';
-			} else {
-				this.selectionElStyle.left = Math.min(this.percentage[0], this.percentage[1]) +'%';
-				this.selectionElStyle.width = Math.abs(this.percentage[0] - this.percentage[1]) +'%';
-			}
-			if (this.range) {
-				this.tooltipInner.text(
-					this.formater(this.value[0]) + 
-					' : ' + 
-					this.formater(this.value[1])
-				);
-				this.tooltip[0].style[this.stylePos] = this.size * (this.percentage[0] + (this.percentage[1] - this.percentage[0])/2)/100 - (this.orientation === 'vertical' ? this.tooltip.outerHeight()/2 : this.tooltip.outerWidth()/2) +'px';
-			} else {
-				this.tooltipInner.text(
-					this.formater(this.value[0])
-				);
-				this.tooltip[0].style[this.stylePos] = this.size * this.percentage[0]/100 - (this.orientation === 'vertical' ? this.tooltip.outerHeight()/2 : this.tooltip.outerWidth()/2) +'px';
-			}
-		},
-
-		mousedown: function(ev) {
-
-			// Touch: Get the original event:
-			if (this.touchCapable && ev.type === 'touchstart') {
-				ev = ev.originalEvent;
-			}
-
-			this.offset = this.picker.offset();
-			this.size = this.picker[0][this.sizePos];
-
-			var percentage = this.getPercentage(ev);
-
-			if (this.range) {
-				var diff1 = Math.abs(this.percentage[0] - percentage);
-				var diff2 = Math.abs(this.percentage[1] - percentage);
-				this.dragged = (diff1 < diff2) ? 0 : 1;
-			} else {
-				this.dragged = 0;
-			}
-
-			this.percentage[this.dragged] = percentage;
-			this.layout();
-
-			if (this.touchCapable) {
-				// Touch: Bind touch events:
-				$(document).on({
-					touchmove: $.proxy(this.mousemove, this),
-					touchend: $.proxy(this.mouseup, this)
-				});
-			} else {
-				$(document).on({
-					mousemove: $.proxy(this.mousemove, this),
-					mouseup: $.proxy(this.mouseup, this)
-				});
-			}
-
-			this.inDrag = true;
-			var val = this.calculateValue();
-			this.element.trigger({
-					type: 'slideStart',
-					value: val
-				}).trigger({
-					type: 'slide',
-					value: val
-				});
-			return false;
-		},
-
-		mousemove: function(ev) {
-			
-			// Touch: Get the original event:
-			if (this.touchCapable && ev.type === 'touchmove') {
-				ev = ev.originalEvent;
-			}
-
-			var percentage = this.getPercentage(ev);
-			if (this.range) {
-				if (this.dragged === 0 && this.percentage[1] < percentage) {
-					this.percentage[0] = this.percentage[1];
-					this.dragged = 1;
-				} else if (this.dragged === 1 && this.percentage[0] > percentage) {
-					this.percentage[1] = this.percentage[0];
-					this.dragged = 0;
-				}
-			}
-			this.percentage[this.dragged] = percentage;
-			this.layout();
-			var val = this.calculateValue();
-			this.element
-				.trigger({
-					type: 'slide',
-					value: val
-				})
-				.data('value', val)
-				.prop('value', val);
-			return false;
-		},
-
-		mouseup: function(ev) {
-			if (this.touchCapable) {
-				// Touch: Bind touch events:
-				$(document).off({
-					touchmove: this.mousemove,
-					touchend: this.mouseup
-				});
-			} else {
-				$(document).off({
-					mousemove: this.mousemove,
-					mouseup: this.mouseup
-				});
-			}
-
-			this.inDrag = false;
-			if (this.over == false) {
-				this.hideTooltip();
-			}
-			this.element;
-			var val = this.calculateValue();
-			this.element
-				.trigger({
-					type: 'slideStop',
-					value: val
-				})
-				.data('value', val)
-				.prop('value', val);
-			return false;
-		},
-
-		calculateValue: function() {
-			var val;
-			if (this.range) {
-				val = [
-					(this.min + Math.round((this.diff * this.percentage[0]/100)/this.step)*this.step),
-					(this.min + Math.round((this.diff * this.percentage[1]/100)/this.step)*this.step)
-				];
-				this.value = val;
-			} else {
-				val = (this.min + Math.round((this.diff * this.percentage[0]/100)/this.step)*this.step);
-				this.value = [val, this.value[1]];
-			}
-			return val;
-		},
-
-		getPercentage: function(ev) {
-			if (this.touchCapable) {
-				ev = ev.touches[0];
-			}
-			var percentage = (ev[this.mousePos] - this.offset[this.stylePos])*100/this.size;
-			percentage = Math.round(percentage/this.percentage[2])*this.percentage[2];
-			return Math.max(0, Math.min(100, percentage));
-		},
-
-		getValue: function() {
-			if (this.range) {
-				return this.value;
-			}
-			return this.value[0];
-		},
-
-		setValue: function(val) {
-			this.value = val;
-
-			if (this.range) {
-				this.value[0] = Math.max(this.min, Math.min(this.max, this.value[0]));
-				this.value[1] = Math.max(this.min, Math.min(this.max, this.value[1]));
-			} else {
-				this.value = [ Math.max(this.min, Math.min(this.max, this.value))];
-				this.handle2.addClass('hide');
-				if (this.selection == 'after') {
-					this.value[1] = this.max;
-				} else {
-					this.value[1] = this.min;
-				}
-			}
-			this.diff = this.max - this.min;
-			this.percentage = [
-				(this.value[0]-this.min)*100/this.diff,
-				(this.value[1]-this.min)*100/this.diff,
-				this.step*100/this.diff
-			];
-			this.layout();
-		}
-	};
-
-	$.fn.slider = function ( option, val ) {
-		return this.each(function () {
-			var $this = $(this),
-				data = $this.data('slider'),
-				options = typeof option === 'object' && option;
-			if (!data)  {
-				$this.data('slider', (data = new Slider(this, $.extend({}, $.fn.slider.defaults,options))));
-			}
-			if (typeof option == 'string') {
-				data[option](val);
-			}
-		})
-	};
-
-	$.fn.slider.defaults = {
-		min: 0,
-		max: 10,
-		step: 1,
-		orientation: 'horizontal',
-		value: 5,
-		selection: 'before',
-		tooltip: 'show',
-		handle: 'round',
-		formater: function(value) {
-			return value;
-		}
-	};
-
-	$.fn.slider.Constructor = Slider;
-
-}( window.jQuery );
+}

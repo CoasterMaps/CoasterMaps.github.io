@@ -1,0 +1,37 @@
+body {
+  background-color: #222;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;    
+}
+
+#buttons {
+  overflow: hidden;
+  height: 100%;
+}
+
+/* Buttons */
+
+.button {
+  position: relative;
+  float: left;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: 0%;
+  background: #777;
+  color: #eee;
+  text-align: center;
+  border-radius: 0.1em;
+  font-weight: 700;  
+}
+
+.outer {
+    position: relative;
+    float: left;
+    width: 100 px;
+    height: 100 px;
+}

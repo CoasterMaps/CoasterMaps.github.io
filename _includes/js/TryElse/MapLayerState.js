@@ -1,6 +1,7 @@
+
+
 function MapLayerState()
 {
-
 
 //this.clear();
 
@@ -57,7 +58,7 @@ function MapLayerState()
     this.getDiffY = function() {
 
     	if(typeof this.initialDifferenceY !== 'undefined')
-    		return parseFloat(this.initialDifferenceY );
+    		return parseFloat(this.initialDifferenceY);
         else return 0;
     }
     

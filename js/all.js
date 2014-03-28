@@ -25,4 +25,8 @@
 
 {% include js/TryElse/HandLineContainer.js %}
 
+{% include js/TryElse/CurrentDrawView.js %}
+
 {% include js/TryElse/Save.js %}
+
+{% include js/TryElse/bootstrapslider.js %}

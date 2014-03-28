@@ -17,7 +17,6 @@ function MapLayer()
       point.x = point.x + 60;
     
       var topRight = map.getProjection().fromLatLngToPoint(map.getBounds().getNorthEast());
-
       var bottomLeft = map.getProjection().fromLatLngToPoint(map.getBounds().getSouthWest());
       var scale = Math.pow(2, map.getZoom());
       
