@@ -9713,28 +9713,31 @@ google.loader.rpl({":scriptaculous":{"versions":{":1.8.3":{"uncompressed":"scrip
 
 
 
-    $("#prev-tool").click(function(){
+    $("#prev-tool").click(function() {
 
      var newAnnotString = curViewQueue.getPrevView();
-     //window.alert("prev-tool annot:"+newAnnotString);
-      if (newAnnotString!== undefined) {
      
-      var saveDrawings = new Save();
       staticLayer.clear(); 
       overlay.hideAll();
-     // var veraString = jsonstr;
-      var res = newAnnotString.split("+");
-      //window.alert("res splitted");
-      //window.alert("gettingLines:"+res[1]);
-      saveDrawings.getLines(res[1]);
-      //window.alert("gettingHandLines:"+res[2]);
-      saveDrawings.getHandLines(res[2]);
-      //window.alert("gettingAnnot:"+res[0]);
-      saveDrawings.getAnnot(res[0]);
       
-      document.getElementById("get-tool").disabled = true;
+      if (newAnnotString!== undefined) {
 
-    }
+        var saveDrawings = new Save();
+
+        var res = newAnnotString.split("+");
+            
+        var newStr = "lines:" + res[1] + " "; 
+        saveDrawings.getLines(res[1]);
+      
+        newStr += "handlines:" + res[2] + " "; 
+        saveDrawings.getHandLines(res[2]);
+      
+        newStr += "annot:" + res[0] + " "; 
+        saveDrawings.getAnnot(res[0]);
+
+        //window.alert(newStr);      
+        document.getElementById("get-tool").disabled = true;
+      }
     });
 
 
@@ -9742,23 +9745,30 @@ google.loader.rpl({":scriptaculous":{"versions":{":1.8.3":{"uncompressed":"scrip
 
       var newAnnotString = curViewQueue.getNextView();
 
+        
       if (newAnnotString!== undefined) {
+   
+        var saveDrawings = new Save();
+        staticLayer.clear(); 
+        overlay.hideAll();
       
-      var saveDrawings = new Save();
-      staticLayer.clear(); 
-      overlay.hideAll();
-     // var veraString = jsonstr;
-      var res = newAnnotString.split("+");
-      //window.alert("res splitted");
-      //window.alert("gettingLines:"+res[1]);
-      saveDrawings.getLines(res[1]);
-      //window.alert("gettingHandLines:"+res[2]);
-      saveDrawings.getHandLines(res[2]);
-      //window.alert("gettingAnnot:"+res[0]);
-      saveDrawings.getAnnot(res[0]);
       
-      document.getElementById("get-tool").disabled = true;
-    }
+        var res = newAnnotString.split("+");
+    
+        var checkString = "lines:"+res[1] + " ";
+        saveDrawings.getLines(res[1]);
+    
+        checkString = "handlines:"+res[2] + " ";
+        saveDrawings.getHandLines(res[2]);
+    
+        checkString = "annot:"+res[0] + " ";
+        saveDrawings.getAnnot(res[0]);
+
+        //window.alert(checkString);
+  
+        document.getElementById("get-tool").disabled = true;
+      }
+
     });
 
 
@@ -9878,7 +9888,10 @@ google.loader.rpl({":scriptaculous":{"versions":{":1.8.3":{"uncompressed":"scrip
 
       currentToolType[currentToolTypePos] = "annot";
       currentToolTypePos++;
-      curViewQueue.newPrevView();
+
+//hiihihihih      
+      //window.alert("put annot");
+      curViewQueue.newPrevView(curViewQueue.getCurrentView());
     }
 
 
@@ -9901,7 +9914,9 @@ google.loader.rpl({":scriptaculous":{"versions":{":1.8.3":{"uncompressed":"scrip
       
       document.getElementById("save-tool").disabled = false;
       document.getElementById("delete-tool").disabled = false;
-      curViewQueue.newPrevView();
+
+//hihihihihi
+      curViewQueue.newPrevView(curViewQueue.getCurrentView());
     }
 
 
@@ -9958,7 +9973,9 @@ google.loader.rpl({":scriptaculous":{"versions":{":1.8.3":{"uncompressed":"scrip
 
         overlay.uploadLastHandLine(currentHandLine, handpoints);
         stage.draggable(true);
-         curViewQueue.newPrevView();
+
+//hihihihihih
+        curViewQueue.newPrevView(curViewQueue.getCurrentView());
       }
       
     }
@@ -10054,11 +10071,10 @@ function Overlay()
     stage = new Kinetic.Stage({
       container: 'container',
       width: 2500,
-      height: 1500,//window.innerHeight,//$(window).height(),
+      height: 1500,
       draggable: true
     });
 
-    //this.eventLayer = new Kinetic.Layer();
     staticLayer = new Kinetic.Layer();
 
     stage.add(staticLayer);
@@ -10066,7 +10082,7 @@ function Overlay()
   }
 
 
-  this.getStage = function() {
+ this.getStage = function() {
 
    return stage;
  }
@@ -10094,7 +10110,7 @@ function Overlay()
  this.uploadNextObject = function() {
 
   var arrayToolTip = toolTips.returnArray();
-  var latestPosition = toolTips.returnCounter() - 1;
+  var latestPosition = toolTips.returnCounter()-1;
 
   staticLayer.add(arrayToolTip[latestPosition][0]);
   arrayToolTip[latestPosition][0].draw();
@@ -10239,8 +10255,6 @@ function Overlay()
 
   this.hideAll = function() {
 
-    //window.alert("hide all");
-
      var handlineArray = handLines.returnArray();
       if (handlineArray.length > 0) {
         for (var i=0; i<handlineArray.length; i++) {
@@ -10250,8 +10264,9 @@ function Overlay()
 
           var currentHandLine = handlineArray[i];
           
-          currentHandLine.getLine().hide();//draw();
+          currentHandLine.getLine().hide();
         }
+        handLines.clearArray();
       }
 
 
@@ -10267,22 +10282,25 @@ function Overlay()
          
           currentLine.getLine().hide();
         }
+        lines.clearArray();
       }
 
 
-      var arrayToolTip = toolTips.returnArray();
+     var arrayToolTip = toolTips.returnArray();
     
-     if (arrayToolTip.length > 0) {
-     
-      for (var i=0; i<arrayToolTip.length; i++) {
+      if (arrayToolTip.length > 0) {
+        for (var i=0; i<arrayToolTip.length; i++) {
 
-        var actualpixelMouse = mapLayer.fromLatLngToPoint(arrayToolTip[i][1], globalMap); 
+          var actualpixelMouse = mapLayer.fromLatLngToPoint(arrayToolTip[i][1], globalMap); 
 
-        var newLayerPixel = new google.maps.Point(actualpixelMouse.x, actualpixelMouse.y);
+          var newLayerPixel = new google.maps.Point(actualpixelMouse.x, actualpixelMouse.y);
 
-        arrayToolTip[i][0].hide();
+          arrayToolTip[i][0].hide();
+        }
+        toolTips.clearArray();
       }
-    }
+
+
     
   }
 
@@ -10382,19 +10400,25 @@ function ToolTips()
         shadowOffset: {x:10,y:20},
         shadowOpacity: 0.5
     }));
+
+    var annotText = document.getElementById("annotName").value;
       
     tooltip.add(new Kinetic.Text({
-        text: 'Tooltip pointing down',
+        name: this.counter,  
+        text: annotText,
         fontFamily: 'Calibri',
         fontSize: 18,
         padding: 5,
         fill: 'white'
     }));
 
-   
+    tooltip.on('dblclick', function(evt) {
+
+        var shape=evt.targetNode;
+        toolTips.deleteItemNumber(parseInt(shape.attrs.name));  
+    });
 
     var toolTipGeo = new Array();
-    
 
     toolTipGeo[0]=tooltip;
     
@@ -10405,11 +10429,53 @@ function ToolTips()
   	this.counter++;
   } 
 
-  this.deleteItem = function() {
+  this.deleteLastItem = function() {
 
     this.array.pop();
     this.counter--;
   }
+
+
+  this.deleteItemNumber = function(num) {
+
+    this.array[num][0].hide();
+   
+    if (this.array.length>1)  this.array.splice(num, 1);
+    else {
+      this.array = [];
+      annotGlobalString="";
+    }
+
+    this.counter--;
+
+    curViewQueue.newPrevView(curViewQueue.getCurrentView());
+    var newAnnotString = curViewQueue.getCurrentView();
+
+    staticLayer.clear(); 
+    overlay.hideAll();
+    
+      
+    if (newAnnotString!== undefined) {
+
+      var saveDrawings = new Save();
+
+      var res = newAnnotString.split("+");
+            
+      var newStr = "lines:" + res[1] + " "; 
+      saveDrawings.getLines(res[1]);
+      
+      newStr += "handlines:" + res[2] + " "; 
+      saveDrawings.getHandLines(res[2]);
+      
+      newStr += "annot:" + res[0] + " "; 
+      saveDrawings.getAnnot(res[0]);
+
+      document.getElementById("get-tool").disabled = true;
+    }
+
+  }
+
+
 
   this.returnArray = function() {
 
@@ -10478,12 +10544,20 @@ function Lines()
 
    
   	var redLine = new Kinetic.Line({
+            name: this.counter,
             points: [],
             stroke: 'red',
             strokeWidth: globalLineStroke,
             lineCap: 'round',
             lineJoin: 'round'
     });
+
+
+    redLine.on('dblclick', function(evt) {
+        var shape=evt.targetNode;
+        lines.deleteItemNumber(parseInt(shape.attrs.name));  
+    });
+
 
      
     var newLineContainer = new LineContainer(redLine);
@@ -10496,6 +10570,43 @@ function Lines()
 
     staticLayer.add(redLine);
    // return redLine;
+  }
+
+   this.deleteItemNumber = function(num) {
+
+    this.array[num].getLine().hide();
+    if (this.array.length>1)  this.array.splice(num, 1);
+    else {
+      this.array = [];
+      lineGlobalString="";
+    }
+    this.counter--;
+
+    curViewQueue.newPrevView(curViewQueue.getCurrentView());
+    var newAnnotString = curViewQueue.getCurrentView();
+
+    staticLayer.clear(); 
+    overlay.hideAll();
+    
+      
+    if (newAnnotString!== undefined) {
+
+      var saveDrawings = new Save();
+
+      var res = newAnnotString.split("+");
+            
+      var newStr = "lines:" + res[1] + " "; 
+      saveDrawings.getLines(res[1]);
+      
+      newStr += "handlines:" + res[2] + " "; 
+      saveDrawings.getHandLines(res[2]);
+      
+      newStr += "annot:" + res[0] + " "; 
+      saveDrawings.getAnnot(res[0]);
+
+      document.getElementById("get-tool").disabled = true;
+    }
+
   }
 
 
@@ -10674,12 +10785,20 @@ function HandLines()
 
 
 		var redLine = new Kinetic.Line({
+			name: this.counter,
 			points: [],
 			stroke: 'red',//'' rgb(r.getValue(),g.getValue(),b.getValue()
 			strokeWidth: globalHandLineStroke,
 			lineCap: 'round',
 			lineJoin: 'round'
 		});
+
+		redLine.on('dblclick', function(evt) {
+
+			var shape=evt.targetNode;
+            handLines.deleteItemNumber(parseInt(shape.attrs.name));  
+      		
+        });
 
 
 		var newHandLineContainer = new HandLineContainer(redLine);
@@ -10692,6 +10811,48 @@ function HandLines()
 
 		return redLine;
 	}
+
+
+	this.deleteItemNumber = function(num) {
+
+
+    this.array[num].getLine().hide();
+    if (this.array.length>1)  this.array.splice(num, 1);
+    else  {
+    	this.array = [];
+    	handLinesGlobalString="";
+    }
+    this.counter--;
+
+    curViewQueue.newPrevView(curViewQueue.getCurrentView());
+    var newAnnotString = curViewQueue.getCurrentView();
+
+    staticLayer.clear(); 
+    overlay.hideAll();
+    
+      
+    if (newAnnotString!== undefined) {
+
+      var saveDrawings = new Save();
+
+      var res = newAnnotString.split("+");
+            
+      var newStr = "lines:" + res[1] + " "; 
+      saveDrawings.getLines(res[1]);
+      
+      newStr += "handlines:" + res[2] + " "; 
+      saveDrawings.getHandLines(res[2]);
+      
+      newStr += "annot:" + res[0] + " "; 
+      saveDrawings.getAnnot(res[0]);
+
+      document.getElementById("get-tool").disabled = true;
+    }
+
+
+
+  }
+
 
 	this.deleteLastLineContainer = function() {
 		this.array.pop();
@@ -10775,106 +10936,95 @@ function HandLines()
 function CurrentDrawView() {
 
 
-
 	this.initViewArray = function() {
 
 		this.prevStates = new Array();
-		this.prevStatesCounter = 0;
-
 		this.nextStates = new Array();
-		this.nextStatesCounter = 0;
+		this.newPrevView(this.getCurrentView());
 	};
 
 
-	this.newPrevView = function() {
+	this.newPrevView = function(view) {
         
-        // prev and current states saved in the array
-       // window.alert("new prev view saved");
-       
-        this.prevStates[this.prevStatesCounter] = this.getCurrentView();
-		this.prevStatesCounter++;
-		//window.alert("new prev");
-		
-		//window.alert("new prev view created");    
+		this.prevStates.push(view);
 	};
 
 
 	this.getPrevView = function() {
-
-		//window.alert("get new prev view");
         
-		this.prevStatesCounter--;
-		this.newNextView(this.prevStates[this.prevStatesCounter]);
-		
-		this.prevStatesCounter--;
+		if (this.prevStates.length>0) {
 
-		var returnView = this.prevStates[this.prevStatesCounter];
-		this.prevStatesCounter++;
+		    var currentView = this.prevStates.pop();
+			this.newNextView(currentView);
+		 
+			var prevView = this.prevStates.pop();
+			
+			if (this.prevStates.length!==0) {
+		        this.newPrevView(prevView);
+		    }
+		    else this.newNextView(prevView);
 
-		//window.alert("return new prev view");
-		this.prevStates.pop();    
 
-		//window.alert("- prev");    
+            var outString = "prevStates: "+"\n";
+		    for (var i=0; i<this.prevStates.length; i++) {
+		    	outString+= "num "+i+": "+this.prevStates[i]+"\n";
+		    }
+		    //window.alert(outString);
+	    }
 
-		return returnView;
+		return prevView;
 	};
 
 
 	this.newNextView = function(view) {
 
-		//window.alert("new next");
+		this.nextStates.push(view);
+    }
 
-		this.nextStates[this.nextStatesCounter] = view;
-		this.nextStatesCounter++;
-		//window.alert(this.nextStates.length);
-	}
 
 	this.getNextView = function() {
 
-		//window.alert(this.nextStates.length);
-	    
+		if (this.nextStates.length>0) {
 
-		this.nextStatesCounter--;
-		//window.alert("counter"+this.nextStatesCounter);
-		var returnView = this.nextStates[this.nextStatesCounter];
-		this.newPrevView(returnView);
-		this.nextStates.pop();
+			var nextView = this.nextStates.pop();
 
-	    //window.alert("- next");
+	        this.newPrevView(nextView);
+
+
+	        var outString = "nextStates: "+"\n";
+	    	for (var i=0; i<this.nextStates.length; i++) {
+	    		outString+= "num "+i+": "+this.nextStates[i]+"\n";
+		    }
+		    //window.alert(outString);
+	    }
 		
-
-		return returnView;
+		
+		return nextView;
 	}
 
 
 	this.getCurrentView = function() {
 
+	 //window.alert("getCurrentView");
+
 	  var saveDrawings = new Save();
       
-      //staticLayer.clear(); 
-      
-      //window.alert("got annotations cleared");
-
 	  var arrayToolTip = toolTips.returnArray();
       var lineArray = lines.returnArray();
       var handlineArray = handLines.returnArray();
 
-      //window.alert("got current once");
+      if (arrayToolTip.length > 0) 
+      	saveDrawings.saveAnnot(arrayToolTip);
+      if (lineArray.length > 0) 
+      	saveDrawings.saveLines(lineArray);
+      if (handlineArray.length > 0) 
+      	saveDrawings.saveHandLines(handlineArray);
 
-      var saveDrawings = new Save();
+      var curSavedView = annotGlobalString + "+" + lineGlobalString + "+" + handLinesGlobalString;
 
-      if (arrayToolTip.length > 0) saveDrawings.saveAnnot(arrayToolTip);
-      
-      if (lineArray.length > 0) saveDrawings.saveLines(lineArray);
-      
-      if (handlineArray.length > 0) saveDrawings.saveHandLines(handlineArray);
-
-      // saveWithVera
-      jsonstr = annotGlobalString + "+" + lineGlobalString + "+" + handLinesGlobalString;
-      //window.alert("returning saved annotation string");
-
-      return jsonstr;
+      return curSavedView;
 	}
+
 
 }
 
@@ -10979,11 +11129,11 @@ function CurrentDrawView() {
 
       this.getLines = function(inputLines) {
 
-       if(inputLines !== 'undefined') {
+       if((inputLines !== 'undefined')&&(inputLines !== "")) {
 
 
         var myJsonString = inputLines;//localStorage.linesArraySaved;
-
+       
         this.obj = JSON.parse(myJsonString);
 
 
@@ -11063,7 +11213,7 @@ function CurrentDrawView() {
 
        // window.alert(inputHandLines);
 
-        if(inputHandLines !== 'undefined') {
+        if((inputHandLines !== 'undefined')&&(inputHandLines !== "")) {
 
          // window.alert(inputHandLines);
 
@@ -11092,7 +11242,7 @@ function CurrentDrawView() {
 
           var curPoint = mapLayer.fromLatLngToPoint(latLng, globalMap); 
 
-          handLines.getLastLineContainer().addNewPoint(curPoint.x + 60, curPoint.y);
+          handLines.getLastLineContainer().addNewPoint(curPoint.x, curPoint.y);
 
           overlay.uploadLastLineHand(); 
           //uploadLastHandLine

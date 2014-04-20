@@ -2,105 +2,94 @@
 function CurrentDrawView() {
 
 
-
 	this.initViewArray = function() {
 
 		this.prevStates = new Array();
-		this.prevStatesCounter = 0;
-
 		this.nextStates = new Array();
-		this.nextStatesCounter = 0;
+		this.newPrevView(this.getCurrentView());
 	};
 
 
-	this.newPrevView = function() {
+	this.newPrevView = function(view) {
         
-        // prev and current states saved in the array
-       // window.alert("new prev view saved");
-       
-        this.prevStates[this.prevStatesCounter] = this.getCurrentView();
-		this.prevStatesCounter++;
-		//window.alert("new prev");
-		
-		//window.alert("new prev view created");    
+		this.prevStates.push(view);
 	};
 
 
 	this.getPrevView = function() {
-
-		//window.alert("get new prev view");
         
-		this.prevStatesCounter--;
-		this.newNextView(this.prevStates[this.prevStatesCounter]);
-		
-		this.prevStatesCounter--;
+		if (this.prevStates.length>0) {
 
-		var returnView = this.prevStates[this.prevStatesCounter];
-		this.prevStatesCounter++;
+		    var currentView = this.prevStates.pop();
+			this.newNextView(currentView);
+		 
+			var prevView = this.prevStates.pop();
+			
+			if (this.prevStates.length!==0) {
+		        this.newPrevView(prevView);
+		    }
+		    else this.newNextView(prevView);
 
-		//window.alert("return new prev view");
-		this.prevStates.pop();    
 
-		//window.alert("- prev");    
+            var outString = "prevStates: "+"\n";
+		    for (var i=0; i<this.prevStates.length; i++) {
+		    	outString+= "num "+i+": "+this.prevStates[i]+"\n";
+		    }
+		    //window.alert(outString);
+	    }
 
-		return returnView;
+		return prevView;
 	};
 
 
 	this.newNextView = function(view) {
 
-		//window.alert("new next");
+		this.nextStates.push(view);
+    }
 
-		this.nextStates[this.nextStatesCounter] = view;
-		this.nextStatesCounter++;
-		//window.alert(this.nextStates.length);
-	}
 
 	this.getNextView = function() {
 
-		//window.alert(this.nextStates.length);
-	    
+		if (this.nextStates.length>0) {
 
-		this.nextStatesCounter--;
-		//window.alert("counter"+this.nextStatesCounter);
-		var returnView = this.nextStates[this.nextStatesCounter];
-		this.newPrevView(returnView);
-		this.nextStates.pop();
+			var nextView = this.nextStates.pop();
 
-	    //window.alert("- next");
+	        this.newPrevView(nextView);
+
+
+	        var outString = "nextStates: "+"\n";
+	    	for (var i=0; i<this.nextStates.length; i++) {
+	    		outString+= "num "+i+": "+this.nextStates[i]+"\n";
+		    }
+		    //window.alert(outString);
+	    }
 		
-
-		return returnView;
+		
+		return nextView;
 	}
 
 
 	this.getCurrentView = function() {
 
+	 //window.alert("getCurrentView");
+
 	  var saveDrawings = new Save();
       
-      //staticLayer.clear(); 
-      
-      //window.alert("got annotations cleared");
-
 	  var arrayToolTip = toolTips.returnArray();
       var lineArray = lines.returnArray();
       var handlineArray = handLines.returnArray();
 
-      //window.alert("got current once");
+      if (arrayToolTip.length > 0) 
+      	saveDrawings.saveAnnot(arrayToolTip);
+      if (lineArray.length > 0) 
+      	saveDrawings.saveLines(lineArray);
+      if (handlineArray.length > 0) 
+      	saveDrawings.saveHandLines(handlineArray);
 
-      var saveDrawings = new Save();
+      var curSavedView = annotGlobalString + "+" + lineGlobalString + "+" + handLinesGlobalString;
 
-      if (arrayToolTip.length > 0) saveDrawings.saveAnnot(arrayToolTip);
-      
-      if (lineArray.length > 0) saveDrawings.saveLines(lineArray);
-      
-      if (handlineArray.length > 0) saveDrawings.saveHandLines(handlineArray);
-
-      // saveWithVera
-      jsonstr = annotGlobalString + "+" + lineGlobalString + "+" + handLinesGlobalString;
-      //window.alert("returning saved annotation string");
-
-      return jsonstr;
+      return curSavedView;
 	}
+
 
 }

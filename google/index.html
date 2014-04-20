@@ -207,7 +207,7 @@ function get_value(callback){
 
 
 
- <button class="btn btn-lg btn-success" role="button" id="save-tool" type="button" onclick = "buttonClicked()">
+  <button class="btn btn-lg btn-success" role="button" id="save-tool" type="button" onclick = "buttonClicked()">
     <span class="glyphicon glyphicon-save"></span>
   </button>
 
@@ -215,36 +215,28 @@ function get_value(callback){
     <span class="glyphicon glyphicon-remove"></span>
   </button>
 
-
   <button class="btn btn-lg btn-success" role="button" id="get-tool" type="button" onclick = "get_annotation_from_database()">
     <span class="glyphicon glyphicon-folder-open"></span>
   </button>
 
 
 
+
+  <button class="btn btn-lg btn-success" role="button" type="button" id="cancel-tool">
+	<span class="glyphicon glyphicon-move"></span>
+  </button> 
+
+  <button class="btn btn-lg btn-success" role="button" type="button" id="annotation-tool"> 
+	<span class="glyphicon glyphicon-screenshot"></span>
+  </button>	  
+  <div id="annotation-name" class="form-group" >
+	<input id="annotName" type="text" class="form-control" placeholder="name">
+  </div>
+    
+
+
+
 <div id="tools" class="btn-group">
-
-	<button class="btn btn-lg btn-success" role="button" id="cancel-tool" type="button">
-		<span class="glyphicon glyphicon-move"></span>
-	</button> 
-
-
-	<div class="btn-group">
-
-		<button type="button" class="btn btn-lg btn-success" id="annotation-tool"> 
-			<span class="glyphicon glyphicon-screenshot"></span>
-		</button>
-
-		<button type="button" class="btn btn-lg btn-success dropdown-toggle" data-toggle="dropdown">
-			<span class="caret"></span>
-		</button>
-
-		<ul class="dropdown-menu pull-center">
-			<li><a href="#">Dropdown link</a></li>
-			<li><a href="#">Dropdown link</a></li>
-		</ul>
-	</div>
-
 
 	<div class="btn-group">
 

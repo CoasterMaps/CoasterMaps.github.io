@@ -18,11 +18,10 @@ function Overlay()
     stage = new Kinetic.Stage({
       container: 'container',
       width: 2500,
-      height: 1500,//window.innerHeight,//$(window).height(),
+      height: 1500,
       draggable: true
     });
 
-    //this.eventLayer = new Kinetic.Layer();
     staticLayer = new Kinetic.Layer();
 
     stage.add(staticLayer);
@@ -30,7 +29,7 @@ function Overlay()
   }
 
 
-  this.getStage = function() {
+ this.getStage = function() {
 
    return stage;
  }
@@ -58,7 +57,7 @@ function Overlay()
  this.uploadNextObject = function() {
 
   var arrayToolTip = toolTips.returnArray();
-  var latestPosition = toolTips.returnCounter() - 1;
+  var latestPosition = toolTips.returnCounter()-1;
 
   staticLayer.add(arrayToolTip[latestPosition][0]);
   arrayToolTip[latestPosition][0].draw();
@@ -203,8 +202,6 @@ function Overlay()
 
   this.hideAll = function() {
 
-    //window.alert("hide all");
-
      var handlineArray = handLines.returnArray();
       if (handlineArray.length > 0) {
         for (var i=0; i<handlineArray.length; i++) {
@@ -214,8 +211,9 @@ function Overlay()
 
           var currentHandLine = handlineArray[i];
           
-          currentHandLine.getLine().hide();//draw();
+          currentHandLine.getLine().hide();
         }
+        handLines.clearArray();
       }
 
 
@@ -231,22 +229,25 @@ function Overlay()
          
           currentLine.getLine().hide();
         }
+        lines.clearArray();
       }
 
 
-      var arrayToolTip = toolTips.returnArray();
+     var arrayToolTip = toolTips.returnArray();
     
-     if (arrayToolTip.length > 0) {
-     
-      for (var i=0; i<arrayToolTip.length; i++) {
+      if (arrayToolTip.length > 0) {
+        for (var i=0; i<arrayToolTip.length; i++) {
 
-        var actualpixelMouse = mapLayer.fromLatLngToPoint(arrayToolTip[i][1], globalMap); 
+          var actualpixelMouse = mapLayer.fromLatLngToPoint(arrayToolTip[i][1], globalMap); 
 
-        var newLayerPixel = new google.maps.Point(actualpixelMouse.x, actualpixelMouse.y);
+          var newLayerPixel = new google.maps.Point(actualpixelMouse.x, actualpixelMouse.y);
 
-        arrayToolTip[i][0].hide();
+          arrayToolTip[i][0].hide();
+        }
+        toolTips.clearArray();
       }
-    }
+
+
     
   }
 

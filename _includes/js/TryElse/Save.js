@@ -99,11 +99,11 @@
 
       this.getLines = function(inputLines) {
 
-       if(inputLines !== 'undefined') {
+       if((inputLines !== 'undefined')&&(inputLines !== "")) {
 
 
         var myJsonString = inputLines;//localStorage.linesArraySaved;
-
+       
         this.obj = JSON.parse(myJsonString);
 
 
@@ -183,7 +183,7 @@
 
        // window.alert(inputHandLines);
 
-        if(inputHandLines !== 'undefined') {
+        if((inputHandLines !== 'undefined')&&(inputHandLines !== "")) {
 
          // window.alert(inputHandLines);
 
@@ -212,7 +212,7 @@
 
           var curPoint = mapLayer.fromLatLngToPoint(latLng, globalMap); 
 
-          handLines.getLastLineContainer().addNewPoint(curPoint.x + 60, curPoint.y);
+          handLines.getLastLineContainer().addNewPoint(curPoint.x, curPoint.y);
 
           overlay.uploadLastLineHand(); 
           //uploadLastHandLine

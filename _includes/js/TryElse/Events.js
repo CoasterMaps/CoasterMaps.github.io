@@ -73,28 +73,31 @@
 
 
 
-    $("#prev-tool").click(function(){
+    $("#prev-tool").click(function() {
 
      var newAnnotString = curViewQueue.getPrevView();
-     //window.alert("prev-tool annot:"+newAnnotString);
-      if (newAnnotString!== undefined) {
      
-      var saveDrawings = new Save();
       staticLayer.clear(); 
       overlay.hideAll();
-     // var veraString = jsonstr;
-      var res = newAnnotString.split("+");
-      //window.alert("res splitted");
-      //window.alert("gettingLines:"+res[1]);
-      saveDrawings.getLines(res[1]);
-      //window.alert("gettingHandLines:"+res[2]);
-      saveDrawings.getHandLines(res[2]);
-      //window.alert("gettingAnnot:"+res[0]);
-      saveDrawings.getAnnot(res[0]);
       
-      document.getElementById("get-tool").disabled = true;
+      if (newAnnotString!== undefined) {
 
-    }
+        var saveDrawings = new Save();
+
+        var res = newAnnotString.split("+");
+            
+        var newStr = "lines:" + res[1] + " "; 
+        saveDrawings.getLines(res[1]);
+      
+        newStr += "handlines:" + res[2] + " "; 
+        saveDrawings.getHandLines(res[2]);
+      
+        newStr += "annot:" + res[0] + " "; 
+        saveDrawings.getAnnot(res[0]);
+
+        //window.alert(newStr);      
+        document.getElementById("get-tool").disabled = true;
+      }
     });
 
 
@@ -102,23 +105,30 @@
 
       var newAnnotString = curViewQueue.getNextView();
 
+        
       if (newAnnotString!== undefined) {
+   
+        var saveDrawings = new Save();
+        staticLayer.clear(); 
+        overlay.hideAll();
       
-      var saveDrawings = new Save();
-      staticLayer.clear(); 
-      overlay.hideAll();
-     // var veraString = jsonstr;
-      var res = newAnnotString.split("+");
-      //window.alert("res splitted");
-      //window.alert("gettingLines:"+res[1]);
-      saveDrawings.getLines(res[1]);
-      //window.alert("gettingHandLines:"+res[2]);
-      saveDrawings.getHandLines(res[2]);
-      //window.alert("gettingAnnot:"+res[0]);
-      saveDrawings.getAnnot(res[0]);
       
-      document.getElementById("get-tool").disabled = true;
-    }
+        var res = newAnnotString.split("+");
+    
+        var checkString = "lines:"+res[1] + " ";
+        saveDrawings.getLines(res[1]);
+    
+        checkString = "handlines:"+res[2] + " ";
+        saveDrawings.getHandLines(res[2]);
+    
+        checkString = "annot:"+res[0] + " ";
+        saveDrawings.getAnnot(res[0]);
+
+        //window.alert(checkString);
+  
+        document.getElementById("get-tool").disabled = true;
+      }
+
     });
 
 
@@ -238,7 +248,10 @@
 
       currentToolType[currentToolTypePos] = "annot";
       currentToolTypePos++;
-      curViewQueue.newPrevView();
+
+//hiihihihih      
+      //window.alert("put annot");
+      curViewQueue.newPrevView(curViewQueue.getCurrentView());
     }
 
 
@@ -261,7 +274,9 @@
       
       document.getElementById("save-tool").disabled = false;
       document.getElementById("delete-tool").disabled = false;
-      curViewQueue.newPrevView();
+
+//hihihihihi
+      curViewQueue.newPrevView(curViewQueue.getCurrentView());
     }
 
 
@@ -318,7 +333,9 @@
 
         overlay.uploadLastHandLine(currentHandLine, handpoints);
         stage.draggable(true);
-         curViewQueue.newPrevView();
+
+//hihihihihih
+        curViewQueue.newPrevView(curViewQueue.getCurrentView());
       }
       
     }
