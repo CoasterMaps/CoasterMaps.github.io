@@ -1,95 +1,91 @@
-
 function CurrentDrawView() {
 
 
-	this.initViewArray = function() {
+    this.initViewArray = function () {
 
-		this.prevStates = new Array();
-		this.nextStates = new Array();
-		this.newPrevView(this.getCurrentView());
-	};
-
-
-	this.newPrevView = function(view) {
-        
-		this.prevStates.push(view);
-	};
+        this.prevStates = new Array();
+        this.nextStates = new Array();
+        this.newPrevView(this.getCurrentView());
+    };
 
 
-	this.getPrevView = function() {
-        
-		if (this.prevStates.length>0) {
+    this.newPrevView = function (view) {
 
-		    var currentView = this.prevStates.pop();
-			this.newNextView(currentView);
-		 
-			var prevView = this.prevStates.pop();
-			
-			if (this.prevStates.length!==0) {
-		        this.newPrevView(prevView);
-		    }
-		    else this.newNextView(prevView);
+        this.prevStates.push(view);
+    };
 
 
-            var outString = "prevStates: "+"\n";
-		    for (var i=0; i<this.prevStates.length; i++) {
-		    	outString+= "num "+i+": "+this.prevStates[i]+"\n";
-		    }
-		    //window.alert(outString);
-	    }
+    this.getPrevView = function () {
 
-		return prevView;
-	};
+        if (this.prevStates.length > 0) {
+
+            var currentView = this.prevStates.pop();
+            this.newNextView(currentView);
+
+            var prevView = this.prevStates.pop();
+
+            if (this.prevStates.length !== 0) {
+                this.newPrevView(prevView);
+            } else this.newNextView(prevView);
 
 
-	this.newNextView = function(view) {
+            var outString = "prevStates: " + "\n";
+            for (var i = 0; i < this.prevStates.length; i++) {
+                outString += "num " + i + ": " + this.prevStates[i] + "\n";
+            }
+        }
 
-		this.nextStates.push(view);
+        return prevView;
+    };
+
+
+    this.newNextView = function (view) {
+
+        this.nextStates.push(view);
     }
 
 
-	this.getNextView = function() {
+    this.getNextView = function () {
 
-		if (this.nextStates.length>0) {
+        if (this.nextStates.length > 0) {
 
-			var nextView = this.nextStates.pop();
+            var nextView = this.nextStates.pop();
 
-	        this.newPrevView(nextView);
-
-
-	        var outString = "nextStates: "+"\n";
-	    	for (var i=0; i<this.nextStates.length; i++) {
-	    		outString+= "num "+i+": "+this.nextStates[i]+"\n";
-		    }
-		    //window.alert(outString);
-	    }
-		
-		
-		return nextView;
-	}
+            this.newPrevView(nextView);
 
 
-	this.getCurrentView = function() {
+            var outString = "nextStates: " + "\n";
+            for (var i = 0; i < this.nextStates.length; i++) {
+                outString += "num " + i + ": " + this.nextStates[i] + "\n";
+            }
+        }
 
-	 //window.alert("getCurrentView");
+        return nextView;
+    }
 
-	  var saveDrawings = new Save();
-      
-	  var arrayToolTip = toolTips.returnArray();
-      var lineArray = lines.returnArray();
-      var handlineArray = handLines.returnArray();
 
-      if (arrayToolTip.length > 0) 
-      	saveDrawings.saveAnnot(arrayToolTip);
-      if (lineArray.length > 0) 
-      	saveDrawings.saveLines(lineArray);
-      if (handlineArray.length > 0) 
-      	saveDrawings.saveHandLines(handlineArray);
+    this.getCurrentView = function () {
+        
+        document.getElementById("save-tool").disabled = false;
+        //window.alert("get view");
 
-      var curSavedView = annotGlobalString + "+" + lineGlobalString + "+" + handLinesGlobalString;
+        var saveDrawings = new Save();
 
-      return curSavedView;
-	}
+        var arrayToolTip = toolTips.returnArray();
+        var lineArray = lines.returnArray();
+        var handlineArray = handLines.returnArray();
+
+        if (arrayToolTip.length > 0)
+            saveDrawings.saveAnnot(arrayToolTip);
+        if (lineArray.length > 0)
+            saveDrawings.saveLines("lines", lineArray);
+        if (handlineArray.length > 0)
+            saveDrawings.saveLines("handLines", handlineArray);
+
+        var curSavedView = annotGlobalString + "+" + lineGlobalString + "+" + handLinesGlobalString;
+
+        return curSavedView;
+    }
 
 
 }

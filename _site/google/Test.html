@@ -1,166 +1,140 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-  <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
-  <title>COMP2013 Group Blog. COASTER 3D PROJECT. | That's techSoc to you
-  </title>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <title>COMP2013 Group Blog. COASTER 3D PROJECT. | That's techSoc to you
+    </title>
 
-  <link href="/css/all.css" rel="stylesheet" type="text/css" />
+    
+    <script src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script src="https://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+    
+    <link href="/css/all.css" rel="stylesheet" type="text/css" />
 
-  <script type="text/javascript"
-  src="https://maps.googleapis.com/maps/api/js?v=3key={AIzaSyBiVydJrssXEs9BpQoO7MX7RSsU13CuJ20}&sensor=false">
-  </script>
-
-  <script type="text/javascript"
-  src="http://ecn.dev.virtualearth.net/mapcontrol/mapcontrol.ashx?v=7.0">
-  </script>
-
-  <script 
-  src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=drawing">
-  </script>
-
-  <script type="text/javascript" src="http://openspace.ordnancesurvey.co.uk/osmapapi/openspace.js?key=BA08531D8339984EE0405F0AC86026A9"></script>  
-
-  <script type="text/javascript" src="/js/all.js"></script>
-
-  <script src="http://d3lp1msu2r81bx.cloudfront.net/kjs/js/lib/kinetic-v5.0.0.min.js"></script>
-
-
-  <!-- Latest compiled and minified CSS -->
-  <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
-
-  <!-- Optional theme -->
-  <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
-
-  <!-- Latest compiled and minified JavaScript -->
-  <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
-
-
-  <script type="text/javascript">
-  //$('#tools').click(function (e) { 
-  //  window.alert("hi");                  
-  //  e.stopPropagation();
-  //});
-  </script>
+    <script type="text/javascript" src="/js/all.js"></script>
 
 
 
-  <style type="text/css">
 
-  #map-canvas {
-    height: 100%;
-    position: absolute;
-    top: 0;    
-    left: 0;
-    right: 0;
-    z-index: 0;
-  }
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
 
-  #container {
-    margin-left: 60px;   
-    width: 80%;
-    z-index: 99;
-    position: relative;
-  }
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
 
-   #prev-tool {
-    margin-top: 50px;
-    width:100px;
-    position: absolute;
-    right:5px;
-    z-index: 100;
-  }
-
-   #next-tool {
-    margin-top: 100px;
-    width:100px;
-    position: absolute;
-    right:5px;
-    z-index: 100;
-  }
-
-  #save-tool {
-    margin-top: 150px;
-    width:100px;
-    position: absolute;
-    right:5px;
-    z-index: 100;
-  }
-
-  #delete-tool {
-    margin-top: 200px;
-    width:100px;
-    position: absolute;
-    right:5px;
-    z-index: 100;
-  }
-
-  #get-tool {
-    margin-top: 250px;
-    width:100px;
-    position: absolute;
-    right:5px;
-    z-index: 100;
-  }
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
 
 
-  #cancel-tool {
-    margin-top: 350px;
-    width:100px;
-    position: absolute;
-    right:5px;
-    z-index: 100;
-  }
 
-  #annotation-tool {
-    margin-top: 400px;
-    width:100px;
-    position: absolute;
-    right:5px;
-    z-index: 100;
-  }
-  
-  #annotation-name {
-    margin-top: 445px;
-    width:100px;
-    position: absolute;
-    right:5px;
-    z-index: 100;
-  }
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3key={AIzaSyBiVydJrssXEs9BpQoO7MX7RSsU13CuJ20}&sensor=false">
+    </script>
 
-  #tools {
-    margin-top: 500px;
-    width:100px;
-    position: absolute;
-    right:5px;
-    z-index: 100;
-  }
+    <script src="http://d3lp1msu2r81bx.cloudfront.net/kjs/js/lib/kinetic-v5.0.0.min.js"></script>
 
 
-  #text-debug {
-    margin-top: 550px;
-    width:100px;
-    position: absolute;
-    right:5px;
-    z-index: 100;
-    color: red;
-  }
 
-  #text-debug2 {
-    margin-top: 650px;
-    width:100px;
-    position: absolute;
-    right:5px;
-    z-index: 100;
-  }
 
-  </style>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+
+
+    <script type="text/javascript">
+        //$('#tools').click(function (e) { 
+         //  window.alert("hi");                  
+         //  e.stopPropagation();
+         //});
+    </script>
+
+
+
+    <style type="text/css">
+        #map-canvas {
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 0;
+        }
+        #container {
+            margin-left: 60px;
+            width: 80%;
+            z-index: 99;
+            position: relative;
+        }
+        #prev-tool {
+            margin-top: 50px;
+            width: 100px;
+            position: absolute;
+            right: 5px;
+            z-index: 100;
+        }
+        #next-tool {
+            margin-top: 100px;
+            width: 100px;
+            position: absolute;
+            right: 5px;
+            z-index: 100;
+        }
+        #save-tool {
+            margin-top: 150px;
+            width: 100px;
+            position: absolute;
+            right: 5px;
+            z-index: 100;
+        }
+        #delete-tool {
+            margin-top: 200px;
+            width: 100px;
+            position: absolute;
+            right: 5px;
+            z-index: 100;
+        }
+       
+        #cancel-tool {
+            margin-top: 350px;
+            width: 100px;
+            position: absolute;
+            right: 5px;
+            z-index: 100;
+        }
+        #annotation-tool {
+            margin-top: 400px;
+            width: 100px;
+            position: absolute;
+            right: 5px;
+            z-index: 100;
+        }
+        #annotation-name {
+            margin-top: 445px;
+            width: 100px;
+            position: absolute;
+            right: 5px;
+            z-index: 100;
+        }
+        #tools {
+            margin-top: 500px;
+            width: 100px;
+            position: absolute;
+            right: 5px;
+            z-index: 100;
+        }
+       
+    </style>
 
 </head>
 
 
 <div id="contents">
-  	<head>
+    	<head>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Bootstrap is used, and Bootstrap Slider.js by Stefan Patre-->
     <!-- Bootstrap -->

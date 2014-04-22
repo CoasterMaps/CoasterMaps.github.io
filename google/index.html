@@ -169,18 +169,11 @@ function get_value(callback){
                     var saveDrawings = new Save();
                     staticLayer.clear();
 
-
-                    //console.log(veraString)
-                   
-                    var res = veraString.split("+");
-                    
+                    var res = veraString.split("+");       
 
                     saveDrawings.getLines(res[0]);
                     saveDrawings.getHandLines(res[1]);
                     saveDrawings.getAnnot(res[2]);
-                    document.getElementById("get-tool").disabled = true;
-
-
 
                     return value;
                 });
@@ -206,20 +199,13 @@ function get_value(callback){
 </button> 
 
 
-
-  <button class="btn btn-lg btn-success" role="button" id="save-tool" type="button" onclick = "buttonClicked()">
+  <button class="btn btn-lg btn-success" role="button" id="save-tool" type="button">
     <span class="glyphicon glyphicon-save"></span>
-  </button>
+  </button> 
 
   <button class="btn btn-lg btn-success" role="button" id="delete-tool" type="button" onclick = "deleteAllAnnotations()">
     <span class="glyphicon glyphicon-remove"></span>
   </button>
-
-  <button class="btn btn-lg btn-success" role="button" id="get-tool" type="button" onclick = "get_annotation_from_database()">
-    <span class="glyphicon glyphicon-folder-open"></span>
-  </button>
-
-
 
 
   <button class="btn btn-lg btn-success" role="button" type="button" id="cancel-tool">
@@ -299,18 +285,6 @@ function get_value(callback){
 </div>
 
 
-
-<div id="text-debug">
-</div> 	
-
-
-
-<!-- <button class="btn btn-lg btn-success" role="button" id="annotation-tool" type="button">Annotate</button>  -->
-
-   <!--
-   
-    <div id="text-debug">Title</div> 
-    <div id="text-debug2">Title</div>  -->
 
     
     

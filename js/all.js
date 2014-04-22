@@ -1,8 +1,6 @@
 ---
 ---
-{% include js/_jquery.js %}
-{% include js/_jsapi.js %}
-
+    
 {% include js/TryElse/Events.js %}
 
 {% include js/TryElse/GoogleMap.js %}
